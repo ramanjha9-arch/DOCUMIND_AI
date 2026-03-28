@@ -4,8 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>DocuMind AI — Intelligent Document Intelligence Platform</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -29,92 +27,79 @@
   .header-nav a:hover { color: var(--paper); }
   .badge-live { background: var(--accent); color: white; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 2px; }
 
-  .api-banner { background: #0d1117; border-bottom: 1px solid #30363d; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; flex-wrap: wrap; }
-  .api-banner label { color: #58a6ff; flex-shrink: 0; font-weight: 600; }
-  .api-banner input { background: #010409; border: 1px solid #30363d; color: #c9d1d9; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.8rem; flex: 1; min-width: 240px; max-width: 400px; outline: none; transition: border-color 0.2s; }
-  .api-banner input:focus { border-color: #58a6ff; }
+  .api-banner { background: #111a11; border-bottom: 1px solid #1e3a1e; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; flex-wrap: wrap; }
+  .api-banner label { color: #7ec891; flex-shrink: 0; font-weight: 600; }
+  .api-banner input { background: #0d160d; border: 1px solid #1e3a1e; color: #a6e3a1; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.8rem; flex: 1; min-width: 240px; max-width: 400px; outline: none; }
   .api-status { font-size: 0.65rem; flex-shrink: 0; }
-  .api-status.ok { color: var(--green); }
+  .api-status.ok  { color: var(--green); }
   .api-status.bad { color: var(--accent); }
 
   .hero { padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .hero-eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  h1 { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 1.2rem; }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: 1rem; line-height: 1.7; color: var(--muted); margin-bottom: 2rem; max-width: 460px; }
+  
+  .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+  .stat { background: var(--paper); padding: 1.2rem; }
+  .stat-val { font-family: var(--serif); font-size: 2rem; color: var(--ink); }
+  .stat-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+
+  .hero-visual { position: relative; background: var(--ink); border: 1px solid #222; padding: 1.5rem; min-height: 280px; display: flex; flex-direction: column; gap: 0.8rem; overflow: hidden; }
+  .mock-json { font-family: var(--mono); font-size: 0.66rem; color: #4a9; line-height: 1.9; background: #0d0d14; padding: 1rem; flex: 1; }
+
   .app-shell { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; display: grid; grid-template-columns: 340px 1fr; gap: 2rem; }
   .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
   .card { background: var(--card); border: 1px solid var(--border); overflow: hidden; }
   .card-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--cream); display: flex; align-items: center; justify-content: space-between; }
   .card-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
 
-  .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
-  .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: #c8441a08; }
-  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .upload-icon { font-size: 2.2rem; margin-bottom: 0.7rem; display: block; }
-  .upload-label { font-size: 0.82rem; font-weight: 600; color: var(--ink); display: block; }
+  .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; position: relative; }
+  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .upload-preview { display: none; flex-direction: column; gap: 0.6rem; padding: 1rem; }
-  .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); display: block; }
-  .preview-pdf { width: 100%; height: 80px; background: var(--cream); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-  .preview-name { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); word-break: break-all; }
-  .change-btn { background: none; border: 1px dashed var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.65rem; padding: 0.35rem; width: 100%; cursor: pointer; }
+  .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); }
 
   .doc-types { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.8rem; }
-  .doc-type-btn { padding: 0.65rem 0.9rem; border: 1px solid var(--border); background: var(--paper); cursor: pointer; font-family: var(--sans); font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 0.7rem; transition: all 0.15s; color: var(--ink); text-align: left; width: 100%; }
-  .doc-type-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .dt-sub { font-size: 0.62rem; font-weight: 400; color: inherit; opacity: 0.6; font-family: var(--mono); display: block; }
+  .doc-type-btn { padding: 0.65rem 0.9rem; border: 1px solid var(--border); background: var(--paper); cursor: pointer; font-size: 0.78rem; font-weight: 600; text-align: left; width: 100%; }
+  .doc-type-btn.active { background: var(--ink); color: var(--paper); }
 
-  .analyze-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; cursor: pointer; font-family: var(--sans); font-size: 0.88rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
-  .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.7; }
-  .spinner { display: none; width: 15px; height: 15px; border: 2px solid #ffffff44; border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .analyze-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+  .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; }
 
   .main-panel { display: flex; flex-direction: column; gap: 1.5rem; }
   .status-bar { background: var(--ink); color: var(--paper); padding: 0.65rem 1.2rem; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 0.68rem; }
   .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
   .sdot.ready { background: var(--green); }
-  .sdot.processing { background: var(--gold); animation: pulse 0.5s infinite; }
+  .sdot.processing { background: var(--gold); }
 
   .tabs { display: flex; border-bottom: 2px solid var(--border); overflow-x: auto; }
-  .tab-btn { padding: 0.75rem 1.1rem; border: none; background: transparent; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+  .tab-btn { padding: 0.75rem 1.1rem; border: none; background: transparent; font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.12s; }
   .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  .empty { padding: 4rem 2rem; text-align: center; border: 1px solid var(--border); background: var(--card); }
-  .dec-banner { padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid; margin-bottom: 0.8rem; }
+  .risk-card { background: #fff5f2; border: 1px solid #ffded4; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); }
+  .risk-title { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); text-transform: uppercase; font-weight: 800; margin-bottom: 0.5rem; }
+  .risk-item { font-size: 0.78rem; color: var(--ink); margin-bottom: 0.35rem; }
+
+  .dec-banner { padding: 1.1rem 1.4rem; border-left: 4px solid; margin-bottom: 0.8rem; display: flex; align-items: center; justify-content: space-between; }
   .dec-banner.APPROVED { background:#1ac86b12; border-color:var(--green); }
   .dec-banner.REJECTED { background:#c8441a12; border-color:var(--accent); }
-  .dec-banner.REVIEW { background:#c8a41a12; border-color:var(--gold); }
-  .dec-label { font-family: var(--serif); font-size: 1.7rem; font-style: italic; }
+  .dec-banner.REVIEW   { background:#c8a41a12; border-color:var(--gold); }
   
   .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); margin-bottom: 0.8rem; }
-  .sc { background: var(--card); padding: 0.8rem 1rem; }
+  .sc { background: white; padding: 0.8rem 1rem; }
   .sc-l { font-family: var(--mono); font-size: 0.58rem; text-transform: uppercase; color: var(--muted); }
   .sc-v { font-weight: 700; font-size: 0.85rem; font-family: var(--mono); }
 
-  .risk-box { margin-top: 1rem; padding: 1rem; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 4px; }
-  .risk-title { font-size: 0.75rem; font-weight: 800; color: #c53030; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
-  .risk-item { font-family: var(--mono); font-size: 0.7rem; color: #742a2a; margin-bottom: 0.3rem; }
-
-  .pdf-btn { margin-top: 1rem; background: var(--accent2); color: white; border: none; padding: 0.6rem 1rem; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem; }
-
-  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 1px; background: var(--border); }
-  .fc { background: var(--card); padding: 0.9rem 1rem; }
-  .fk { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); }
+  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: var(--border); }
+  .fc { background: white; padding: 0.9rem 1rem; }
+  .fk { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); text-transform: uppercase; }
   .fv { font-size: 0.86rem; font-weight: 600; font-family: var(--mono); }
 
-  .rules-out { display: flex; flex-direction: column; gap: 0.45rem; }
-  .ri { padding: 0.75rem 1rem; border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 0.8rem; background: var(--card); }
-  .rb { padding: 0.18rem 0.55rem; font-family: var(--mono); font-size: 0.58rem; font-weight: 700; flex-shrink: 0; text-transform: uppercase; border: 1px solid; }
-  .rb.PASS { background:#1ac86b20;color:var(--green);border-color:#1ac86b40; }
-  .rb.FAIL { background:#c8441a20;color:var(--accent);border-color:#c8441a40; }
-
-  .json-out { background: #0d1117; color: #c9d1d9; font-family: var(--mono); font-size: 0.72rem; padding: 1.4rem; overflow: auto; max-height: 520px; border: 1px solid var(--border); }
-
-  .modal-bg { position: fixed; inset: 0; background: #0a0a0fcc; z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-  .modal-bg.open { display: flex; }
-  .modal { background: var(--card); border: 1px solid var(--border); padding: 2rem; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
-  .notif { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300; background: var(--ink); color: var(--paper); padding: 0.75rem 1.1rem; border-left: 3px solid var(--accent); font-family: var(--mono); font-size: 0.7rem; transform: translateX(120%); transition: transform 0.28s ease; }
+  .json-out { background: #0d1117; color: #c9d1d9; font-family: var(--mono); font-size: 0.72rem; padding: 1.4rem; overflow: auto; border: 1px solid var(--border); }
+  .notif { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ink); color: var(--paper); padding: 0.75rem 1.1rem; font-family: var(--mono); font-size: 0.7rem; transform: translateX(120%); transition: 0.28s; z-index: 1000; }
   .notif.show { transform: translateX(0); }
-
-  @media (max-width: 860px) { .app-shell { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -122,121 +107,115 @@
 <header>
   <div class="logo"><span class="logo-dot"></span>DocuMind AI</div>
   <nav class="header-nav">
-    <a onclick="openModal('rulesModal')">Rules</a>
+    <a onclick="switchTab('overview')">Overview</a>
+    <a onclick="switchTab('extracted')">Extracted</a>
     <a onclick="switchTab('json')">JSON</a>
     <span class="badge-live">LIVE</span>
   </nav>
 </header>
 
 <div class="api-banner">
-  <label for="apiKey">💎 GEMINI KEY:</label>
-  <input type="password" id="apiKey" placeholder="AIzaSy..." oninput="onKeyInput()"/>
-  <span class="api-status bad" id="apiSt">Not set</span>
-  <select id="modelSel" style="background:#010409;border:1px solid #30363d;color:#c9d1d9;font-family:var(--mono);font-size:0.69rem;padding:0.32rem 0.6rem;outline:none;">
-    <option value="gemini 2.5 Pro" selected>Gemini 2.5 Pro</option>
-    <option value="gemini 2.5 Flash" selected>Gemini 2.5 Flash</option>
-    <option value="gemini 2.5 Flash-Lite" selected>Gemini 2.5 Flash-Lite</option>
+  <label for="apiKey">🔑 API KEY:</label>
+  <input type="password" id="apiKey" placeholder="sk-ant... or AIza..." oninput="onKeyInput()"/>
+  <span class="api-status bad" id="apiSt">Not set — required</span>
+  <select id="modelSel" onchange="onKeyInput()" style="background:#0d160d; color:#a6e3a1; font-family:var(--mono); font-size:0.69rem; border:1px solid #1e3a1e; padding:0.32rem 0.6rem;">
+    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Free)</option>
+    <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
   </select>
+  <button onclick="testKey()" style="background:#1a3a1a; color:#7ec891; font-family:var(--mono); font-size:0.65rem; padding:0.32rem 0.8rem; cursor:pointer; border:1px solid #1e3a1e;">▶ Test Key</button>
 </div>
+
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Document Intelligence Platform</div>
+    <h1>Analyse. <em>Decide.</em> Standardise.</h1>
+    <p class="hero-sub">Upload medical or financial docs. Vision AI extracts data and identifies underwriting risks instantly.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">3</div><div class="stat-label">Doc Types</div></div>
+      <div class="stat"><div class="stat-val">99%</div><div class="stat-label">Accuracy</div></div>
+      <div class="stat"><div class="stat-val">&lt;8s</div><div class="stat-label">Speed</div></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="mock-json">
+      { "decision": "APPROVED", "confidence": 0.94 }
+    </div>
+  </div>
+</section>
 
 <main class="app-shell">
   <aside class="sidebar">
     <div class="card">
-      <div class="card-header"><div class="card-title">📄 Upload Photo/Doc</div></div>
+      <div class="card-header"><div class="card-title">📄 Document Upload</div></div>
       <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="onFile(event)"/>
-        <span class="upload-icon">⬆</span>
-        <span class="upload-label">Click to Upload</span>
+        <input type="file" id="fileInput" onchange="onFile(event)"/>
+        <span style="font-size:2rem">⬆</span><br>
+        <span class="upload-label">Click or drop document</span>
       </div>
       <div class="upload-preview" id="uploadPrev">
-        <img id="prevImg" class="preview-thumb" alt="" style="display:none"/>
-        <div id="prevPdf" class="preview-pdf" style="display:none">📄</div>
-        <div class="preview-name" id="prevName"></div>
-        <button class="change-btn" onclick="resetFile()">✕ Change file</button>
+        <img id="prevImg" class="preview-thumb" alt=""/>
+        <div id="prevPdf" style="display:none; text-align:center; padding:2rem; background:var(--cream)">📄 PDF Loaded</div>
+        <button onclick="resetFile()" style="width:100%; margin-top:0.5rem; cursor:pointer">✕ Change File</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header"><div class="card-title">🗂 Mode</div></div>
+      <div class="card-header"><div class="card-title">🗂 Intent</div></div>
       <div class="doc-types">
         <button class="doc-type-btn active" data-type="auto" onclick="pickType(this)">🤖 Auto-Detect</button>
-        <button class="doc-type-btn" data-type="medical_photo" onclick="pickType(this)">👤 Photo Analysis</button>
+        <button class="doc-type-btn" data-type="underwriting" onclick="pickType(this)">👤 Customer Photo (Risk)</button>
+        <button class="doc-type-btn" data-type="medical" onclick="pickType(this)">🏥 Medical Report</button>
       </div>
     </div>
 
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>
-      <span class="spinner" id="spin"></span>
-      <span id="btnTxt">Waiting for key...</span>
-    </button>
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>Analyse Document</button>
   </aside>
 
   <div class="main-panel">
     <div class="status-bar">
-      <div class="s-left"><div class="sdot" id="sdot"></div><span id="stxt">Ready</span></div>
-      <span id="sid" style="color:var(--muted)">SESSION: —</span>
+      <div><span class="sdot" id="sdot"></span> <span id="stxt">Ready</span></div>
+      <span id="sid">SESSION: —</span>
     </div>
 
-    <div id="reportContent">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview',this)">Overview</button>
-        <button class="tab-btn" data-tab="extracted" onclick="switchTab('extracted',this)">Data Points</button>
-        <button class="tab-btn" data-tab="rules" onclick="switchTab('rules',this)">Audit</button>
-        <button class="tab-btn" data-tab="json" onclick="switchTab('json',this)">JSON</button>
-      </div>
-
-      <div class="tab-pane active" id="pane-overview">
-        <div id="overviewOut"><div class="empty">Ready for input.</div></div>
-      </div>
-      <div class="tab-pane" id="pane-extracted">
-        <div id="extractedOut"><div class="empty">No data.</div></div>
-      </div>
-      <div class="tab-pane" id="pane-rules">
-        <div id="rulesOut"><div class="empty">No audit.</div></div>
-      </div>
-      <div class="tab-pane" id="pane-json">
-        <div id="jsonOut"><div class="empty">No JSON.</div></div>
-      </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview',this)">Overview</button>
+      <button class="tab-btn" data-tab="extracted" onclick="switchTab('extracted',this)">Extracted</button>
+      <button class="tab-btn" data-tab="json" onclick="switchTab('json',this)">JSON</button>
     </div>
-    
-    <button class="pdf-btn" id="pdfBtn" style="display:none;" onclick="generatePDF()">📥 Export PDF</button>
+
+    <div class="tab-pane active" id="pane-overview"><div id="overviewOut" style="padding:2rem; text-align:center; color:var(--muted)">No data.</div></div>
+    <div class="tab-pane" id="pane-extracted"><div id="extractedOut" class="fields-grid"></div></div>
+    <div class="tab-pane" id="pane-json"><div id="jsonOut" class="json-out"></div></div>
   </div>
 </main>
-
-<div class="modal-bg" id="rulesModal">
-  <div class="modal">
-    <h3>Rules Management</h3>
-    <p style="font-size: 0.8rem; color: var(--muted); margin: 10px 0;">Rules are processed by Gemini during analysis.</p>
-    <button class="btn-primary" onclick="closeModal('rulesModal')">Close</button>
-  </div>
-</div>
 
 <div class="notif" id="notif"></div>
 
 <script>
-const S = { b64:null, mime:null, docType:'auto', sid:null, result:null };
+const S = { b64:null, mime:null, docType:'auto', sid:null };
 
 function init() {
   S.sid = 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase();
   document.getElementById('sid').textContent = 'SESSION: ' + S.sid;
-  const savedKey = sessionStorage.getItem('gemini_key');
-  if(savedKey) { document.getElementById('apiKey').value = savedKey; onKeyInput(); }
+  const k = sessionStorage.getItem('dm_key');
+  if (k) { document.getElementById('apiKey').value = k; onKeyInput(); }
 }
 
 function onKeyInput() {
   const k = document.getElementById('apiKey').value.trim();
+  const model = document.getElementById('modelSel').value;
+  const isGemini = model.includes('gemini');
   const el = document.getElementById('apiSt');
-  const ok = k.length > 30; // Basic check for Gemini Key length
-  el.textContent = ok ? '✓ Key Set' : 'Invalid Key';
+  const ok = isGemini ? k.length > 10 : k.startsWith('sk-ant');
+  el.textContent = ok ? '✓ Ready' : '⚠ Invalid';
   el.className = 'api-status ' + (ok ? 'ok' : 'bad');
-  if (ok) sessionStorage.setItem('gemini_key', k);
+  if(ok) sessionStorage.setItem('dm_key', k);
   refreshBtn();
 }
 
 function refreshBtn() {
-  const k = document.getElementById('apiKey').value.trim();
-  const hasFile = S.b64 !== null;
-  document.getElementById('analyzeBtn').disabled = !(k.length > 10 && hasFile);
-  document.getElementById('btnTxt').textContent = hasFile ? 'Run Gemini Analysis' : 'Upload file first';
+  const k = document.getElementById('apiKey').value;
+  document.getElementById('analyzeBtn').disabled = !(k && S.b64);
 }
 
 function onFile(e) {
@@ -247,21 +226,20 @@ function onFile(e) {
     S.mime = f.type || 'image/jpeg';
     document.getElementById('uploadZone').style.display = 'none';
     document.getElementById('uploadPrev').style.display = 'flex';
-    const img = document.getElementById('prevImg');
-    const pdf = document.getElementById('prevPdf');
-    if (f.type.startsWith('image/')) { img.src = ev.target.result; img.style.display='block'; pdf.style.display='none'; }
-    else { img.style.display='none'; pdf.style.display='flex'; }
-    document.getElementById('prevName').textContent = f.name;
+    const isImg = f.type.startsWith('image/');
+    document.getElementById('prevImg').style.display = isImg ? 'block' : 'none';
+    document.getElementById('prevPdf').style.display = isImg ? 'none' : 'block';
+    if(isImg) document.getElementById('prevImg').src = ev.target.result;
     refreshBtn();
   };
   r.readAsDataURL(f);
 }
 
 function resetFile() {
-    S.b64 = null;
-    document.getElementById('uploadZone').style.display = 'block';
-    document.getElementById('uploadPrev').style.display = 'none';
-    refreshBtn();
+  S.b64 = null;
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('uploadPrev').style.display = 'none';
+  refreshBtn();
 }
 
 function pickType(btn) {
@@ -270,127 +248,76 @@ function pickType(btn) {
   S.docType = btn.dataset.type;
 }
 
+async function callAPI(payload, key) {
+  const model = document.getElementById('modelSel').value;
+  const isGemini = model.includes('gemini');
+  const url = isGemini ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}` : 'https://api.anthropic.com/v1/messages';
+
+  const body = isGemini ? {
+    contents: [{ parts: payload.messages[0].content }],
+    systemInstruction: { parts: [{ text: payload.system }] },
+    generationConfig: { responseMimeType: "application/json" }
+  } : {
+    model: model, system: payload.system, messages: payload.messages, max_tokens: 4096
+  };
+
+  const headers = { 'Content-Type': 'application/json' };
+  if(!isGemini) {
+    headers['x-api-key'] = key;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
+  }
+
+  const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(body) });
+  if (!res.ok) throw new Error('API Error');
+  const data = await res.json();
+  return isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text;
+}
+
+async function testKey() {
+  const k = document.getElementById('apiKey').value.trim();
+  if(!k) return toast('Key required');
+  try {
+    const isGemini = document.getElementById('modelSel').value.includes('gemini');
+    const content = isGemini ? [{text: "Hi"}] : [{type: "text", text: "Hi"}];
+    await callAPI({ system: "Say OK", messages: [{role:'user', content}] }, k);
+    toast('✓ API Connected', 'ok');
+  } catch(e) { toast('✗ Connection Failed'); }
+}
+
 async function analyse() {
   const key = document.getElementById('apiKey').value;
-  const model = document.getElementById('modelSel').value;
-  const btn = document.getElementById('analyzeBtn');
-  btn.disabled = true; document.getElementById('spin').style.display='block';
-  setStatus('processing', 'Gemini is processing...');
+  const isGemini = document.getElementById('modelSel').value.includes('gemini');
+  document.getElementById('analyzeBtn').disabled = true;
+  setStatus('processing', 'AI Analysis active...');
 
-  // System instructions as a prefix to the prompt for Flash/Pro
-  const prompt = `You are DocuMind AI. Extract data and identify risks.
-  IF PHOTO OF PERSON: Identify medical indicators (jaundice in eyes, skin pallor, edema, thyroid enlargement, alcholic, scar on face, etc).
-  IF DOCUMENT: Extract values and evaluate standard rules.
-  Output JSON ONLY in this format:
-  {
-    "document_type": "string",
-    "overall_decision": "APPROVED|REJECTED|REVIEW",
-    "decision_rationale": "string",
-    "medical_risk_indicators": ["string"],
-    "extracted_fields": {"field_name": {"value": "string"}},
-    "rules_evaluation": [{"rule_id": "string", "status": "PASS|FAIL|WARN", "reason": "string"}]
-  }`;
+  const system = `You are DocuMind AI. Analyse intent: ${S.docType}.
+  Return valid JSON ONLY: { "overall_decision": "APPROVED|REJECTED|REVIEW", "rationale": "reason", "risk_markers": [], "fields": {} }`;
+
+  const content = isGemini ? 
+    [{ text: "Analyse" }, { inline_data: { mime_type: S.mime, data: S.b64 } }] : 
+    [{ type: S.mime.includes('pdf')?'document':'image', source:{ type:'base64', media_type:S.mime, data:S.b64 } }, { type:'text', text:'Analyse' }];
 
   try {
-    // Correct Endpoint for v1beta Gemini API
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
-
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [
-            { text: prompt },
-            { inline_data: { mime_type: S.mime, data: S.b64 } }
-          ]
-        }]
-      })
-    });
-
-    const data = await res.json();
+    const raw = await callAPI({ system, messages: [{ role:'user', content }] }, key);
+    const r = JSON.parse(raw);
     
-    if (data.error) throw new Error(data.error.message);
+    // Render Overview
+    let riskHtml = '';
+    if (r.risk_markers?.length) {
+      riskHtml = `<div class="risk-card"><div class="risk-title">⚠️ RISK FLAGS</div>${r.risk_markers.map(m=>`<div class="risk-item">• ${m}</div>`).join('')}</div>`;
+    }
+    document.getElementById('overviewOut').innerHTML = `<div class="dec-banner ${r.overall_decision}"><div><div class="sc-l">Decision</div><div class="stat-val">${r.overall_decision}</div></div></div><p style="padding:0 1.4rem">${r.rationale}</p>${riskHtml}`;
 
-    // Gemini returns content in candidates[0].content.parts[0].text
-    let rawText = data.candidates[0].content.parts[0].text;
-    // Strip markdown if AI includes it
-    rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+    // Render Fields
+    document.getElementById('extractedOut').innerHTML = Object.entries(r.fields || {}).map(([k,v])=>`<div class="fc"><div class="fk">${k}</div><div class="fv">${v}</div></div>`).join('');
+    document.getElementById('jsonOut').textContent = JSON.stringify(r, null, 2);
     
-    const result = JSON.parse(rawText);
-    S.result = result;
-    renderResults(result);
-    document.getElementById('pdfBtn').style.display = 'flex';
-    setStatus('ready', 'Gemini Analysis Complete');
-    toast('Analysis Successful', 'ok');
-  } catch (e) {
-    console.error(e);
-    toast('Error: ' + e.message);
-    setStatus('error', 'Failed');
-  } finally {
-    btn.disabled = false; document.getElementById('spin').style.display='none';
-  }
-}
-
-function renderResults(r) {
-  let riskHtml = '';
-  if (r.medical_risk_indicators && r.medical_risk_indicators.length > 0) {
-    riskHtml = `<div class="risk-box">
-      <div class="risk-title">⚠️ Detected Indicators</div>
-      ${r.medical_risk_indicators.map(i => `<div class="risk-item">• ${i}</div>`).join('')}
-    </div>`;
-  }
-
-  document.getElementById('overviewOut').innerHTML = `
-    <div class="dec-banner ${r.overall_decision}">
-      <div class="dec-meta">
-        <div class="dec-label">${r.overall_decision}</div>
-        <div style="font-size:0.8rem; color:var(--muted)">${r.decision_rationale}</div>
-      </div>
-    </div>
-    ${riskHtml}
-    <div class="stats-row">
-      <div class="sc"><div class="sc-l">Type</div><div class="sc-v">${r.document_type}</div></div>
-      <div class="sc"><div class="sc-l">Session</div><div class="sc-v">${S.sid}</div></div>
-    </div>
-  `;
-
-  let fieldsHtml = '<div class="fields-grid">';
-  for (const [k, v] of Object.entries(r.extracted_fields || {})) {
-    fieldsHtml += `<div class="fc"><div class="fk">${k}</div><div class="fv">${v.value}</div></div>`;
-  }
-  fieldsHtml += '</div>';
-  document.getElementById('extractedOut').innerHTML = fieldsHtml;
-
-  document.getElementById('rulesOut').innerHTML = (r.rules_evaluation || []).map(re => `
-    <div class="ri">
-      <div class="rb ${re.status}">${re.status}</div>
-      <div class="rd"><strong>${re.rule_id}</strong>: ${re.reason}</div>
-    </div>
-  `).join('');
-
-  document.getElementById('jsonOut').innerHTML = `<pre class="json-out">${JSON.stringify(r, null, 2)}</pre>`;
-}
-
-async function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
-    const element = document.getElementById('reportContent');
-    toast('Generating PDF...', 'ok');
-    
-    html2canvas(element).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-        doc.text(`DocuMind Gemini Report - ${S.sid}`, 10, 10);
-        doc.addImage(imgData, 'PNG', 0, 20, pdfWidth, pdfHeight);
-        doc.save(`Gemini_Report_${S.sid}.pdf`);
-    });
-}
-
-function setStatus(type, text) {
-  document.getElementById('sdot').className = 'sdot ' + type;
-  document.getElementById('stxt').textContent = text;
+    setStatus('ready', 'Complete');
+    toast('✓ Complete', 'ok');
+  } catch (err) {
+    setStatus('error', err.message);
+  } finally { document.getElementById('analyzeBtn').disabled = false; }
 }
 
 function switchTab(id, btn) {
@@ -400,8 +327,10 @@ function switchTab(id, btn) {
   if(btn) btn.classList.add('active');
 }
 
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function setStatus(type, text) {
+  document.getElementById('sdot').className = 'sdot ' + type;
+  document.getElementById('stxt').textContent = text;
+}
 
 function toast(msg, type) {
   const el = document.getElementById('notif');
