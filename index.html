@@ -4,7 +4,9 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>DocuMind AI — Intelligent Document Intelligence Platform</title>
-<link href="[https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap)" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root {
     --ink: #0a0a0f; --paper: #f5f3ee; --cream: #ede9e0;
@@ -13,51 +15,106 @@
     --mono: 'DM Mono', monospace; --serif: 'DM Serif Display', serif; --sans: 'Syne', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--paper); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
-  
+  html { scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"); }
+
   header { position: sticky; top: 0; z-index: 100; background: var(--ink); border-bottom: 2px solid var(--accent); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
   .logo { font-family: var(--serif); font-size: 1.4rem; color: var(--paper); display: flex; align-items: center; gap: 0.5rem; }
-  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
+  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+  .header-nav { display: flex; gap: 1.5rem; align-items: center; }
+  .header-nav a { color: var(--muted); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: color 0.2s; cursor: pointer; }
+  .header-nav a:hover { color: var(--paper); }
+  .badge-live { background: var(--accent); color: white; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 2px; }
 
-  .api-banner { background: #111a11; border-bottom: 1px solid #1e3a1e; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; }
-  .api-banner input { background: #0d160d; border: 1px solid #1e3a1e; color: #a6e3a1; font-family: var(--mono); padding: 0.35rem 0.8rem; flex: 1; outline: none; }
-  .api-status { font-size: 0.65rem; }
+  .api-banner { background: #0d1117; border-bottom: 1px solid #30363d; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; flex-wrap: wrap; }
+  .api-banner label { color: #58a6ff; flex-shrink: 0; font-weight: 600; }
+  .api-banner input { background: #010409; border: 1px solid #30363d; color: #c9d1d9; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.8rem; flex: 1; min-width: 240px; max-width: 400px; outline: none; transition: border-color 0.2s; }
+  .api-banner input:focus { border-color: #58a6ff; }
+  .api-status { font-size: 0.65rem; flex-shrink: 0; }
   .api-status.ok { color: var(--green); }
   .api-status.bad { color: var(--accent); }
 
-  .hero { padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-  h1 { font-family: var(--serif); font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
-  h1 em { color: var(--accent); font-style: italic; }
-
+  .hero { padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
   .app-shell { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; display: grid; grid-template-columns: 340px 1fr; gap: 2rem; }
-  .card { background: var(--card); border: 1px solid var(--border); margin-bottom: 1.5rem; }
-  .card-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--cream); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; }
+  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+  .card { background: var(--card); border: 1px solid var(--border); overflow: hidden; }
+  .card-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--cream); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
 
-  .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2rem; text-align: center; cursor: pointer; position: relative; }
-  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  .upload-preview { display: none; padding: 1rem; flex-direction: column; }
-  .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); }
+  .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+  .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: #c8441a08; }
+  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-icon { font-size: 2.2rem; margin-bottom: 0.7rem; display: block; }
+  .upload-label { font-size: 0.82rem; font-weight: 600; color: var(--ink); display: block; }
+  .upload-preview { display: none; flex-direction: column; gap: 0.6rem; padding: 1rem; }
+  .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); display: block; }
+  .preview-pdf { width: 100%; height: 80px; background: var(--cream); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+  .preview-name { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); word-break: break-all; }
+  .change-btn { background: none; border: 1px dashed var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.65rem; padding: 0.35rem; width: 100%; cursor: pointer; }
 
-  .doc-type-btn { width: 100%; padding: 0.8rem; text-align: left; background: var(--paper); border: 1px solid var(--border); margin-bottom: 0.4rem; cursor: pointer; font-weight: 600; }
-  .doc-type-btn.active { background: var(--ink); color: var(--paper); }
+  .doc-types { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.8rem; }
+  .doc-type-btn { padding: 0.65rem 0.9rem; border: 1px solid var(--border); background: var(--paper); cursor: pointer; font-family: var(--sans); font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 0.7rem; transition: all 0.15s; color: var(--ink); text-align: left; width: 100%; }
+  .doc-type-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .dt-sub { font-size: 0.62rem; font-weight: 400; color: inherit; opacity: 0.6; font-family: var(--mono); display: block; }
 
-  .analyze-btn { width: 100%; padding: 1.2rem; background: var(--accent); color: white; border: none; cursor: pointer; font-weight: 800; text-transform: uppercase; }
-  .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; }
+  .analyze-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; cursor: pointer; font-family: var(--sans); font-size: 0.88rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+  .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.7; }
+  .spinner { display: none; width: 15px; height: 15px; border: 2px solid #ffffff44; border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  .tab-btn { padding: 1rem; border: none; background: none; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+  .main-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+  .status-bar { background: var(--ink); color: var(--paper); padding: 0.65rem 1.2rem; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 0.68rem; }
+  .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .sdot.ready { background: var(--green); }
+  .sdot.processing { background: var(--gold); animation: pulse 0.5s infinite; }
+
+  .tabs { display: flex; border-bottom: 2px solid var(--border); overflow-x: auto; }
+  .tab-btn { padding: 0.75rem 1.1rem; border: none; background: transparent; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
   .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  .risk-box { background: #fff5f2; border: 1px solid #ffded4; padding: 1rem; border-left: 4px solid var(--accent); margin-top: 1rem; text-align: left; }
-  .dec-banner { padding: 1.5rem; border-left: 5px solid; margin-bottom: 1rem; text-align: left; }
-  .dec-banner.APPROVED { background: #1ac86b15; border-color: var(--green); }
-  .dec-banner.REJECTED { background: #c8441a15; border-color: var(--accent); }
+  .empty { padding: 4rem 2rem; text-align: center; border: 1px solid var(--border); background: var(--card); }
+  .dec-banner { padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid; margin-bottom: 0.8rem; }
+  .dec-banner.APPROVED { background:#1ac86b12; border-color:var(--green); }
+  .dec-banner.REJECTED { background:#c8441a12; border-color:var(--accent); }
+  .dec-banner.REVIEW { background:#c8a41a12; border-color:var(--gold); }
+  .dec-label { font-family: var(--serif); font-size: 1.7rem; font-style: italic; }
+  
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); margin-bottom: 0.8rem; }
+  .sc { background: var(--card); padding: 0.8rem 1rem; }
+  .sc-l { font-family: var(--mono); font-size: 0.58rem; text-transform: uppercase; color: var(--muted); }
+  .sc-v { font-weight: 700; font-size: 0.85rem; font-family: var(--mono); }
 
-  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; background: var(--border); }
-  .f-card { background: white; padding: 1rem; }
-  .notif { position: fixed; bottom: 2rem; right: 2rem; background: var(--ink); color: white; padding: 1rem; transform: translateY(200%); transition: 0.3s; }
-  .notif.show { transform: translateY(0); }
+  .risk-box { margin-top: 1rem; padding: 1rem; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 4px; }
+  .risk-title { font-size: 0.75rem; font-weight: 800; color: #c53030; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+  .risk-item { font-family: var(--mono); font-size: 0.7rem; color: #742a2a; margin-bottom: 0.3rem; }
+
+  .pdf-btn { margin-top: 1rem; background: var(--accent2); color: white; border: none; padding: 0.6rem 1rem; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem; }
+
+  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 1px; background: var(--border); }
+  .fc { background: var(--card); padding: 0.9rem 1rem; }
+  .fk { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); }
+  .fv { font-size: 0.86rem; font-weight: 600; font-family: var(--mono); }
+
+  .rules-out { display: flex; flex-direction: column; gap: 0.45rem; }
+  .ri { padding: 0.75rem 1rem; border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 0.8rem; background: var(--card); }
+  .rb { padding: 0.18rem 0.55rem; font-family: var(--mono); font-size: 0.58rem; font-weight: 700; flex-shrink: 0; text-transform: uppercase; border: 1px solid; }
+  .rb.PASS { background:#1ac86b20;color:var(--green);border-color:#1ac86b40; }
+  .rb.FAIL { background:#c8441a20;color:var(--accent);border-color:#c8441a40; }
+
+  .json-out { background: #0d1117; color: #c9d1d9; font-family: var(--mono); font-size: 0.72rem; padding: 1.4rem; overflow: auto; max-height: 520px; border: 1px solid var(--border); }
+
+  .modal-bg { position: fixed; inset: 0; background: #0a0a0fcc; z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); padding: 2rem; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+  .notif { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300; background: var(--ink); color: var(--paper); padding: 0.75rem 1.1rem; border-left: 3px solid var(--accent); font-family: var(--mono); font-size: 0.7rem; transform: translateX(120%); transition: transform 0.28s ease; }
+  .notif.show { transform: translateX(0); }
+
+  @media (max-width: 860px) { .app-shell { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -65,93 +122,121 @@
 <header>
   <div class="logo"><span class="logo-dot"></span>DocuMind AI</div>
   <nav class="header-nav">
-    <a onclick="switchTab('overview')">Overview</a>
-    <a onclick="switchTab('extracted')">Data</a>
+    <a onclick="openModal('rulesModal')">Rules</a>
     <a onclick="switchTab('json')">JSON</a>
+    <span class="badge-live">LIVE</span>
   </nav>
 </header>
 
 <div class="api-banner">
-  <label style="color:white">API KEY:</label>
-  <input type="password" id="apiKey" placeholder="sk-ant... or AIza..." oninput="onKeyInput()">
-  <select id="modelSel" onchange="onKeyInput()" style="background:#0d160d; color:#a6e3a1; border:1px solid #1e3a1e;">
-    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Free)</option>
-    <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
+  <label for="apiKey">💎 GEMINI KEY:</label>
+  <input type="password" id="apiKey" placeholder="AIzaSy..." oninput="onKeyInput()"/>
+  <span class="api-status bad" id="apiSt">Not set</span>
+  <select id="modelSel" style="background:#010409;border:1px solid #30363d;color:#c9d1d9;font-family:var(--mono);font-size:0.69rem;padding:0.32rem 0.6rem;outline:none;">
+    <option value="gemini 2.5 Pro" selected>Gemini 2.5 Pro</option>
+    <option value="gemini 2.5 Flash" selected>Gemini 2.5 Flash</option>
+    <option value="gemini 2.5 Flash-Lite" selected>Gemini 2.5 Flash-Lite</option>
   </select>
-  <span id="apiSt" class="api-status bad">Not Set</span>
-  <button onclick="testKey()" style="background:#1a3a1a; color:#7ec891; border:1px solid #1e3a1e; cursor:pointer; padding:2px 10px;">Test</button>
 </div>
 
-<section class="hero">
-  <div>
-    <h1>Analyse. <em>Decide.</em> Standardise.</h1>
-    <p style="color:var(--muted); line-height:1.6;">AI-powered document intelligence for medical and financial underwriting.</p>
-  </div>
-  <div style="background:var(--ink); padding:2rem; color:var(--green); font-family:var(--mono); font-size:0.7rem;">
-    { "status": "LIVE_EXTRACTOR_READY" }
-  </div>
-</section>
-
 <main class="app-shell">
-  <aside>
+  <aside class="sidebar">
     <div class="card">
-      <div class="card-header">Upload</div>
+      <div class="card-header"><div class="card-title">📄 Upload Photo/Doc</div></div>
       <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" onchange="onFile(event)">
-        <strong>Click to Upload</strong>
+        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="onFile(event)"/>
+        <span class="upload-icon">⬆</span>
+        <span class="upload-label">Click to Upload</span>
       </div>
       <div class="upload-preview" id="uploadPrev">
-        <img id="prevImg" class="preview-thumb">
-        <div id="prevPdf" style="display:none; padding:1rem; background:#eee">PDF Loaded</div>
-        <button onclick="resetFile()" style="margin-top:0.5rem; cursor:pointer">Change</button>
+        <img id="prevImg" class="preview-thumb" alt="" style="display:none"/>
+        <div id="prevPdf" class="preview-pdf" style="display:none">📄</div>
+        <div class="preview-name" id="prevName"></div>
+        <button class="change-btn" onclick="resetFile()">✕ Change file</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header">Mode</div>
+      <div class="card-header"><div class="card-title">🗂 Mode</div></div>
       <div class="doc-types">
         <button class="doc-type-btn active" data-type="auto" onclick="pickType(this)">🤖 Auto-Detect</button>
-        <button class="doc-type-btn" data-type="underwriting" onclick="pickType(this)">👤 Photo Risk Analysis</button>
+        <button class="doc-type-btn" data-type="medical_photo" onclick="pickType(this)">👤 Photo Analysis</button>
       </div>
     </div>
 
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>Analyse</button>
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>
+      <span class="spinner" id="spin"></span>
+      <span id="btnTxt">Waiting for key...</span>
+    </button>
   </aside>
 
-  <section class="main-panel">
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview',this)">Overview</button>
-      <button class="tab-btn" data-tab="extracted" onclick="switchTab('extracted',this)">Extracted</button>
-      <button class="tab-btn" data-tab="json" onclick="switchTab('json',this)">JSON</button>
+  <div class="main-panel">
+    <div class="status-bar">
+      <div class="s-left"><div class="sdot" id="sdot"></div><span id="stxt">Ready</span></div>
+      <span id="sid" style="color:var(--muted)">SESSION: —</span>
     </div>
 
-    <div class="tab-pane active" id="pane-overview">
-      <div id="overviewOut" style="padding:2rem; text-align:center; color:#999">Upload a document to begin.</div>
+    <div id="reportContent">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview',this)">Overview</button>
+        <button class="tab-btn" data-tab="extracted" onclick="switchTab('extracted',this)">Data Points</button>
+        <button class="tab-btn" data-tab="rules" onclick="switchTab('rules',this)">Audit</button>
+        <button class="tab-btn" data-tab="json" onclick="switchTab('json',this)">JSON</button>
+      </div>
+
+      <div class="tab-pane active" id="pane-overview">
+        <div id="overviewOut"><div class="empty">Ready for input.</div></div>
+      </div>
+      <div class="tab-pane" id="pane-extracted">
+        <div id="extractedOut"><div class="empty">No data.</div></div>
+      </div>
+      <div class="tab-pane" id="pane-rules">
+        <div id="rulesOut"><div class="empty">No audit.</div></div>
+      </div>
+      <div class="tab-pane" id="pane-json">
+        <div id="jsonOut"><div class="empty">No JSON.</div></div>
+      </div>
     </div>
-    <div class="tab-pane" id="pane-extracted"><div id="extractedOut" class="fields-grid"></div></div>
-    <div class="tab-pane" id="pane-json"><pre id="jsonOut" style="background:#f4f4f4; padding:1rem; overflow:auto;"></pre></div>
-  </section>
+    
+    <button class="pdf-btn" id="pdfBtn" style="display:none;" onclick="generatePDF()">📥 Export PDF</button>
+  </div>
 </main>
 
-<div id="notif" class="notif"></div>
+<div class="modal-bg" id="rulesModal">
+  <div class="modal">
+    <h3>Rules Management</h3>
+    <p style="font-size: 0.8rem; color: var(--muted); margin: 10px 0;">Rules are processed by Gemini during analysis.</p>
+    <button class="btn-primary" onclick="closeModal('rulesModal')">Close</button>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
 
 <script>
-const S = { b64:null, mime:null, docType:'auto' };
+const S = { b64:null, mime:null, docType:'auto', sid:null, result:null };
+
+function init() {
+  S.sid = 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase();
+  document.getElementById('sid').textContent = 'SESSION: ' + S.sid;
+  const savedKey = sessionStorage.getItem('gemini_key');
+  if(savedKey) { document.getElementById('apiKey').value = savedKey; onKeyInput(); }
+}
 
 function onKeyInput() {
   const k = document.getElementById('apiKey').value.trim();
-  const isGemini = document.getElementById('modelSel').value.includes('gemini');
   const el = document.getElementById('apiSt');
-  const ok = isGemini ? k.length > 10 : k.startsWith('sk-ant');
-  el.textContent = ok ? '✓ Ready' : '⚠ Invalid';
+  const ok = k.length > 30; // Basic check for Gemini Key length
+  el.textContent = ok ? '✓ Key Set' : 'Invalid Key';
   el.className = 'api-status ' + (ok ? 'ok' : 'bad');
-  if(ok) sessionStorage.setItem('dm_key', k);
+  if (ok) sessionStorage.setItem('gemini_key', k);
   refreshBtn();
 }
 
 function refreshBtn() {
   const k = document.getElementById('apiKey').value.trim();
-  document.getElementById('analyzeBtn').disabled = !(k && S.b64);
+  const hasFile = S.b64 !== null;
+  document.getElementById('analyzeBtn').disabled = !(k.length > 10 && hasFile);
+  document.getElementById('btnTxt').textContent = hasFile ? 'Run Gemini Analysis' : 'Upload file first';
 }
 
 function onFile(e) {
@@ -162,20 +247,21 @@ function onFile(e) {
     S.mime = f.type || 'image/jpeg';
     document.getElementById('uploadZone').style.display = 'none';
     document.getElementById('uploadPrev').style.display = 'flex';
-    const isImg = f.type.startsWith('image/');
-    document.getElementById('prevImg').style.display = isImg ? 'block' : 'none';
-    document.getElementById('prevPdf').style.display = isImg ? 'none' : 'block';
-    if(isImg) document.getElementById('prevImg').src = ev.target.result;
+    const img = document.getElementById('prevImg');
+    const pdf = document.getElementById('prevPdf');
+    if (f.type.startsWith('image/')) { img.src = ev.target.result; img.style.display='block'; pdf.style.display='none'; }
+    else { img.style.display='none'; pdf.style.display='flex'; }
+    document.getElementById('prevName').textContent = f.name;
     refreshBtn();
   };
   r.readAsDataURL(f);
 }
 
 function resetFile() {
-  S.b64 = null;
-  document.getElementById('uploadZone').style.display = 'block';
-  document.getElementById('uploadPrev').style.display = 'none';
-  refreshBtn();
+    S.b64 = null;
+    document.getElementById('uploadZone').style.display = 'block';
+    document.getElementById('uploadPrev').style.display = 'none';
+    refreshBtn();
 }
 
 function pickType(btn) {
@@ -184,92 +270,127 @@ function pickType(btn) {
   S.docType = btn.dataset.type;
 }
 
-async function callAPI(payload, key) {
-  const model = document.getElementById('modelSel').value;
-  const isGemini = model.includes('gemini');
-  // FIXED: Added v1beta for better instruction support
-  const url = isGemini 
-    ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}` 
-    : '[https://api.anthropic.com/v1/messages](https://api.anthropic.com/v1/messages)';
-
-  const body = isGemini ? {
-    contents: [{ parts: payload.messages[0].content }],
-    systemInstruction: { parts: [{ text: payload.system }] },
-    generationConfig: { responseMimeType: "application/json" }
-  } : {
-    model: model, system: payload.system, messages: payload.messages, max_tokens: 4096
-  };
-
-  const headers = { 'Content-Type': 'application/json' };
-  if(!isGemini) {
-    headers['x-api-key'] = key;
-    headers['anthropic-version'] = '2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access'] = 'true';
-  }
-
-  const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(body) });
-  if (!res.ok) {
-    const err = await res.json().catch(()=>({}));
-    throw new Error(err.error?.message || 'API Error');
-  }
-  const data = await res.json();
-  return isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text;
-}
-
-async function testKey() {
-  const k = document.getElementById('apiKey').value.trim();
-  if(!k) return toast('Key required');
-  try {
-    const isGemini = document.getElementById('modelSel').value.includes('gemini');
-    const content = isGemini ? [{text: "Hi"}] : [{type: "text", text: "Hi"}];
-    await callAPI({ system: "Respond with JSON {'status': 'ok'}", messages: [{role:'user', content}] }, k);
-    toast('✓ Connected', 'ok');
-  } catch(e) { toast('✗ Failed: ' + e.message); }
-}
-
 async function analyse() {
-  const key = document.getElementById('apiKey').value.trim();
+  const key = document.getElementById('apiKey').value;
+  const model = document.getElementById('modelSel').value;
   const btn = document.getElementById('analyzeBtn');
-  btn.disabled = true;
-  document.getElementById('overviewOut').innerHTML = "⏳ <strong>Processing...</strong>";
+  btn.disabled = true; document.getElementById('spin').style.display='block';
+  setStatus('processing', 'Gemini is processing...');
 
-  const system = `You are DocuMind AI. Extract data and detect underwriting risk. 
-  If a photo of a person is provided, check for jaundice (yellow eyes/skin), obesity, or edema.
-  Return valid JSON ONLY:
-  { "overall_decision": "APPROVED|REJECTED|REVIEW", "rationale": "...", "risk_markers": [], "fields": {} }`;
-
-  const isGemini = document.getElementById('modelSel').value.includes('gemini');
-  const content = isGemini ? 
-    [{ text: "Analyse: " + S.docType }, { inline_data: { mime_type: S.mime, data: S.b64 } }] : 
-    [{ type: S.mime.includes('pdf')?'document':'image', source:{ type:'base64', media_type:S.mime, data:S.b64 } }, { type:'text', text:'Analyse' }];
+  // System instructions as a prefix to the prompt for Flash/Pro
+  const prompt = `You are DocuMind AI. Extract data and identify risks.
+  IF PHOTO OF PERSON: Identify medical indicators (jaundice in eyes, skin pallor, edema, thyroid enlargement, alcholic, scar on face, etc).
+  IF DOCUMENT: Extract values and evaluate standard rules.
+  Output JSON ONLY in this format:
+  {
+    "document_type": "string",
+    "overall_decision": "APPROVED|REJECTED|REVIEW",
+    "decision_rationale": "string",
+    "medical_risk_indicators": ["string"],
+    "extracted_fields": {"field_name": {"value": "string"}},
+    "rules_evaluation": [{"rule_id": "string", "status": "PASS|FAIL|WARN", "reason": "string"}]
+  }`;
 
   try {
-    const raw = await callAPI({ system, messages: [{ role:'user', content }] }, key);
-    const r = JSON.parse(raw);
-    renderResults(r);
-    toast('✓ Analysis Complete', 'ok');
-  } catch (err) {
-    document.getElementById('overviewOut').innerHTML = `<div style="color:red">Error: ${err.message}</div>`;
-  } finally { btn.disabled = false; }
+    // Correct Endpoint for v1beta Gemini API
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            { text: prompt },
+            { inline_data: { mime_type: S.mime, data: S.b64 } }
+          ]
+        }]
+      })
+    });
+
+    const data = await res.json();
+    
+    if (data.error) throw new Error(data.error.message);
+
+    // Gemini returns content in candidates[0].content.parts[0].text
+    let rawText = data.candidates[0].content.parts[0].text;
+    // Strip markdown if AI includes it
+    rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+    
+    const result = JSON.parse(rawText);
+    S.result = result;
+    renderResults(result);
+    document.getElementById('pdfBtn').style.display = 'flex';
+    setStatus('ready', 'Gemini Analysis Complete');
+    toast('Analysis Successful', 'ok');
+  } catch (e) {
+    console.error(e);
+    toast('Error: ' + e.message);
+    setStatus('error', 'Failed');
+  } finally {
+    btn.disabled = false; document.getElementById('spin').style.display='none';
+  }
 }
 
 function renderResults(r) {
   let riskHtml = '';
-  if (r.risk_markers?.length) {
-    riskHtml = `<div class="risk-box"><strong>⚠️ RISK FLAGS:</strong><br>${r.risk_markers.map(m=>`• ${m}`).join('<br>')}</div>`;
+  if (r.medical_risk_indicators && r.medical_risk_indicators.length > 0) {
+    riskHtml = `<div class="risk-box">
+      <div class="risk-title">⚠️ Detected Indicators</div>
+      ${r.medical_risk_indicators.map(i => `<div class="risk-item">• ${i}</div>`).join('')}
+    </div>`;
   }
+
   document.getElementById('overviewOut').innerHTML = `
     <div class="dec-banner ${r.overall_decision}">
-      <h2>${r.overall_decision}</h2>
-      <p>${r.rationale}</p>
+      <div class="dec-meta">
+        <div class="dec-label">${r.overall_decision}</div>
+        <div style="font-size:0.8rem; color:var(--muted)">${r.decision_rationale}</div>
+      </div>
     </div>
-    ${riskHtml}`;
+    ${riskHtml}
+    <div class="stats-row">
+      <div class="sc"><div class="sc-l">Type</div><div class="sc-v">${r.document_type}</div></div>
+      <div class="sc"><div class="sc-l">Session</div><div class="sc-v">${S.sid}</div></div>
+    </div>
+  `;
 
-  document.getElementById('extractedOut').innerHTML = Object.entries(r.fields || {}).map(([k,v])=>`
-    <div class="f-card"><div style="font-size:0.6rem; color:#999;">${k}</div><strong>${v}</strong></div>
+  let fieldsHtml = '<div class="fields-grid">';
+  for (const [k, v] of Object.entries(r.extracted_fields || {})) {
+    fieldsHtml += `<div class="fc"><div class="fk">${k}</div><div class="fv">${v.value}</div></div>`;
+  }
+  fieldsHtml += '</div>';
+  document.getElementById('extractedOut').innerHTML = fieldsHtml;
+
+  document.getElementById('rulesOut').innerHTML = (r.rules_evaluation || []).map(re => `
+    <div class="ri">
+      <div class="rb ${re.status}">${re.status}</div>
+      <div class="rd"><strong>${re.rule_id}</strong>: ${re.reason}</div>
+    </div>
   `).join('');
-  document.getElementById('jsonOut').textContent = JSON.stringify(r, null, 2);
-  switchTab('overview');
+
+  document.getElementById('jsonOut').innerHTML = `<pre class="json-out">${JSON.stringify(r, null, 2)}</pre>`;
+}
+
+async function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const element = document.getElementById('reportContent');
+    toast('Generating PDF...', 'ok');
+    
+    html2canvas(element).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        doc.text(`DocuMind Gemini Report - ${S.sid}`, 10, 10);
+        doc.addImage(imgData, 'PNG', 0, 20, pdfWidth, pdfHeight);
+        doc.save(`Gemini_Report_${S.sid}.pdf`);
+    });
+}
+
+function setStatus(type, text) {
+  document.getElementById('sdot').className = 'sdot ' + type;
+  document.getElementById('stxt').textContent = text;
 }
 
 function switchTab(id, btn) {
@@ -279,16 +400,16 @@ function switchTab(id, btn) {
   if(btn) btn.classList.add('active');
 }
 
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
 function toast(msg, type) {
   const el = document.getElementById('notif');
   el.textContent = msg; el.className = 'notif show ' + (type||'');
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-window.onload = () => {
-  const k = sessionStorage.getItem('dm_key');
-  if(k) { document.getElementById('apiKey').value = k; onKeyInput(); }
-};
+init();
 </script>
 </body>
 </html>
