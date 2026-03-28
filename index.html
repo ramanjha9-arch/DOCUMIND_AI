@@ -573,19 +573,10 @@ function pickType(btn) {
   S.docType = btn.dataset.type;
 }
 
-// ══════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════
 // CORE API CALL — shared by testKey() and analyse()
 // ══════════════════════════════════════════════════════
 async function callAPI(payload, key) {
-  // key and model must be provided
-  const apiKey = key || getKey();
-  const model  = document.getElementById('modelSel').value;
-  const isGemini = model.includes('gemini');
-
-  // Merge model into payload if not set
-  if (!payload.model) payload.model = model;
-
-  async function callAPI(payload, key) {
   const apiKey = key || getKey();
   const model = document.getElementById('modelSel').value;
   const isGemini = model.includes('gemini');
@@ -628,6 +619,7 @@ async function callAPI(payload, key) {
   }
 
   const res = await fetch(url, options);
+
   if (!res.ok) {
     const errData = await res.json().catch(() => ({}));
     throw new Error(`API Error ${res.status}: ${errData.error?.message || res.statusText}`);
@@ -641,9 +633,6 @@ async function callAPI(payload, key) {
       text: isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text
     }]
   };
-},
-      body: JSON.stringify(payload)
-    });
   } catch (networkErr) {
     // Distinguish file:// CORS from real network failures
     const isFile = location.protocol === 'file:';
