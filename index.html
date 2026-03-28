@@ -233,6 +233,14 @@
 </head>
 <body>
 
+<!-- file:// protocol warning — hidden by JS if serving over HTTP -->
+<div id="fileBanner" style="display:none;background:#7a1a0a;color:#ffd4c8;font-family:'DM Mono',monospace;font-size:0.73rem;padding:0.7rem 2rem;border-bottom:2px solid #c8441a;line-height:1.7">
+  ⚠️ <strong>You are opening this file directly (file:// protocol).</strong>
+  Browsers block API calls from file:// for security. The Analyse button will fail with "fetch failed".<br>
+  Fix: run <code style="background:#0003;padding:0.1em 0.4em">python3 -m http.server 8080</code> in this folder, then open <code style="background:#0003;padding:0.1em 0.4em">http://localhost:8080</code>
+  — or deploy to <strong>GitHub Pages</strong> (works perfectly there).
+</div>
+
 <header>
   <div class="logo"><span class="logo-dot"></span>DocuMind AI</div>
   <nav class="header-nav">
@@ -247,7 +255,13 @@
   <label for="apiKey">🔑 API KEY:</label>
   <input type="password" id="apiKey" placeholder="sk-ant-api03-xxxx  (or set in config.js)" oninput="onKeyInput()"/>
   <span class="api-status bad" id="apiSt">Not set — required</span>
-  <span class="api-config-note">💡 Pre-set via config.js — key stored in browser session only</span>
+  <select id="modelSel" style="background:#0d160d;border:1px solid #1e3a1e;color:#a6e3a1;font-family:var(--mono);font-size:0.69rem;padding:0.32rem 0.6rem;outline:none;flex-shrink:0;">
+    <option value="claude-haiku-4-5-20251001">Haiku 4.5 (fast/cheap)</option>
+    <option value="claude-sonnet-4-6" selected>Sonnet 4.6 (recommended)</option>
+    <option value="claude-opus-4-5-20251101">Opus 4.5 (best)</option>
+  </select>
+  <button onclick="testKey()" style="background:#1a3a1a;border:1px solid #1e3a1e;color:#7ec891;font-family:var(--mono);font-size:0.65rem;padding:0.32rem 0.8rem;cursor:pointer;flex-shrink:0;">▶ Test Key</button>
+  <span class="api-config-note">Key stays in your browser only</span>
 </div>
 
 <section class="hero">
@@ -454,6 +468,11 @@ const PARAM_DICT = {
 // INIT
 // ══════════════════════════════════════════════════════
 function init() {
+  // Detect file:// and warn immediately
+  if (location.protocol === 'file:') {
+    document.getElementById('fileBanner').style.display = 'block';
+  }
+
   S.rules = DEFAULTS.map(r => ({...r}));
   S.sid   = 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase();
   document.getElementById('sid').textContent = 'SESSION: ' + S.sid;
@@ -554,6 +573,84 @@ function pickType(btn) {
 }
 
 // ══════════════════════════════════════════════════════
+// CORE API CALL — shared by testKey() and analyse()
+// ══════════════════════════════════════════════════════
+async function callAPI(payload, key) {
+  // key and model must be provided
+  const apiKey = key || getKey();
+  const model  = document.getElementById('modelSel').value;
+
+  // Merge model into payload if not set
+  if (!payload.model) payload.model = model;
+
+  let res;
+  try {
+    res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:  'POST',
+      headers: {
+        'Content-Type':                          'application/json',
+        'x-api-key':                             apiKey,
+        'anthropic-version':                     '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (networkErr) {
+    // Distinguish file:// CORS from real network failures
+    const isFile = location.protocol === 'file:';
+    if (isFile) {
+      throw new Error(
+        'FILE:// ORIGIN BLOCKED — browsers refuse API calls from file:// URLs.\n\n' +
+        'Fix: serve the file over HTTP instead:\n' +
+        '  • Python:  python3 -m http.server 8080\n' +
+        '  • Node:    npx serve .\n' +
+        '  • Or deploy to GitHub Pages (already working there).'
+      );
+    }
+    throw new Error('Network error — could not reach api.anthropic.com. Check your internet connection.\nDetail: ' + networkErr.message);
+  }
+
+  if (!res.ok) {
+    let errBody = {};
+    try { errBody = await res.json(); } catch(_) {}
+    const msg = (errBody.error && errBody.error.message) || res.statusText || ('HTTP ' + res.status);
+    if (res.status === 401) throw new Error('401 Unauthorised — API key is invalid or expired.\n💡 Get a key at platform.anthropic.com/keys');
+    if (res.status === 403) throw new Error('403 Forbidden — key does not have permission for this model.\n💡 Check your plan at platform.anthropic.com');
+    if (res.status === 429) throw new Error('429 Rate limit — too many requests.\n💡 Wait 30 seconds then try again.');
+    if (res.status === 400) throw new Error('400 Bad request — ' + msg + '\n💡 Try a different model from the selector.');
+    if (res.status === 529) throw new Error('529 Overloaded — Anthropic servers are busy.\n💡 Wait a few seconds and retry.');
+    throw new Error('API error ' + res.status + ': ' + msg);
+  }
+
+  return await res.json();
+}
+
+// ══════════════════════════════════════════════════════
+// TEST KEY — quick ping with tiny payload
+// ══════════════════════════════════════════════════════
+async function testKey() {
+  const key = getKey();
+  if (!key || !key.startsWith('sk-ant')) { toast('Enter a valid sk-ant-... key first'); return; }
+  const el = document.getElementById('apiSt');
+  el.textContent = '⏳ Testing…'; el.className = 'api-status';
+  try {
+    const data = await callAPI({
+      model:      document.getElementById('modelSel').value,
+      max_tokens: 10,
+      messages:   [{ role:'user', content:'Hi' }]
+    }, key);
+    if (data.content) {
+      el.textContent = '✓ Key works — API connected!'; el.className = 'api-status ok';
+      toast('✓ API key verified and working', 'ok');
+    }
+  } catch(err) {
+    el.textContent = '✗ ' + err.message.split('\n')[0]; el.className = 'api-status bad';
+    toast('✗ ' + err.message.split('\n')[0]);
+    console.error('Key test failed:', err.message);
+  }
+}
+
+// ══════════════════════════════════════════════════════
 // ANALYSE — direct Anthropic API call
 // ══════════════════════════════════════════════════════
 async function analyse() {
@@ -566,81 +663,74 @@ async function analyse() {
   document.getElementById('btnTxt').textContent = 'Analysing…';
   setStatus('processing','Running vision analysis…');
 
-  const active    = S.rules.filter(r => r.on);
-  const rulesText = active.map(r => `- ${r.id}: ${r.desc} [action on fail: ${r.action}]`).join('\n') || 'No active rules.';
-  const dictText  = Object.entries(PARAM_DICT).map(([k,v]) => `"${k}" → "${v}"`).join(', ');
+  const active    = S.rules.filter(function(r){ return r.on; });
+  const rulesText = active.map(function(r){ return '- ' + r.id + ': ' + r.desc + ' [action on fail: ' + r.action + ']'; }).join('\n') || 'No active rules.';
+  const dictText  = Object.entries(PARAM_DICT).map(function(e){ return '"' + e[0] + '" → "' + e[1] + '"'; }).join(', ');
 
-  const sys = `You are DocuMind AI — a professional document intelligence system that extracts and standardises data from document images.
+  const sys = 'You are DocuMind AI — a professional document intelligence system that extracts and standardises data from document images.\n\n' +
+    'PARAMETER DICTIONARY (map any alias to the canonical key):\n' + dictText + '\n\n' +
+    'UNIT STANDARDISATION RULES:\n' +
+    '- Glucose: always output in mmol/L. If document shows mg/dL, convert: divide by 18.016\n' +
+    '- HbA1c: always output in %\n' +
+    '- Creatinine: always output in µmol/L. If document shows mg/dL, multiply by 88.4\n' +
+    '- Cholesterol: always output in mmol/L. If document shows mg/dL, divide by 38.67\n' +
+    '- Dates: ISO 8601 format YYYY-MM-DD\n' +
+    '- Financial amounts: plain numeric value, state currency separately\n\n' +
+    'ACTIVE RULES TO EVALUATE:\n' + rulesText + '\n\n' +
+    'IMPORTANT: Your entire response must be a single valid JSON object only. No markdown, no code fences, no explanation text before or after the JSON.';
 
-PARAMETER DICTIONARY (map any alias to the canonical key):
-${dictText}
-
-UNIT STANDARDISATION RULES:
-- Glucose: always output in mmol/L. If document shows mg/dL, convert: divide by 18.016
-- HbA1c: always output in %
-- Creatinine: always output in µmol/L. If document shows mg/dL, multiply by 88.4
-- Cholesterol: always output in mmol/L. If document shows mg/dL, divide by 38.67
-- Dates: ISO 8601 format YYYY-MM-DD
-- Financial amounts: plain numeric value, state currency separately
-
-ACTIVE RULES TO EVALUATE:
-${rulesText}
-
-IMPORTANT: Your entire response must be a single valid JSON object only. No markdown, no code fences, no explanation text before or after the JSON.`;
-
-  const usr = `Analyse this document image.
-Document type hint: ${S.docType === 'auto' ? 'auto-detect the type' : S.docType}
-Session: ${S.sid}
-
-Return ONLY this JSON structure (all fields required):
-{
-  "document_type": "medical_lab_report | financial_statement | kyc_identity | other",
-  "detected_subtype": "more specific label",
-  "extraction_confidence": 0.0,
-  "overall_decision": "APPROVED | REJECTED | REVIEW | PENDING",
-  "decision_confidence": 0.0,
-  "decision_rationale": "brief explanation",
-  "extracted_fields": {
-    "canonical_field_name": {
-      "value": "the value",
-      "unit": "standardised unit string",
-      "standardised": true,
-      "original_label": "label as it appeared on document",
-      "original_value": "value as it appeared",
-      "original_unit": "unit as it appeared",
-      "status": "normal | warning | flagged | unknown",
-      "reference_range": "if shown on document"
-    }
-  },
-  "rules_evaluation": [
-    {
-      "rule_id": "R001",
-      "rule_name": "Rule Name",
-      "status": "PASS | FAIL | WARN | SKIP",
-      "reason": "explanation",
-      "extracted_value": "value used",
-      "threshold": "threshold compared against"
-    }
-  ],
-  "metadata": {
-    "session_id": "${S.sid}",
-    "analysed_at": "${new Date().toISOString()}",
-    "doc_type_hint": "${S.docType}",
-    "rules_applied": ${active.length},
-    "platform": "DocuMind AI v1.0"
-  }
-}`;
+  const usr = 'Analyse this document image.\nDocument type hint: ' +
+    (S.docType === 'auto' ? 'auto-detect the type' : S.docType) +
+    '\nSession: ' + S.sid + '\n\n' +
+    'Return ONLY this JSON structure (all fields required):\n' +
+    '{\n' +
+    '  "document_type": "medical_lab_report | financial_statement | kyc_identity | other",\n' +
+    '  "detected_subtype": "more specific label",\n' +
+    '  "extraction_confidence": 0.0,\n' +
+    '  "overall_decision": "APPROVED | REJECTED | REVIEW | PENDING",\n' +
+    '  "decision_confidence": 0.0,\n' +
+    '  "decision_rationale": "brief explanation",\n' +
+    '  "extracted_fields": {\n' +
+    '    "canonical_field_name": {\n' +
+    '      "value": "the value",\n' +
+    '      "unit": "standardised unit string",\n' +
+    '      "standardised": true,\n' +
+    '      "original_label": "label as it appeared on document",\n' +
+    '      "original_value": "value as it appeared",\n' +
+    '      "original_unit": "unit as it appeared",\n' +
+    '      "status": "normal | warning | flagged | unknown",\n' +
+    '      "reference_range": "if shown on document"\n' +
+    '    }\n' +
+    '  },\n' +
+    '  "rules_evaluation": [\n' +
+    '    {\n' +
+    '      "rule_id": "R001",\n' +
+    '      "rule_name": "Rule Name",\n' +
+    '      "status": "PASS | FAIL | WARN | SKIP",\n' +
+    '      "reason": "explanation",\n' +
+    '      "extracted_value": "value used",\n' +
+    '      "threshold": "threshold compared against"\n' +
+    '    }\n' +
+    '  ],\n' +
+    '  "metadata": {\n' +
+    '    "session_id": "' + S.sid + '",\n' +
+    '    "analysed_at": "' + new Date().toISOString() + '",\n' +
+    '    "doc_type_hint": "' + S.docType + '",\n' +
+    '    "rules_applied": ' + active.length + ',\n' +
+    '    "platform": "DocuMind AI v1.0"\n' +
+    '  }\n' +
+    '}';
 
   // Build content array — images vs PDF
   const VALID_IMG = ['image/jpeg','image/png','image/gif','image/webp'];
-  let content;
+  var content;
   if (S.mime === 'application/pdf') {
     content = [
       { type:'document', source:{ type:'base64', media_type:'application/pdf', data:S.b64 } },
       { type:'text', text:usr }
     ];
   } else {
-    const mt = VALID_IMG.includes(S.mime) ? S.mime : 'image/jpeg';
+    var mt = VALID_IMG.includes(S.mime) ? S.mime : 'image/jpeg';
     content = [
       { type:'image', source:{ type:'base64', media_type:mt, data:S.b64 } },
       { type:'text', text:usr }
@@ -648,61 +738,40 @@ Return ONLY this JSON structure (all fields required):
   }
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type':    'application/json',
-        'x-api-key':       key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-calls': 'true'
-      },
-      body: JSON.stringify({
-        model:      'claude-opus-4-5-20251101',
-        max_tokens: 4096,
-        system:     sys,
-        messages:   [{ role:'user', content }]
-      })
-    });
+    const data = await callAPI({
+      max_tokens: 4096,
+      system:     sys,
+      messages:   [{ role:'user', content:content }]
+    }, key);
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      const msg = err?.error?.message || res.statusText;
-      throw new Error('API ' + res.status + ': ' + msg);
-    }
-
-    const data = await res.json();
-    const raw  = (data.content || []).map(c => c.text || '').join('');
+    const raw = (data.content || []).map(function(c){ return c.text || ''; }).join('');
 
     // Parse JSON — strip accidental fences
-    let result;
+    var result;
     try {
-      const clean = raw.replace(/^```(?:json)?\s*/m,'').replace(/```\s*$/m,'').trim();
+      var clean = raw.replace(/^```(?:json)?\s*/m,'').replace(/```\s*$/m,'').trim();
       result = JSON.parse(clean);
     } catch(_) {
-      const m = raw.match(/\{[\s\S]*\}/);
+      var m = raw.match(/\{[\s\S]*\}/);
       if (m) result = JSON.parse(m[0]);
-      else throw new Error('Model did not return valid JSON. Raw: ' + raw.slice(0,200));
+      else throw new Error('Model did not return valid JSON.\n\nRaw response preview:\n' + raw.slice(0,300));
     }
 
     S.result = result;
-    S.sessions.push({...result, ts: Date.now()});
+    S.sessions.push(Object.assign({}, result, { ts: Date.now() }));
     drawResults(result);
     setStatus('ready', '✓ Decision: ' + result.overall_decision + ' — ' + Math.round((result.decision_confidence||0)*100) + '% confidence');
     toast('✓ Analysis complete', 'ok');
 
   } catch (err) {
-    console.error(err);
-    setStatus('error', '✗ ' + err.message);
-    let hint = '';
-    if (err.message.includes('401')) hint = '💡 API key is invalid or expired. Get a key at platform.anthropic.com';
-    else if (err.message.includes('403')) hint = '💡 Access forbidden. Check your key permissions.';
-    else if (err.message.includes('429')) hint = '💡 Rate limit hit. Wait 30 seconds and try again.';
-    else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-      hint = '💡 Network/CORS error. Make sure you are serving this file via a web server (not file://). GitHub Pages works fine. Also check your API key is valid.';
-    }
-    document.getElementById('overviewOut').innerHTML = '<div class="err-box"><strong>✗ Analysis Failed</strong>' + esc(err.message) + (hint ? '<br><br>' + hint : '') + '</div>';
+    console.error('DocuMind analyse error:', err);
+    setStatus('error', '✗ ' + err.message.split('\n')[0]);
+    var errHtml = '<div class="err-box"><strong>✗ Analysis Failed</strong>' +
+      esc(err.message).replace(/\n/g,'<br>') +
+      '</div>';
+    document.getElementById('overviewOut').innerHTML = errHtml;
     switchTab('overview');
-    toast('✗ ' + err.message.slice(0,55));
+    toast('✗ ' + err.message.split('\n')[0].slice(0,60));
   } finally {
     btn.classList.remove('loading');
     btn.disabled = false;
