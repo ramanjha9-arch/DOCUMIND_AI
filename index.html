@@ -27,43 +27,17 @@
   .header-nav a:hover { color: var(--paper); }
   .badge-live { background: var(--accent); color: white; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 2px; }
 
-  /* API Key Banner */
   .api-banner { background: #111a11; border-bottom: 1px solid #1e3a1e; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; flex-wrap: wrap; }
   .api-banner label { color: #7ec891; flex-shrink: 0; font-weight: 600; }
   .api-banner input { background: #0d160d; border: 1px solid #1e3a1e; color: #a6e3a1; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.8rem; flex: 1; min-width: 240px; max-width: 400px; outline: none; transition: border-color 0.2s; }
   .api-banner input:focus { border-color: #1ac86b; }
-  .api-banner input::placeholder { color: #2e4a2e; }
   .api-status { font-size: 0.65rem; flex-shrink: 0; }
   .api-status.ok  { color: var(--green); }
   .api-status.bad { color: var(--accent); }
-  .api-note { color: #3a5a3a; font-size: 0.63rem; }
-  .api-config-note { color: #5a8a5a; font-size: 0.63rem; font-style: italic; }
 
   .hero { padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-  .hero-eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-  .hero-eyebrow::before { content: '//'; opacity: 0.5; }
   h1 { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 1.2rem; }
   h1 em { font-style: italic; color: var(--accent); }
-  .hero-sub { font-size: 1rem; line-height: 1.7; color: var(--muted); margin-bottom: 2rem; max-width: 460px; }
-  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn-primary { background: var(--ink); color: var(--paper); border: none; padding: 0.8rem 1.8rem; font-family: var(--sans); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
-  .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
-  .btn-outline { background: transparent; color: var(--ink); border: 2px solid var(--border); padding: 0.8rem 1.8rem; font-family: var(--sans); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
-  .btn-outline:hover { border-color: var(--ink); }
-  .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
-  .stat { background: var(--paper); padding: 1.2rem; }
-  .stat-val { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; }
-  .stat-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.3rem; }
-  .hero-visual { position: relative; background: var(--ink); border: 1px solid #222; padding: 1.5rem; min-height: 280px; display: flex; flex-direction: column; gap: 0.8rem; overflow: hidden; }
-  .hero-visual::after { content: 'LIVE OUTPUT'; position: absolute; top: 12px; right: 12px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; color: var(--green); opacity: 0.7; }
-  .mock-line { height: 8px; background: #1a1a22; border-radius: 2px; animation: shimmer 2s infinite; }
-  .mock-line.accent { background: #c8441a33; width: 60%; }
-  .mock-line.short { width: 40%; }
-  .mock-line.med { width: 75%; animation-delay: 0.3s; }
-  @keyframes shimmer { 0%,100%{opacity:0.5} 50%{opacity:1} }
-  .mock-json { font-family: var(--mono); font-size: 0.66rem; color: #4a9; line-height: 1.9; background: #0d0d14; border: 1px solid #1a1a2e; padding: 1rem; flex: 1; overflow: hidden; }
-  .mock-json .k { color: #6a9fd8; }
-  .mock-json .v { color: #c8a41a; }
 
   .app-shell { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; display: grid; grid-template-columns: 340px 1fr; gap: 2rem; }
   .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
@@ -72,174 +46,54 @@
   .card-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
 
   .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
-  .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: #c8441a08; }
-  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .upload-icon { font-size: 2.2rem; margin-bottom: 0.7rem; display: block; }
-  .upload-label { font-size: 0.82rem; font-weight: 600; color: var(--ink); display: block; }
-  .upload-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; font-family: var(--mono); }
+  .upload-zone:hover { border-color: var(--accent); background: #c8441a08; }
+  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .upload-preview { display: none; flex-direction: column; gap: 0.6rem; padding: 1rem; }
-  .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); display: block; }
-  .preview-pdf { width: 100%; height: 80px; background: var(--cream); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-  .preview-name { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); word-break: break-all; }
-  .change-btn { background: none; border: 1px dashed var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.65rem; padding: 0.35rem; width: 100%; cursor: pointer; }
-  .change-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); }
 
   .doc-types { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.8rem; }
-  .doc-type-btn { padding: 0.65rem 0.9rem; border: 1px solid var(--border); background: var(--paper); cursor: pointer; font-family: var(--sans); font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 0.7rem; transition: all 0.15s; color: var(--ink); text-align: left; width: 100%; }
-  .doc-type-btn:hover { border-color: var(--accent); }
-  .doc-type-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .dt-icon { font-size: 1rem; flex-shrink: 0; }
-  .dt-sub { font-size: 0.62rem; font-weight: 400; color: inherit; opacity: 0.6; font-family: var(--mono); display: block; }
+  .doc-type-btn { padding: 0.65rem 0.9rem; border: 1px solid var(--border); background: var(--paper); cursor: pointer; font-family: var(--sans); font-size: 0.78rem; font-weight: 600; width: 100%; text-align: left; }
+  .doc-type-btn.active { background: var(--ink); color: var(--paper); }
 
-  .rules-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 250px; overflow-y: auto; padding: 0.7rem; }
-  .rule-item { padding: 0.5rem 0.7rem; border: 1px solid var(--border); background: var(--paper); font-size: 0.72rem; font-family: var(--mono); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; transition: all 0.12s; user-select: none; }
-  .rule-item:hover { border-color: var(--accent2); }
-  .rule-item.active { border-color: var(--accent2); background: #1a6bc808; }
-  .rule-chk { width: 13px; height: 13px; border: 1.5px solid var(--border); border-radius: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; transition: all 0.12s; }
-  .rule-chk.on { background: var(--accent2); border-color: var(--accent2); color: white; }
-  .rule-lbl { flex: 1; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .rule-lbl strong { color: var(--ink); }
-
-  .analyze-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; cursor: pointer; font-family: var(--sans); font-size: 0.88rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
-  .analyze-btn:hover:not(:disabled) { background: #a33515; }
+  .analyze-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; cursor: pointer; font-size: 0.88rem; font-weight: 700; text-transform: uppercase; }
   .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.7; }
-  .spinner { display: none; width: 15px; height: 15px; border: 2px solid #ffffff44; border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
-  .analyze-btn.loading .spinner { display: block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .tp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding: 0.8rem; }
-  .tp-card { padding: 0.7rem; border: 1px solid var(--border); background: var(--paper); }
-  .tp-card.on { border-color: var(--green); background: #1ac86b06; }
-  .tp-name { font-weight: 700; font-size: 0.75rem; color: var(--ink); }
-  .tp-dot { font-family: var(--mono); font-size: 0.6rem; margin-top: 0.2rem; }
-  .tp-dot.on { color: var(--green); }
-  .tp-dot.off { color: var(--muted); }
 
   .main-panel { display: flex; flex-direction: column; gap: 1.5rem; }
   .status-bar { background: var(--ink); color: var(--paper); padding: 0.65rem 1.2rem; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 0.68rem; }
-  .s-left { display: flex; align-items: center; gap: 0.8rem; }
-  .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .sdot.ready { background: var(--green); animation: pulse 2s infinite; }
-  .sdot.processing { background: var(--gold); animation: pulse 0.5s infinite; }
-  .sdot.error { background: var(--accent); }
+  .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .sdot.ready { background: var(--green); }
+  .sdot.processing { background: var(--gold); }
 
-  .tabs { display: flex; border-bottom: 2px solid var(--border); overflow-x: auto; }
-  .tab-btn { padding: 0.75rem 1.1rem; border: none; background: transparent; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.12s; border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; }
-  .tab-btn:hover { color: var(--ink); }
+  .tabs { display: flex; border-bottom: 2px solid var(--border); }
+  .tab-btn { padding: 0.75rem 1.1rem; border: none; background: transparent; font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
   .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .tab-pane { display: none; }
+  .tab-pane { display: none; padding-top: 1rem; }
   .tab-pane.active { display: block; }
 
-  .empty { padding: 4rem 2rem; text-align: center; border: 1px solid var(--border); background: var(--card); }
-  .empty-i { font-size: 2.2rem; margin-bottom: 0.8rem; opacity: 0.2; }
-  .empty-t { font-family: var(--serif); font-size: 1.3rem; margin-bottom: 0.4rem; }
-  .empty-s { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+  /* Risk Banner Styles */
+  .risk-card { background: #fff5f2; border: 1px solid #ffded4; padding: 1rem; margin-top: 1rem; }
+  .risk-title { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); text-transform: uppercase; font-weight: 800; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .risk-item { font-size: 0.78rem; color: var(--ink); margin-bottom: 0.35rem; line-height: 1.4; border-left: 2px solid var(--accent); padding-left: 0.7rem; }
 
-  .dec-banner { padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid; margin-bottom: 0.8rem; }
+  .dec-banner { padding: 1.1rem 1.4rem; border-left: 4px solid; margin-bottom: 0.8rem; }
   .dec-banner.APPROVED { background:#1ac86b12; border-color:var(--green); }
   .dec-banner.REJECTED { background:#c8441a12; border-color:var(--accent); }
-  .dec-banner.REVIEW   { background:#c8a41a12; border-color:var(--gold); }
-  .dec-banner.PENDING  { background:#1a6bc812; border-color:var(--accent2); }
-  .dec-label { font-family: var(--serif); font-size: 1.7rem; font-style: italic; }
-  .dec-meta { flex: 1; }
-  .dec-conf { font-family: var(--mono); font-size: 1.9rem; font-weight: 300; }
-  .dec-conf.hi { color: var(--green); } .dec-conf.md { color: var(--gold); } .dec-conf.lo { color: var(--accent); }
-  .conf-wrap { height: 4px; background: var(--border); width: 110px; margin-top: 0.4rem; }
-  .conf-bar { height: 100%; transition: width 0.8s ease; }
-  .conf-bar.hi { background: var(--green); } .conf-bar.md { background: var(--gold); } .conf-bar.lo { background: var(--accent); }
-
+  .dec-label { font-family: var(--serif); font-size: 1.7rem; }
+  
   .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); margin-bottom: 0.8rem; }
   .sc { background: var(--card); padding: 0.8rem 1rem; }
-  .sc-l { font-family: var(--mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.25rem; }
-  .sc-v { font-weight: 700; font-size: 0.85rem; font-family: var(--mono); color: var(--ink); }
+  .sc-l { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); }
+  .sc-v { font-weight: 700; font-size: 0.85rem; font-family: var(--mono); }
 
-  .pass-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); }
-  .pr { padding: 0.9rem 1rem; }
-  .pr.pass { background:#1ac86b12; border-top:3px solid var(--green); }
-  .pr.fail { background:#c8441a12; border-top:3px solid var(--accent); }
-  .pr.warn { background:#c8a41a12; border-top:3px solid var(--gold); }
-  .pr-l { font-family:var(--mono); font-size:0.58rem; text-transform:uppercase; color:var(--muted); }
-  .pr-v { font-family:var(--serif); font-size:2rem; }
-  .pr.pass .pr-v { color:var(--green); } .pr.fail .pr-v { color:var(--accent); } .pr.warn .pr-v { color:var(--gold); }
-
-  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 1px; background: var(--border); }
-  .fc { background: var(--card); padding: 0.9rem 1rem; }
-  .fk { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.25rem; }
-  .fv { font-size: 0.86rem; font-weight: 600; color: var(--ink); font-family: var(--mono); word-break: break-word; }
-  .fv.flagged { color: var(--accent); } .fv.normal { color: var(--green); } .fv.warning { color: var(--gold); }
-  .fss { font-size: 0.58rem; color: var(--muted); margin-top: 0.18rem; font-family: var(--mono); }
-
-  .rules-out { display: flex; flex-direction: column; gap: 0.45rem; }
-  .ri { padding: 0.75rem 1rem; border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 0.8rem; background: var(--card); }
-  .rb { padding: 0.18rem 0.55rem; font-family: var(--mono); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; flex-shrink: 0; text-transform: uppercase; border: 1px solid; }
-  .rb.PASS { background:#1ac86b20;color:var(--green);border-color:#1ac86b40; }
-  .rb.FAIL { background:#c8441a20;color:var(--accent);border-color:#c8441a40; }
-  .rb.WARN { background:#c8a41a20;color:var(--gold);border-color:#c8a41a40; }
-  .rb.SKIP { background:#7a757020;color:var(--muted);border-color:#7a757040; }
-  .rd { flex: 1; font-size: 0.76rem; line-height: 1.5; }
-  .rd small { font-family: var(--mono); font-size: 0.63rem; color: var(--muted); display: block; margin-top: 0.15rem; }
-
-  .json-out { background: #0d1117; color: #c9d1d9; font-family: var(--mono); font-size: 0.72rem; line-height: 1.8; padding: 1.4rem; overflow: auto; max-height: 520px; border: 1px solid var(--border); position: relative; }
-  .json-out .jk { color: #79c0ff; } .json-out .jv { color: #a5d6a7; } .json-out .jn { color: #ffa657; } .json-out .jb { color: #d2a8ff; }
-  .copy-btn { position: sticky; top: 0; float: right; background: #21262d; border: 1px solid #30363d; color: #8b949e; font-family: var(--mono); font-size: 0.62rem; padding: 0.25rem 0.7rem; cursor: pointer; }
-  .copy-btn:hover { background: #30363d; color: #c9d1d9; }
-
-  .sl { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 0.35rem 0; border-bottom: 1px solid var(--border); margin-bottom: 0.7rem; display: flex; justify-content: space-between; }
-  .trends-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); }
-  .tc { background: var(--card); padding: 0.9rem; }
-  .tt { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; font-family: var(--mono); }
-  .tv { font-family: var(--serif); font-size: 1.5rem; }
-  .td { font-family: var(--mono); font-size: 0.62rem; margin-top: 0.15rem; }
-  .td.up { color: var(--green); } .td.dn { color: var(--accent); }
-
-  .modal-bg { position: fixed; inset: 0; background: #0a0a0fcc; z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-  .modal-bg.open { display: flex; }
-  .modal { background: var(--card); border: 1px solid var(--border); padding: 2rem; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; animation: up 0.2s ease; }
-  @keyframes up { from{transform:translateY(14px);opacity:0} to{transform:none;opacity:1} }
-  .mh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-  .mt { font-family: var(--serif); font-size: 1.35rem; }
-  .mc { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--muted); line-height: 1; }
-  .mc:hover { color: var(--ink); }
-  .fr { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 0.7rem; }
-  .ff { display: flex; flex-direction: column; gap: 0.28rem; margin-bottom: 0.7rem; }
-  .fl { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-family: var(--mono); }
-  .fi, .fs2, .fta { padding: 0.55rem 0.75rem; border: 1px solid var(--border); background: var(--paper); font-family: var(--mono); font-size: 0.76rem; color: var(--ink); outline: none; width: 100%; transition: border-color 0.15s; }
-  .fi:focus, .fs2:focus, .fta:focus { border-color: var(--accent2); }
-  .fta { resize: vertical; min-height: 65px; }
-  .modal-rule-row { padding: 0.7rem 0.9rem; border: 1px solid var(--border); background: var(--paper); display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.4rem; }
-  .mrr-info { flex: 1; font-family: var(--mono); font-size: 0.68rem; min-width: 0; }
-  .mrr-info strong { color: var(--ink); }
-  .mrr-info span { color: var(--muted); font-size: 0.62rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .badge-on  { font-family:var(--mono); font-size:0.58rem; padding:0.18rem 0.45rem; background:#1a6bc820; color:var(--accent2); border:1px solid #1a6bc840; flex-shrink:0; }
-  .badge-off { font-family:var(--mono); font-size:0.58rem; padding:0.18rem 0.45rem; background:#7a757020; color:var(--muted); border:1px solid #7a757040; flex-shrink:0; }
-  .sm-btn { background:none; border:1px solid var(--border); cursor:pointer; font-family:var(--mono); font-size:0.6rem; color:var(--muted); padding:0.2rem 0.45rem; flex-shrink:0; }
-  .sm-btn:hover { border-color:var(--accent2); color:var(--accent2); }
-  .del-btn { background:none; border:none; cursor:pointer; font-size:0.75rem; color:var(--accent); flex-shrink:0; }
-
-  .err-box { padding: 1rem 1.2rem; background:#c8441a10; border:1px solid #c8441a40; border-left:4px solid var(--accent); font-family:var(--mono); font-size:0.73rem; line-height:1.7; margin-top:0.5rem; }
-  .err-box strong { color:var(--accent); display:block; margin-bottom:0.3rem; }
-
-  .notif { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300; background: var(--ink); color: var(--paper); padding: 0.75rem 1.1rem; border-left: 3px solid var(--accent); font-family: var(--mono); font-size: 0.7rem; max-width: 300px; transform: translateX(120%); transition: transform 0.28s ease; }
+  .notif { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ink); color: var(--paper); padding: 0.75rem 1.1rem; transform: translateX(120%); transition: transform 0.28s; }
   .notif.show { transform: translateX(0); }
-  .notif.ok { border-color: var(--green); }
 
-  @media (max-width: 860px) {
-    .hero { grid-template-columns: 1fr; }
-    .hero-visual { display: none; }
-    .app-shell { grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: repeat(2,1fr); }
-  }
+  .modal-bg { position: fixed; inset: 0; background: #0a0a0fcc; display: none; align-items: center; justify-content: center; z-index: 1000; }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--card); padding: 2rem; width: 500px; max-height: 80vh; overflow-y: auto; }
 </style>
 </head>
 <body>
-
-<!-- file:// protocol warning — hidden by JS if serving over HTTP -->
-<div id="fileBanner" style="display:none;background:#7a1a0a;color:#ffd4c8;font-family:'DM Mono',monospace;font-size:0.73rem;padding:0.7rem 2rem;border-bottom:2px solid #c8441a;line-height:1.7">
-  ⚠️ <strong>You are opening this file directly (file:// protocol).</strong>
-  Browsers block API calls from file:// for security. The Analyse button will fail with "fetch failed".<br>
-  Fix: run <code style="background:#0003;padding:0.1em 0.4em">python3 -m http.server 8080</code> in this folder, then open <code style="background:#0003;padding:0.1em 0.4em">http://localhost:8080</code>
-  — or deploy to <strong>GitHub Pages</strong> (works perfectly there).
-</div>
 
 <header>
   <div class="logo"><span class="logo-dot"></span>DocuMind AI</div>
@@ -247,820 +101,231 @@
     <a onclick="openModal('rulesModal')">Rules</a>
     <a onclick="switchTab('trends')">Trends</a>
     <a onclick="switchTab('json')">JSON</a>
-    <span class="badge-live">LIVE</span>
+    <span class="badge-live">VISION ENABLED</span>
   </nav>
 </header>
 
 <div class="api-banner">
   <label for="apiKey">🔑 API KEY:</label>
-  <input type="password" id="apiKey" placeholder="sk-ant-api03-xxxx  (or set in config.js)" oninput="onKeyInput()"/>
+  <input type="password" id="apiKey" placeholder="sk-ant-api03... or AIza..." oninput="onKeyInput()"/>
   <span class="api-status bad" id="apiSt">Not set — required</span>
-  <select id="modelSel" style="background:#0d160d;border:1px solid #1e3a1e;color:#a6e3a1;font-family:var(--mono);font-size:0.69rem;padding:0.32rem 0.6rem;outline:none;flex-shrink:0;">
-    <option value="claude-haiku-4-5-20251001">Haiku 4.5 (fast/cheap)</option>
-    <option value="claude-sonnet-4-6" selected>Sonnet 4.6 (recommended)</option>
-    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast & Free)</option>
-    <option value="gemini-1.5-pro">Gemini 1.5 Pro (High Reasoning)</option>
+  <select id="modelSel" style="background:#0d160d;color:#a6e3a1;font-family:var(--mono);font-size:0.69rem;border:1px solid #1e3a1e;padding:0.32rem 0.6rem;">
+    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Free)</option>
+    <option value="claude-3-5-sonnet-20240620" selected>Claude 3.5 Sonnet</option>
   </select>
-  <button onclick="testKey()" style="background:#1a3a1a;border:1px solid #1e3a1e;color:#7ec891;font-family:var(--mono);font-size:0.65rem;padding:0.32rem 0.8rem;cursor:pointer;flex-shrink:0;">▶ Test Key</button>
-  <span class="api-config-note">Key stays in your browser only</span>
+  <button onclick="testKey()" style="background:#1a3a1a;color:#7ec891;cursor:pointer;padding:0.32rem 0.8rem;">▶ Test Key</button>
 </div>
-
-<section class="hero">
-  <div>
-    <div class="hero-eyebrow">Document Intelligence Platform</div>
-    <h1>Analyse. <em>Decide.</em> Standardise.</h1>
-    <p class="hero-sub">Upload medical, financial, or KYC documents. Vision AI extracts data, applies your rules, and delivers standardised JSON decisions.</p>
-    <div class="hero-cta">
-      <button class="btn-primary" onclick="document.querySelector('.app-shell').scrollIntoView({behavior:'smooth'})">↓ Start Analysing</button>
-      <button class="btn-outline" onclick="openModal('rulesModal')">Manage Rules</button>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-val">3</div><div class="stat-label">Doc Types</div></div>
-      <div class="stat"><div class="stat-val">99%</div><div class="stat-label">Std. Accuracy</div></div>
-      <div class="stat"><div class="stat-val">&lt;8s</div><div class="stat-label">Avg. Analysis</div></div>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="mock-line accent"></div>
-    <div class="mock-json">
-      <div><span class="k">"document_type"</span>: <span class="v">"medical_lab_report"</span>,</div>
-      <div><span class="k">"decision"</span>: <span class="v">"APPROVED"</span>,</div>
-      <div><span class="k">"confidence"</span>: <span class="v">0.94</span>,</div>
-      <div><span class="k">"hba1c_percent"</span>: <span class="v">6.2</span>,</div>
-      <div><span class="k">"glucose_mmol_l"</span>: <span class="v">5.4</span>,</div>
-      <div><span class="k">"rules_passed"</span>: <span class="v">7</span></div>
-    </div>
-    <div class="mock-line short"></div>
-    <div class="mock-line med"></div>
-  </div>
-</section>
 
 <main class="app-shell">
   <aside class="sidebar">
-
     <div class="card">
-      <div class="card-header"><div class="card-title">📄 Document Upload</div></div>
+      <div class="card-header"><div class="card-title">📄 Document / Photo Upload</div></div>
       <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/gif,image/webp,.pdf" onchange="onFile(event)"/>
-        <span class="upload-icon">⬆</span>
-        <span class="upload-label">Click or drop document here</span>
-        <span class="upload-sub">JPG · PNG · WEBP · PDF</span>
+        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="onFile(event)"/>
+        <span style="font-size:2rem">⬆</span><br>
+        <span class="upload-label">Click or drop here</span>
+        <span style="font-size:0.6rem;color:var(--muted)">Supports ID, Lab Reports, or Customer Face Photo</span>
       </div>
       <div class="upload-preview" id="uploadPrev">
-        <img id="prevImg" class="preview-thumb" alt="" style="display:none"/>
-        <div id="prevPdf" class="preview-pdf" style="display:none">📄</div>
-        <div class="preview-name" id="prevName"></div>
-        <button class="change-btn" onclick="resetFile()">✕ Change file</button>
+        <img id="prevImg" class="preview-thumb" alt=""/>
+        <div id="prevPdf" style="display:none;background:var(--cream);padding:2rem;text-align:center">📄 PDF Loaded</div>
+        <button onclick="resetFile()" style="width:100%;margin-top:0.5rem;font-family:var(--mono);font-size:0.6rem;cursor:pointer">✕ Change</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header"><div class="card-title">🗂 Document Type</div></div>
+      <div class="card-header"><div class="card-title">🗂 Analysis Intent</div></div>
       <div class="doc-types">
-        <button class="doc-type-btn active" data-type="auto"      onclick="pickType(this)"><span class="dt-icon">🤖</span><div>Auto-Detect<span class="dt-sub">AI determines type</span></div></button>
-        <button class="doc-type-btn"        data-type="medical"   onclick="pickType(this)"><span class="dt-icon">🏥</span><div>Medical / Lab Report<span class="dt-sub">CBC, LFT, RFT, HbA1c…</span></div></button>
-        <button class="doc-type-btn"        data-type="financial" onclick="pickType(this)"><span class="dt-icon">💰</span><div>Financial Statement<span class="dt-sub">P&amp;L, Balance Sheet, Bank…</span></div></button>
-        <button class="doc-type-btn"        data-type="kyc"       onclick="pickType(this)"><span class="dt-icon">🪪</span><div>KYC / Identity<span class="dt-sub">Passport, NID, Licence…</span></div></button>
+        <button class="doc-type-btn active" data-type="auto" onclick="pickType(this)">🤖 Auto-Detect</button>
+        <button class="doc-type-btn" data-type="underwriting" onclick="pickType(this)">👤 Customer Photo (Risk Analysis)</button>
+        <button class="doc-type-btn" data-type="medical" onclick="pickType(this)">🏥 Medical / Lab Report</button>
+        <button class="doc-type-btn" data-type="kyc" onclick="pickType(this)">🪪 Identity (KYC)</button>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">⚙ Active Rules</div>
-        <button onclick="openModal('rulesModal')" style="background:none;border:none;font-size:0.65rem;color:var(--accent2);cursor:pointer;font-family:var(--mono);font-weight:700">+ EDIT</button>
-      </div>
-      <div class="rules-list" id="rulesList"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-title">🔌 Third-Party Data</div></div>
-      <div class="tp-grid">
-        <div class="tp-card on"><div class="tp-name">Credit Bureau</div><div class="tp-dot on">● Connected</div></div>
-        <div class="tp-card">   <div class="tp-name">Sanctions List</div><div class="tp-dot off">○ Offline</div></div>
-        <div class="tp-card on"><div class="tp-name">Lab Standards</div><div class="tp-dot on">● Connected</div></div>
-        <div class="tp-card">   <div class="tp-name">Fraud Score</div><div class="tp-dot off">○ Offline</div></div>
-      </div>
-    </div>
-
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>
-      <span class="spinner" id="spin"></span>
-      <span id="btnTxt">Upload a document first</span>
-    </button>
-
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>Analyse Document</button>
   </aside>
 
   <div class="main-panel">
     <div class="status-bar">
-      <div class="s-left"><div class="sdot" id="sdot"></div><span id="stxt">Ready — no document loaded</span></div>
-      <span id="sid" style="color:var(--muted)">SESSION: —</span>
+      <div><span class="sdot" id="sdot"></span> <span id="stxt">Ready — no document loaded</span></div>
+      <span id="sid">SESSION: —</span>
     </div>
 
-    <div>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="overview"  onclick="switchTab('overview',this)">Overview</button>
-        <button class="tab-btn"        data-tab="extracted" onclick="switchTab('extracted',this)">Extracted Fields</button>
-        <button class="tab-btn"        data-tab="rules"     onclick="switchTab('rules',this)">Rules Eval</button>
-        <button class="tab-btn"        data-tab="json"      onclick="switchTab('json',this)">JSON Output</button>
-        <button class="tab-btn"        data-tab="trends"    onclick="switchTab('trends',this)">Trends</button>
-      </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview',this)">Overview</button>
+      <button class="tab-btn" data-tab="extracted" onclick="switchTab('extracted',this)">Extracted Data</button>
+      <button class="tab-btn" data-tab="json" onclick="switchTab('json',this)">JSON</button>
+    </div>
 
-      <div class="tab-pane active" id="pane-overview">
-        <div id="overviewOut"><div class="empty"><div class="empty-i">📋</div><div class="empty-t">No document analysed yet</div><div class="empty-s">Upload a document and click Analyse to get structured results.</div></div></div>
-      </div>
-      <div class="tab-pane" id="pane-extracted">
-        <div id="extractedOut"><div class="empty"><div class="empty-i">🔍</div><div class="empty-t">No fields extracted</div><div class="empty-s">Standardised field values will appear here after analysis.</div></div></div>
-      </div>
-      <div class="tab-pane" id="pane-rules">
-        <div id="rulesOut"><div class="empty"><div class="empty-i">⚖</div><div class="empty-t">No rules evaluated</div><div class="empty-s">Rule evaluation results appear here after analysis.</div></div></div>
-      </div>
-      <div class="tab-pane" id="pane-json">
-        <div id="jsonOut"><div class="empty"><div class="empty-i">{}</div><div class="empty-t">No JSON output</div><div class="empty-s">Standardised JSON output appears here after analysis.</div></div></div>
-      </div>
-      <div class="tab-pane" id="pane-trends">
-        <div style="padding:1.2rem 0">
-          <div class="sl">Session Trends <span id="trendCount">0 documents</span></div>
-          <div class="trends-grid" id="trendGrid">
-            <div class="tc"><div class="tt">Avg Confidence</div><div class="tv">—</div><div class="td">No data</div></div>
-            <div class="tc"><div class="tt">Approval Rate</div><div class="tv">—</div><div class="td">No data</div></div>
-            <div class="tc"><div class="tt">Docs Processed</div><div class="tv">0</div><div class="td">This session</div></div>
-          </div>
-          <div style="margin-top:1.4rem" class="sl">AI-Suggested Rule Updates</div>
-          <div id="ruleHints" style="padding:1rem;background:var(--card);border:1px solid var(--border);font-family:var(--mono);font-size:0.71rem;color:var(--muted);line-height:1.8">
-            Process at least 3 documents to generate AI-suggested rule updates.
-          </div>
-        </div>
+    <div class="tab-pane active" id="pane-overview">
+      <div id="overviewOut">
+        <div style="padding:4rem;text-align:center;color:var(--muted)">Upload a file to begin analysis.</div>
       </div>
     </div>
+    <div class="tab-pane" id="pane-extracted"><div id="extractedOut"></div></div>
+    <div class="tab-pane" id="pane-json"><div id="jsonOut"></div></div>
   </div>
 </main>
 
-<!-- RULES MODAL -->
-<div class="modal-bg" id="rulesModal" onclick="if(event.target===this)closeModal('rulesModal')">
-  <div class="modal">
-    <div class="mh"><div class="mt">Rule Management</div><button class="mc" onclick="closeModal('rulesModal')">✕</button></div>
-    <div class="sl">Add New Rule</div>
-    <div class="fr">
-      <div class="ff"><label class="fl">Rule Name</label><input class="fi" id="rName" placeholder="e.g. HbA1c Threshold"/></div>
-      <div class="ff"><label class="fl">Document Type</label>
-        <select class="fs2" id="rDocType"><option value="all">All Types</option><option value="medical">Medical</option><option value="financial">Financial</option><option value="kyc">KYC</option></select>
-      </div>
-    </div>
-    <div class="fr">
-      <div class="ff"><label class="fl">Parameter</label><input class="fi" id="rParam" placeholder="e.g. hba1c_percent"/></div>
-      <div class="ff"><label class="fl">Condition</label>
-        <select class="fs2" id="rCond">
-          <option value="lte">≤ Less than or equal</option>
-          <option value="lt">&lt; Less than</option>
-          <option value="gte">≥ Greater than or equal</option>
-          <option value="gt">&gt; Greater than</option>
-          <option value="eq">= Equals</option>
-          <option value="present">Is Present</option>
-          <option value="absent">Is Absent</option>
-        </select>
-      </div>
-    </div>
-    <div class="fr">
-      <div class="ff"><label class="fl">Threshold</label><input class="fi" id="rThresh" placeholder="e.g. 6.5"/></div>
-      <div class="ff"><label class="fl">Action if Failed</label>
-        <select class="fs2" id="rAction"><option value="REJECT">Reject</option><option value="WARN">Flag for Review</option><option value="NOTE">Note Only</option></select>
-      </div>
-    </div>
-    <div class="ff"><label class="fl">Description</label><textarea class="fta" id="rDesc" placeholder="e.g. HbA1c must be ≤ 6.5% for approval"></textarea></div>
-    <button class="btn-primary" onclick="addRule()" style="margin-bottom:1.5rem;font-size:0.78rem">+ Add Rule</button>
-    <div class="sl">Existing Rules</div>
-    <div id="modalRules" style="max-height:320px;overflow-y:auto"></div>
-  </div>
-</div>
-
 <div class="notif" id="notif"></div>
-
-<!-- Optional: load config.js for pre-set API key. Create config.js with: const DOCUMIND_API_KEY = 'sk-ant-...'; -->
-<script src="config.js" onerror="console.info('config.js not found — API key can be entered manually.')"></script>
 
 <script>
 // ══════════════════════════════════════════════════════
-// STATE
+// CORE LOGIC & API
 // ══════════════════════════════════════════════════════
-const S = { b64:null, mime:null, docType:'auto', rules:[], sessions:[], sid:null, result:null };
+const S = { b64:null, mime:null, docType:'auto', sessions:[], sid:null, result:null };
 
-const DEFAULTS = [
-  {id:'R001',name:'HbA1c Threshold',      docType:'medical',   param:'hba1c_percent',        cond:'lte',thresh:'6.5',  action:'REJECT',desc:'HbA1c must be ≤ 6.5% for standard approval',   on:true },
-  {id:'R002',name:'Glucose Normal Range', docType:'medical',   param:'glucose_mmol_l',       cond:'lte',thresh:'11.1', action:'WARN',  desc:'Blood glucose should not exceed 11.1 mmol/L',    on:true },
-  {id:'R003',name:'KYC ID Expiry',        docType:'kyc',       param:'document_expiry_valid',cond:'present',thresh:'', action:'REJECT',desc:'Identity document must not be expired',          on:true },
-  {id:'R004',name:'KYC Name Match',       docType:'kyc',       param:'name_match_score',     cond:'gte',thresh:'0.9',  action:'REJECT',desc:'Name match score must be ≥ 0.9',               on:true },
-  {id:'R005',name:'Debt-to-Income Ratio', docType:'financial', param:'debt_to_income_ratio', cond:'lte',thresh:'0.43', action:'REJECT',desc:'DTI must be ≤ 43% for loan approval',           on:true },
-  {id:'R006',name:'Credit Score Min',     docType:'financial', param:'credit_score',         cond:'gte',thresh:'650',  action:'WARN',  desc:'Credit score ≥ 650 for standard tier',          on:true },
-  {id:'R007',name:'Creatinine Check',     docType:'medical',   param:'creatinine_umol_l',    cond:'lte',thresh:'110',  action:'WARN',  desc:'Creatinine ≤ 110 µmol/L (normal renal range)',  on:false},
-];
-
-const PARAM_DICT = {
-  'hba1c':'hba1c_percent','hemoglobin a1c':'hba1c_percent','a1c':'hba1c_percent',
-  'glucose':'glucose_mmol_l','blood glucose':'glucose_mmol_l','fbs':'glucose_mmol_l',
-  'creatinine':'creatinine_umol_l','serum creatinine':'creatinine_umol_l',
-  'cholesterol':'cholesterol_mmol_l','ldl':'ldl_cholesterol_mmol_l','hdl':'hdl_cholesterol_mmol_l',
-  'haemoglobin':'hemoglobin_g_dl','hemoglobin':'hemoglobin_g_dl',
-  'credit score':'credit_score','cibil':'credit_score','fico':'credit_score',
-  'dti':'debt_to_income_ratio','net income':'net_income','revenue':'gross_revenue',
-  'full name':'full_name','name':'full_name','dob':'date_of_birth','date of birth':'date_of_birth',
-  'expiry':'document_expiry','id number':'id_number','passport number':'id_number',
-};
-
-// ══════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════
 function init() {
-  // Detect file:// and warn immediately
-  if (location.protocol === 'file:') {
-    document.getElementById('fileBanner').style.display = 'block';
-  }
-
-  S.rules = DEFAULTS.map(r => ({...r}));
-  S.sid   = 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase();
+  S.sid = 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase();
   document.getElementById('sid').textContent = 'SESSION: ' + S.sid;
-  renderRules();
-
-  // Try config.js key first, then sessionStorage
-  let key = '';
-  if (typeof DOCUMIND_API_KEY !== 'undefined' && DOCUMIND_API_KEY) {
-    key = DOCUMIND_API_KEY;
-  } else {
-    key = sessionStorage.getItem('dm_key') || '';
-  }
-  if (key) {
-    document.getElementById('apiKey').value = key;
-    onKeyInput();
-  }
+  const k = sessionStorage.getItem('dm_key');
+  if (k) { document.getElementById('apiKey').value = k; onKeyInput(); }
 }
 
-// ══════════════════════════════════════════════════════
-// API KEY
-// ══════════════════════════════════════════════════════
 function onKeyInput() {
-  const k  = document.getElementById('apiKey').value.trim();
+  const k = document.getElementById('apiKey').value.trim();
+  const model = document.getElementById('modelSel').value;
+  const isGemini = model.includes('gemini');
   const el = document.getElementById('apiSt');
-  const ok = k.startsWith('sk-ant') && k.length > 20;
-  el.textContent = ok ? '✓ Key set — ready' : (k.length > 0 ? '⚠ Invalid format (must start with sk-ant)' : 'Not set — required');
-  el.className   = 'api-status ' + (ok ? 'ok' : 'bad');
+  
+  const ok = isGemini ? k.length > 10 : k.startsWith('sk-ant');
+  el.textContent = ok ? '✓ Key Ready' : '⚠ Invalid Key';
+  el.className = 'api-status ' + (ok ? 'ok' : 'bad');
   if (ok) sessionStorage.setItem('dm_key', k);
   refreshBtn();
 }
 
-function getKey() {
-  const field = document.getElementById('apiKey').value.trim();
-  if (field) return field;
-  if (typeof DOCUMIND_API_KEY !== 'undefined') return DOCUMIND_API_KEY;
-  return '';
-}
-
 function refreshBtn() {
-  const k = getKey();
-  const ok = k.startsWith('sk-ant') && k.length > 20 && S.b64;
-  document.getElementById('analyzeBtn').disabled = !ok;
-  if (!S.b64) document.getElementById('btnTxt').textContent = 'Upload a document first';
-  else if (!k.startsWith('sk-ant')) document.getElementById('btnTxt').textContent = 'Enter API key first';
-  else document.getElementById('btnTxt').textContent = 'Analyse Document';
+  const k = document.getElementById('apiKey').value;
+  document.getElementById('analyzeBtn').disabled = !(k && S.b64);
 }
 
-// ══════════════════════════════════════════════════════
-// FILE
-// ══════════════════════════════════════════════════════
 function onFile(e) {
   const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
   r.onload = ev => {
-    S.b64  = ev.target.result.split(',')[1];
+    S.b64 = ev.target.result.split(',')[1];
     S.mime = f.type || 'image/jpeg';
     document.getElementById('uploadZone').style.display = 'none';
     document.getElementById('uploadPrev').style.display = 'flex';
     const img = document.getElementById('prevImg');
     const pdf = document.getElementById('prevPdf');
     if (f.type.startsWith('image/')) { img.src = ev.target.result; img.style.display='block'; pdf.style.display='none'; }
-    else { img.style.display='none'; pdf.style.display='flex'; }
-    document.getElementById('prevName').textContent = '📎 ' + f.name + ' (' + (f.size/1024).toFixed(1) + ' KB)';
-    setStatus('ready','Document loaded — ' + f.name);
+    else { img.style.display='none'; pdf.style.display='block'; }
     refreshBtn();
   };
   r.readAsDataURL(f);
 }
 
 function resetFile() {
-  S.b64 = null; S.mime = null;
+  S.b64 = null;
   document.getElementById('uploadZone').style.display = 'block';
   document.getElementById('uploadPrev').style.display = 'none';
-  document.getElementById('fileInput').value = '';
-  setStatus('','Ready — no document loaded');
   refreshBtn();
 }
 
-// Drag and drop
-const uz = document.getElementById('uploadZone');
-uz.addEventListener('dragover',  e => { e.preventDefault(); uz.classList.add('dragover'); });
-uz.addEventListener('dragleave', () => uz.classList.remove('dragover'));
-uz.addEventListener('drop', e => {
-  e.preventDefault(); uz.classList.remove('dragover');
-  const f = e.dataTransfer.files[0]; if (!f) return;
-  const dt = new DataTransfer(); dt.items.add(f);
-  document.getElementById('fileInput').files = dt.files;
-  onFile({target:{files:[f]}});
-});
-
-// ══════════════════════════════════════════════════════
-// DOC TYPE
-// ══════════════════════════════════════════════════════
 function pickType(btn) {
   document.querySelectorAll('.doc-type-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   S.docType = btn.dataset.type;
 }
 
-  // ══════════════════════════════════════════════════════
-// CORE API CALL — shared by testKey() and analyse()
-// ══════════════════════════════════════════════════════
+// FIXED: Consolidated callAPI with Gemini & Anthropic Support
 async function callAPI(payload, key) {
-  const apiKey = key || getKey();
   const model = document.getElementById('modelSel').value;
   const isGemini = model.includes('gemini');
+  const url = isGemini 
+    ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`
+    : 'https://api.anthropic.com/v1/messages';
 
-  let url, options;
-
-  if (isGemini) {
-    // --- GOOGLE GEMINI CONFIG ---
-    url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    options = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: payload.messages[0].content }],
-        systemInstruction: { parts: [{ text: payload.system || "" }] },
-        generationConfig: { 
-          maxOutputTokens: payload.max_tokens || 4096,
-          responseMimeType: "application/json" 
-        }
-      })
-    };
-  } else {
-    // --- ANTHROPIC CONFIG ---
-    url = 'https://api.anthropic.com/v1/messages';
-    options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: model,
-        system: payload.system,
-        messages: payload.messages,
-        max_tokens: payload.max_tokens || 4096
-      })
-    };
-  }
-
-  const res = await fetch(url, options);
-
-  if (!res.ok) {
-    const errData = await res.json().catch(() => ({}));
-    throw new Error(`API Error ${res.status}: ${errData.error?.message || res.statusText}`);
-  }
-
-  const data = await res.json();
-  
-  // Standardize the output so the rest of your app doesn't break
-  return {
-    content: [{
-      text: isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text
-    }]
+  const headers = isGemini ? { 'Content-Type': 'application/json' } : {
+    'Content-Type': 'application/json',
+    'x-api-key': key,
+    'anthropic-version': '2023-06-01',
+    'anthropic-dangerous-direct-browser-access': 'true'
   };
-  } catch (networkErr) {
-    // Distinguish file:// CORS from real network failures
-    const isFile = location.protocol === 'file:';
-    if (isFile) {
-      throw new Error(
-        'FILE:// ORIGIN BLOCKED — browsers refuse API calls from file:// URLs.\n\n' +
-        'Fix: serve the file over HTTP instead:\n' +
-        '  • Python:  python3 -m http.server 8080\n' +
-        '  • Node:    npx serve .\n' +
-        '  • Or deploy to GitHub Pages (already working there).'
-      );
-    }
-    throw new Error('Network error — could not reach api.anthropic.com. Check your internet connection.\nDetail: ' + networkErr.message);
-  }
 
-  if (!res.ok) {
-    let errBody = {};
-    try { errBody = await res.json(); } catch(_) {}
-    const msg = (errBody.error && errBody.error.message) || res.statusText || ('HTTP ' + res.status);
-    if (res.status === 401) throw new Error('401 Unauthorised — API key is invalid or expired.\n💡 Get a key at platform.anthropic.com/keys');
-    if (res.status === 403) throw new Error('403 Forbidden — key does not have permission for this model.\n💡 Check your plan at platform.anthropic.com');
-    if (res.status === 429) throw new Error('429 Rate limit — too many requests.\n💡 Wait 30 seconds then try again.');
-    if (res.status === 400) throw new Error('400 Bad request — ' + msg + '\n💡 Try a different model from the selector.');
-    if (res.status === 529) throw new Error('529 Overloaded — Anthropic servers are busy.\n💡 Wait a few seconds and retry.');
-    throw new Error('API error ' + res.status + ': ' + msg);
-  }
-
-  return await res.json();
-}
-
-// ══════════════════════════════════════════════════════
-// TEST KEY — quick ping with tiny payload
-// ══════════════════════════════════════════════════════
-async function testKey() {
-  const key = getKey();
-  if (!key || !key.startsWith('sk-ant')) { toast('Enter a valid sk-ant-... key first'); return; }
-  const el = document.getElementById('apiSt');
-  el.textContent = '⏳ Testing…'; el.className = 'api-status';
-  try {
-    const data = await callAPI({
-      model:      document.getElementById('modelSel').value,
-      max_tokens: 1,
-      messages:   [{ role:'user', content:'Hi' }]
-    }, key);
-    if (data.content) {
-      el.textContent = '✓ Key works — API connected!'; el.className = 'api-status ok';
-      toast('✓ API key verified and working', 'ok');
-    }
-  } catch(err) {
-    el.textContent = '✗ ' + err.message.split('\n')[0]; el.className = 'api-status bad';
-    toast('✗ ' + err.message.split('\n')[0]);
-    console.error('Key test failed:', err.message);
-  }
-}
-
-// ══════════════════════════════════════════════════════
-// ANALYSE — direct Anthropic API call
-// ══════════════════════════════════════════════════════
-async function analyse() {
-  const key = getKey();
-  const model = document.getElementById('modelSel').value;
-  const isGemini = model.includes('gemini');
-
-  // 1. Updated Key Validation (Gemini keys usually start with AIza)
-  if (!key) { 
-    toast('Enter an API key first'); 
-    return; 
-  }
-  if (!isGemini && !key.startsWith('sk-ant')) {
-    toast('Enter a valid Anthropic API key (sk-ant-...)');
-    return;
-  }
-  
-  if (!S.b64) { toast('Upload a document first'); return; }
-
-  const btn = document.getElementById('analyzeBtn');
-  btn.disabled = true; btn.classList.add('loading');
-  document.getElementById('btnTxt').textContent = 'Analysing…';
-  setStatus('processing','Running vision analysis…');
-
-  const active    = S.rules.filter(function(r){ return r.on; });
-  const rulesText = active.map(function(r){ return '- ' + r.id + ': ' + r.desc + ' [action on fail: ' + r.action + ']'; }).join('\n') || 'No active rules.';
-  const dictText  = Object.entries(PARAM_DICT).map(function(e){ return '"' + e[0] + '" → "' + e[1] + '"'; }).join(', ');
-
-  const sys = 'You are DocuMind AI — a professional document intelligence system that extracts and standardises data from document images.\n\n' +
-    'PARAMETER DICTIONARY (map any alias to the canonical key):\n' + dictText + '\n\n' +
-    'UNIT STANDARDISATION RULES:\n' +
-    '- Glucose: always output in mmol/L. If document shows mg/dL, convert: divide by 18.016\n' +
-    '- HbA1c: always output in %\n' +
-    '- Creatinine: always output in µmol/L. If document shows mg/dL, multiply by 88.4\n' +
-    '- Cholesterol: always output in mmol/L. If document shows mg/dL, divide by 38.67\n' +
-    '- Dates: ISO 8601 format YYYY-MM-DD\n' +
-    '- Financial amounts: plain numeric value, state currency separately\n\n' +
-    'ACTIVE RULES TO EVALUATE:\n' + rulesText + '\n\n' +
-    'IMPORTANT: Your entire response must be a single valid JSON object only. No markdown, no code fences, no explanation text before or after the JSON.';
-
-  const usr = 'Analyse this document image.\nDocument type hint: ' +
-    (S.docType === 'auto' ? 'auto-detect the type' : S.docType) +
-    '\nSession: ' + S.sid + '\n\n' +
-    'Return ONLY this JSON structure (all fields required):\n' +
-    '{\n' +
-    '  "document_type": "medical_lab_report | financial_statement | kyc_identity | other",\n' +
-    '  "detected_subtype": "more specific label",\n' +
-    '  "extraction_confidence": 0.0,\n' +
-    '  "overall_decision": "APPROVED | REJECTED | REVIEW | PENDING",\n' +
-    '  "decision_confidence": 0.0,\n' +
-    '  "decision_rationale": "brief explanation",\n' +
-    '  "extracted_fields": {\n' +
-    '    "canonical_field_name": {\n' +
-    '      "value": "the value",\n' +
-    '      "unit": "standardised unit string",\n' +
-    '      "standardised": true,\n' +
-    '      "original_label": "label as it appeared on document",\n' +
-    '      "original_value": "value as it appeared",\n' +
-    '      "original_unit": "unit as it appeared",\n' +
-    '      "status": "normal | warning | flagged | unknown",\n' +
-    '      "reference_range": "if shown on document"\n' +
-    '    }\n' +
-    '  },\n' +
-    '  "rules_evaluation": [\n' +
-    '    {\n' +
-    '      "rule_id": "R001",\n' +
-    '      "rule_name": "Rule Name",\n' +
-    '      "status": "PASS | FAIL | WARN | SKIP",\n' +
-    '      "reason": "explanation",\n' +
-    '      "extracted_value": "value used",\n' +
-    '      "threshold": "threshold compared against"\n' +
-    '    }\n' +
-    '  ],\n' +
-    '  "metadata": {\n' +
-    '    "session_id": "' + S.sid + '",\n' +
-    '    "analysed_at": "' + new Date().toISOString() + '",\n' +
-    '    "doc_type_hint": "' + S.docType + '",\n' +
-    '    "rules_applied": ' + active.length + ',\n' +
-    '    "platform": "DocuMind AI v1.0"\n' +
-    '  }\n' +
-    '}';
-
-  // 2. Build provider-specific content array
-  const VALID_IMG = ['image/jpeg','image/png','image/gif','image/webp'];
-  let content;
-  
-  if (isGemini) {
-    // Gemini Format
-    content = [
-      { text: usr },
-      { inline_data: { mime_type: S.mime, data: S.b64 } }
-    ];
-  } else {
-    // Anthropic Format
-    const type = S.mime === 'application/pdf' ? 'document' : 'image';
-    content = [
-      { type: type, source: { type: 'base64', media_type: S.mime, data: S.b64 } },
-      { type: 'text', text: usr }
-    ];
-  }
+  const body = isGemini ? {
+    contents: [{ parts: payload.messages[0].content }],
+    systemInstruction: { parts: [{ text: payload.system }] },
+    generationConfig: { responseMimeType: "application/json" }
+  } : {
+    model: model,
+    system: payload.system,
+    messages: payload.messages,
+    max_tokens: 4096
+  };
 
   try {
-    // 3. Updated callAPI parameters
-    const data = await callAPI({
-      max_tokens: 4096,
-      system:     sys,
-      messages:   [{ role:'user', content: content }]
-    }, key);
-
-    const raw = (data.content || []).map(function(c){ return c.text || ''; }).join('');
-
-    // Parse JSON — strip accidental fences
-    var result;
-    try {
-      var clean = raw.replace(/^
-http://googleusercontent.com/immersive_entry_chip/0
-
-### Key Changes Made:
-* **Provider Detection:** Added `const isGemini = model.includes('gemini');` to branch logic based on your selector.
-* **Flexible Key Check:** Loosened the `sk-ant` requirement so it only applies when an Anthropic model is selected.
-* **Payload Switching:** Gemini requires `inline_data` and puts the text block first in the array for better prompt adherence, whereas Anthropic requires `source` objects.
-* **Response Consistency:** Since I updated your `callAPI` in the previous step to return the same format `{ content: [{ text: "..." }] }` for both providers, the JSON parsing logic at the end of `analyse()` remains fully compatible.
-
-Would you like me to help you refine the **System Prompt (`sys`)** specifically to help Gemini better categorize the `document_type` for financial vs medical docs?
-
-  // Build content array — images vs PDF
-  const VALID_IMG = ['image/jpeg','image/png','image/gif','image/webp'];
-  var content;
-  if (S.mime === 'application/pdf') {
-    content = [
-      { type:'document', source:{ type:'base64', media_type:'application/pdf', data:S.b64 } },
-      { type:'text', text:usr }
-    ];
-  } else {
-    var mt = VALID_IMG.includes(S.mime) ? S.mime : 'image/jpeg';
-    content = [
-      { type:'image', source:{ type:'base64', media_type:mt, data:S.b64 } },
-      { type:'text', text:usr }
-    ];
-  }
-
-  try {
-    const data = await callAPI({
-      max_tokens: 4096,
-      system:     sys,
-      messages:   [{ role:'user', content:content }]
-    }, key);
-
-    const raw = (data.content || []).map(function(c){ return c.text || ''; }).join('');
-
-    // Parse JSON — strip accidental fences
-    var result;
-    try {
-      var clean = raw.replace(/^```(?:json)?\s*/m,'').replace(/```\s*$/m,'').trim();
-      result = JSON.parse(clean);
-    } catch(_) {
-      var m = raw.match(/\{[\s\S]*\}/);
-      if (m) result = JSON.parse(m[0]);
-      else throw new Error('Model did not return valid JSON.\n\nRaw response preview:\n' + raw.slice(0,300));
-    }
-
-    S.result = result;
-    S.sessions.push(Object.assign({}, result, { ts: Date.now() }));
-    drawResults(result);
-    setStatus('ready', '✓ Decision: ' + result.overall_decision + ' — ' + Math.round((result.decision_confidence||0)*100) + '% confidence');
-    toast('✓ Analysis complete', 'ok');
-
+    const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error(`API Error ${res.status}`);
+    const data = await res.json();
+    return { text: isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text };
   } catch (err) {
-    console.error('DocuMind analyse error:', err);
-    setStatus('error', '✗ ' + err.message.split('\n')[0]);
-    var errHtml = '<div class="err-box"><strong>✗ Analysis Failed</strong>' +
-      esc(err.message).replace(/\n/g,'<br>') +
-      '</div>';
-    document.getElementById('overviewOut').innerHTML = errHtml;
-    switchTab('overview');
-    toast('✗ ' + err.message.split('\n')[0].slice(0,60));
-  } finally {
-    btn.classList.remove('loading');
-    btn.disabled = false;
-    document.getElementById('btnTxt').textContent = 'Re-Analyse';
+    throw err;
   }
 }
 
-// ══════════════════════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════════════════════
-function drawResults(r) {
-  drawOverview(r);
-  drawExtracted(r);
-  drawRulesOut(r);
-  drawJSON(r);
-  drawTrends();
-  switchTab('overview');
-}
+async function analyse() {
+  const key = document.getElementById('apiKey').value;
+  const isGemini = document.getElementById('modelSel').value.includes('gemini');
+  
+  setStatus('processing', 'AI Vision Underwriting active...');
+  
+  const systemPrompt = `You are DocuMind AI — a Medical Underwriting specialist. 
+  If a customer photo is provided, look for clinical risk markers: jaundice, obesity indicators, visible tremors, edema, or skin conditions.
+  If a document is provided, extract standardized values.
+  RETURN JSON ONLY: {
+    "overall_decision": "APPROVED|REJECTED|REVIEW",
+    "decision_rationale": "reason",
+    "risk_markers": ["marker 1", "marker 2"],
+    "extracted_fields": {"key": "value"}
+  }`;
 
-function drawOverview(r) {
-  const dec  = r.overall_decision || 'PENDING';
-  const conf = Math.round((r.decision_confidence || 0) * 100);
-  const cc   = conf >= 80 ? 'hi' : conf >= 60 ? 'md' : 'lo';
-  const ev   = r.rules_evaluation || [];
-  const pass = ev.filter(x=>x.status==='PASS').length;
-  const fail = ev.filter(x=>x.status==='FAIL').length;
-  const warn = ev.filter(x=>x.status==='WARN').length;
-  const fc   = Object.keys(r.extracted_fields||{}).length;
+  const userContent = isGemini 
+    ? [{ text: "Analyse this " + S.docType }, { inline_data: { mime_type: S.mime, data: S.b64 } }]
+    : [{ type: S.mime.includes('pdf')?'document':'image', source:{ type:'base64', media_type:S.mime, data:S.b64 } }, { type:'text', text:"Analyse this" }];
 
-  document.getElementById('overviewOut').innerHTML =
-    '<div class="dec-banner ' + dec + '">' +
-      '<div class="dec-meta">' +
-        '<div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem">Overall Decision</div>' +
-        '<div class="dec-label">' + dec + '</div>' +
-        '<div style="font-size:0.76rem;color:var(--muted);margin-top:0.35rem;line-height:1.5;max-width:380px">' + esc(r.decision_rationale||'No rationale provided.') + '</div>' +
-      '</div>' +
-      '<div style="text-align:right;flex-shrink:0">' +
-        '<div style="font-family:var(--mono);font-size:0.58rem;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem">Confidence</div>' +
-        '<div class="dec-conf ' + cc + '">' + conf + '%</div>' +
-        '<div class="conf-wrap"><div class="conf-bar ' + cc + '" style="width:' + conf + '%"></div></div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="stats-row">' +
-      [['Doc Type',(r.document_type||'—').replace(/_/g,' ')],['Subtype',(r.detected_subtype||'—').replace(/_/g,' ')],['Fields Found',fc],['Rules Applied',ev.length]]
-        .map(function(item){ return '<div class="sc"><div class="sc-l">' + item[0] + '</div><div class="sc-v">' + esc(String(item[1])) + '</div></div>'; }).join('') +
-    '</div>' +
-    '<div class="pass-row">' +
-      '<div class="pr pass"><div class="pr-l">Passed</div><div class="pr-v">' + pass + '</div></div>' +
-      '<div class="pr fail"><div class="pr-l">Failed</div><div class="pr-v">' + fail + '</div></div>' +
-      '<div class="pr warn"><div class="pr-l">Warnings</div><div class="pr-v">' + warn + '</div></div>' +
-    '</div>';
-}
-
-function drawExtracted(r) {
-  const f = r.extracted_fields || {};
-  const keys = Object.keys(f);
-  if (!keys.length) {
-    document.getElementById('extractedOut').innerHTML = '<div class="empty"><div class="empty-i">🔍</div><div class="empty-t">No fields extracted</div></div>';
-    return;
-  }
-  var html = '<div class="sl" style="margin:0.8rem 0">Extracted &amp; Standardised <span>' + keys.length + ' fields</span></div><div class="fields-grid">';
-  keys.forEach(function(k) {
-    var v = f[k];
-    html += '<div class="fc">';
-    html += '<div class="fk">' + esc(k) + '</div>';
-    html += '<div class="fv ' + (v.status||'') + '">' + esc(String(v.value != null ? v.value : '—')) + (v.unit ? ' <span style="font-size:0.64rem;opacity:0.6">' + esc(v.unit) + '</span>' : '') + '</div>';
-    if (v.original_label && v.original_label !== k) html += '<div class="fss">alias: "' + esc(v.original_label) + '"</div>';
-    if (v.original_value !== undefined && String(v.original_value) !== String(v.value)) html += '<div class="fss">orig: ' + esc(String(v.original_value)) + ' ' + esc(v.original_unit||'') + '</div>';
-    if (v.reference_range) html += '<div class="fss">ref: ' + esc(v.reference_range) + '</div>';
-    if (v.standardised) html += '<div class="fss" style="color:var(--green)">✓ standardised</div>';
-    html += '</div>';
-  });
-  html += '</div>';
-  document.getElementById('extractedOut').innerHTML = html;
-}
-
-function drawRulesOut(r) {
-  const ev = r.rules_evaluation || [];
-  if (!ev.length) {
-    document.getElementById('rulesOut').innerHTML = '<div class="empty"><div class="empty-i">⚖</div><div class="empty-t">No rules evaluated</div></div>';
-    return;
-  }
-  var html = '<div class="sl" style="margin:0.8rem 0">Rule Evaluation <span>' + ev.length + ' rules</span></div><div class="rules-out">';
-  ev.forEach(function(x) {
-    html += '<div class="ri">';
-    html += '<div class="rb ' + (x.status||'SKIP') + '">' + (x.status||'SKIP') + '</div>';
-    html += '<div class="rd"><strong>' + esc(x.rule_id||'') + ': ' + esc(x.rule_name||'') + '</strong><br>' + esc(x.reason||'—');
-    html += '<small>Extracted: ' + esc(String(x.extracted_value != null ? x.extracted_value : '—')) + (x.threshold ? ' | Threshold: ' + esc(String(x.threshold)) : '') + '</small></div>';
-    html += '</div>';
-  });
-  html += '</div>';
-  document.getElementById('rulesOut').innerHTML = html;
-}
-
-function drawJSON(r) {
-  const raw = JSON.stringify(r, null, 2);
-  const escaped = raw
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;');
-  const coloured = escaped
-    .replace(/("[\w_]+")\s*:/g, '<span class="jk">$1</span>:')
-    .replace(/: ("(?:[^"\\]|\\.)*")/g, ': <span class="jv">$1</span>')
-    .replace(/: (-?\d+\.?\d*)/g, ': <span class="jn">$1</span>')
-    .replace(/: (true|false|null)/g, ': <span class="jb">$1</span>');
-  document.getElementById('jsonOut').innerHTML =
-    '<div class="json-out"><button class="copy-btn" onclick="copyJSON()">⎘ Copy</button><pre style="white-space:pre-wrap;word-break:break-word">' + coloured + '</pre></div>';
-}
-
-function drawTrends() {
-  const s = S.sessions, n = s.length;
-  document.getElementById('trendCount').textContent = n + ' document' + (n!==1?'s':'');
-  if (!n) return;
-  const avgC = Math.round(s.reduce(function(a,x){ return a+(x.decision_confidence||0); },0)/n*100);
-  const appr = s.filter(function(x){ return x.overall_decision==='APPROVED'; }).length;
-  const appc = Math.round(appr/n*100);
-  document.getElementById('trendGrid').innerHTML =
-    '<div class="tc"><div class="tt">Avg Confidence</div><div class="tv">' + avgC + '%</div><div class="td ' + (avgC>=80?'up':'dn') + '">' + (avgC>=80?'↑ High':'↓ Low') + '</div></div>' +
-    '<div class="tc"><div class="tt">Approval Rate</div><div class="tv">' + appc + '%</div><div class="td ' + (appc>=60?'up':'dn') + '">' + appr + '/' + n + ' approved</div></div>' +
-    '<div class="tc"><div class="tt">Docs Processed</div><div class="tv">' + n + '</div><div class="td up">This session</div></div>';
-  if (n >= 3) {
-    const fm = {};
-    s.forEach(function(x) {
-      (x.rules_evaluation||[]).filter(function(r){ return r.status==='FAIL'; }).forEach(function(r){ fm[r.rule_name]=(fm[r.rule_name]||0)+1; });
-    });
-    const top = Object.entries(fm).sort(function(a,b){ return b[1]-a[1]; }).slice(0,3);
-    document.getElementById('ruleHints').innerHTML = top.length
-      ? '<strong style="color:var(--ink)">Suggested Adjustments:</strong><br><br>' + top.map(function(item){ return '⚠ "<strong style="color:var(--ink)">' + esc(item[0]) + '</strong>" failed ' + item[1] + '× — consider relaxing threshold'; }).join('<br>')
-      : 'All rules passing consistently across all sessions.';
+  try {
+    const data = await callAPI({ system: systemPrompt, messages: [{ role:'user', content: userContent }] }, key);
+    const result = JSON.parse(data.text);
+    S.result = result;
+    renderResults(result);
+    setStatus('ready', 'Analysis Complete');
+    toast('✓ Complete', 'ok');
+  } catch (err) {
+    setStatus('error', err.message);
+    toast('✗ Failed');
   }
 }
 
-// ══════════════════════════════════════════════════════
-// RULES MANAGEMENT
-// ══════════════════════════════════════════════════════
-function renderRules() {
-  document.getElementById('rulesList').innerHTML = S.rules.map(function(r) {
-    return '<div class="rule-item ' + (r.on?'active':'') + '" onclick="toggleRule(\'' + r.id + '\')">' +
-      '<div class="rule-chk ' + (r.on?'on':'') + '">' + (r.on?'✓':'') + '</div>' +
-      '<div class="rule-lbl"><strong>' + r.id + '</strong> ' + esc(r.name) + '</div>' +
-      '</div>';
-  }).join('');
+function renderResults(r) {
+  // Update Overview with Risks
+  let riskHtml = '';
+  if (r.risk_markers && r.risk_markers.length) {
+    riskHtml = `<div class="risk-card">
+      <div class="risk-title">⚠️ Underwriting Risk Flags</div>
+      ${r.risk_markers.map(m => `<div class="risk-item">${m}</div>`).join('')}
+    </div>`;
+  }
+
+  document.getElementById('overviewOut').innerHTML = `
+    <div class="dec-banner ${r.overall_decision}">
+      <div class="dec-label">${r.overall_decision}</div>
+      <div style="font-size:0.8rem">${r.decision_rationale}</div>
+    </div>
+    ${riskHtml}
+  `;
+
+  document.getElementById('jsonOut').innerHTML = `<pre style="font-size:0.7rem">${JSON.stringify(r,null,2)}</pre>`;
 }
 
-function renderModalRules() {
-  document.getElementById('modalRules').innerHTML = S.rules.map(function(r) {
-    return '<div class="modal-rule-row">' +
-      '<div class="mrr-info"><strong>' + r.id + ': ' + esc(r.name) + '</strong><span>' + esc(r.desc) + '</span></div>' +
-      '<span class="' + (r.on?'badge-on':'badge-off') + '">' + (r.on?'ON':'OFF') + '</span>' +
-      '<button class="sm-btn" onclick="toggleRule(\'' + r.id + '\');renderModalRules()">Toggle</button>' +
-      '<button class="del-btn" onclick="deleteRule(\'' + r.id + '\')">✕</button>' +
-      '</div>';
-  }).join('');
-}
-
-function toggleRule(id) {
-  const r = S.rules.find(function(x){ return x.id===id; });
-  if (r) { r.on = !r.on; renderRules(); }
-}
-
-function addRule() {
-  const name  = document.getElementById('rName').value.trim();
-  const param = document.getElementById('rParam').value.trim();
-  if (!name||!param) { toast('Rule name and parameter are required'); return; }
-  const id = 'R' + String(S.rules.length+1).padStart(3,'0');
-  S.rules.push({
-    id, name, on:true,
-    desc:    document.getElementById('rDesc').value.trim() || name,
-    docType: document.getElementById('rDocType').value,
-    param,
-    cond:    document.getElementById('rCond').value,
-    thresh:  document.getElementById('rThresh').value,
-    action:  document.getElementById('rAction').value,
-  });
-  ['rName','rParam','rThresh','rDesc'].forEach(function(i){ document.getElementById(i).value=''; });
-  renderRules(); renderModalRules();
-  toast('✓ Rule added: ' + name, 'ok');
-}
-
-function deleteRule(id) {
-  S.rules = S.rules.filter(function(r){ return r.id!==id; });
-  renderRules(); renderModalRules();
-  toast('Rule deleted');
-}
-
-// ══════════════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════════════
-// FIX: proper HTML escaping (original had wrong entity for double-quote)
-function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
 function setStatus(type, text) {
@@ -1068,35 +333,14 @@ function setStatus(type, text) {
   document.getElementById('stxt').textContent = text;
 }
 
-// FIX: switchTab now correctly handles nav links (no btn arg) by finding tab via data-tab
-function switchTab(id, btn) {
-  document.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  const pane = document.getElementById('pane-' + id);
-  if (pane) pane.classList.add('active');
-  // If btn not supplied (called from nav), find by data-tab attribute
-  const activeBtn = btn || document.querySelector('.tab-btn[data-tab="' + id + '"]');
-  if (activeBtn) activeBtn.classList.add('active');
-}
-
-function openModal(id)  { document.getElementById(id).classList.add('open'); renderModalRules(); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-function copyJSON() {
-  if (!S.result) return;
-  navigator.clipboard.writeText(JSON.stringify(S.result,null,2))
-    .then(function(){ toast('✓ JSON copied','ok'); })
-    .catch(function(){ toast('Copy failed — select text manually'); });
-}
-
 function toast(msg, type) {
-  type = type || '';
   const el = document.getElementById('notif');
-  el.textContent = msg;
-  el.className = 'notif show ' + type;
-  clearTimeout(el._t);
-  el._t = setTimeout(function(){ el.classList.remove('show'); }, 3800);
+  el.textContent = msg; el.className = 'notif show ' + (type||'');
+  setTimeout(() => el.classList.remove('show'), 3000);
 }
+
+function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
 init();
 </script>
