@@ -1,107 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DocuMind AI — Intelligent Document Intelligence Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --ink: #0a0a0f; --paper: #f5f3ee; --cream: #ede9e0;
-    --accent: #c8441a; --accent2: #1a6bc8; --gold: #c8a41a;
-    --green: #1ac86b; --muted: #7a7570; --border: #d4cfc6; --card: #ffffff;
-    --mono: 'DM Mono', monospace; --serif: 'DM Serif Display', serif; --sans: 'Syne', sans-serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--paper); color: var(--ink); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.3;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"); }
-
-  header { position: sticky; top: 0; z-index: 100; background: var(--ink); border-bottom: 2px solid var(--accent); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .logo { font-family: var(--serif); font-size: 1.4rem; color: var(--paper); display: flex; align-items: center; gap: 0.5rem; }
-  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
-  .header-nav { display: flex; gap: 1.5rem; align-items: center; }
-  .header-nav a { color: var(--muted); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: color 0.2s; cursor: pointer; }
-  .header-nav a:hover { color: var(--paper); }
-  .badge-live { background: var(--accent); color: white; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 2px; }
-
-  .api-banner { background: #111a11; border-bottom: 1px solid #1e3a1e; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; flex-wrap: wrap; }
-  .api-banner label { color: #7ec891; flex-shrink: 0; font-weight: 600; }
-  .api-banner input { background: #0d160d; border: 1px solid #1e3a1e; color: #a6e3a1; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.8rem; flex: 1; min-width: 240px; max-width: 400px; outline: none; }
-  .api-status { font-size: 0.65rem; flex-shrink: 0; }
-  .api-status.ok  { color: var(--green); }
-  .api-status.bad { color: var(--accent); }
-
-  .hero { padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-  .hero-eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-  h1 { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 1.2rem; }
-  h1 em { font-style: italic; color: var(--accent); }
-  .hero-sub { font-size: 1rem; line-height: 1.7; color: var(--muted); margin-bottom: 2rem; max-width: 460px; }
-  
-  .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
-  .stat { background: var(--paper); padding: 1.2rem; }
-  .stat-val { font-family: var(--serif); font-size: 2rem; color: var(--ink); }
-  .stat-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
-
-  .hero-visual { position: relative; background: var(--ink); border: 1px solid #222; padding: 1.5rem; min-height: 280px; display: flex; flex-direction: column; gap: 0.8rem; overflow: hidden; }
-  .mock-json { font-family: var(--mono); font-size: 0.66rem; color: #4a9; line-height: 1.9; background: #0d0d14; padding: 1rem; flex: 1; }
-
-  .app-shell { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; display: grid; grid-template-columns: 340px 1fr; gap: 2rem; }
-  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
-  .card { background: var(--card); border: 1px solid var(--border); overflow: hidden; }
-  .card-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--cream); display: flex; align-items: center; justify-content: space-between; }
-  .card-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
-
-  .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; position: relative; }
-  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  .upload-preview { display: none; flex-direction: column; gap: 0.6rem; padding: 1rem; }
-  .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); }
-
-  .doc-types { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.8rem; }
-  .doc-type-btn { padding: 0.65rem 0.9rem; border: 1px solid var(--border); background: var(--paper); cursor: pointer; font-size: 0.78rem; font-weight: 600; text-align: left; width: 100%; }
-  .doc-type-btn.active { background: var(--ink); color: var(--paper); }
-
-  .analyze-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
-  .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; }
-
-  .main-panel { display: flex; flex-direction: column; gap: 1.5rem; }
-  .status-bar { background: var(--ink); color: var(--paper); padding: 0.65rem 1.2rem; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 0.68rem; }
-  .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
-  .sdot.ready { background: var(--green); }
-  .sdot.processing { background: var(--gold); }
-
-  .tabs { display: flex; border-bottom: 2px solid var(--border); overflow-x: auto; }
-  .tab-btn { padding: 0.75rem 1.1rem; border: none; background: transparent; font-size: 0.7rem; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.12s; }
-  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-
-  .risk-card { background: #fff5f2; border: 1px solid #ffded4; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); }
-  .risk-title { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); text-transform: uppercase; font-weight: 800; margin-bottom: 0.5rem; }
-  .risk-item { font-size: 0.78rem; color: var(--ink); margin-bottom: 0.35rem; }
-
-  .dec-banner { padding: 1.1rem 1.4rem; border-left: 4px solid; margin-bottom: 0.8rem; display: flex; align-items: center; justify-content: space-between; }
-  .dec-banner.APPROVED { background:#1ac86b12; border-color:var(--green); }
-  .dec-banner.REJECTED { background:#c8441a12; border-color:var(--accent); }
-  .dec-banner.REVIEW   { background:#c8a41a12; border-color:var(--gold); }
-  
-  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); margin-bottom: 0.8rem; }
-  .sc { background: white; padding: 0.8rem 1rem; }
-  .sc-l { font-family: var(--mono); font-size: 0.58rem; text-transform: uppercase; color: var(--muted); }
-  .sc-v { font-weight: 700; font-size: 0.85rem; font-family: var(--mono); }
-
-  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: var(--border); }
-  .fc { background: white; padding: 0.9rem 1rem; }
-  .fk { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); text-transform: uppercase; }
-  .fv { font-size: 0.86rem; font-weight: 600; font-family: var(--mono); }
-
-  .json-out { background: #0d1117; color: #c9d1d9; font-family: var(--mono); font-size: 0.72rem; padding: 1.4rem; overflow: auto; border: 1px solid var(--border); }
-  .notif { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ink); color: var(--paper); padding: 0.75rem 1.1rem; font-family: var(--mono); font-size: 0.7rem; transform: translateX(120%); transition: 0.28s; z-index: 1000; }
-  .notif.show { transform: translateX(0); }
-</style>
-</head>
 <body>
 
 <header>
@@ -118,57 +14,48 @@
   <label for="apiKey">🔑 API KEY:</label>
   <input type="password" id="apiKey" placeholder="sk-ant... or AIza..." oninput="onKeyInput()"/>
   <span class="api-status bad" id="apiSt">Not set — required</span>
-  <select id="modelSel" onchange="onKeyInput()" style="background:#0d160d; color:#a6e3a1; font-family:var(--mono); font-size:0.69rem; border:1px solid #1e3a1e; padding:0.32rem 0.6rem;">
-    <option value="gemini-pro-latest">Gemini Pro (Advanced)</option>
-    <option value="gemini-flash-latest" selected>Gemini Flash (Fast)</option>
-  </select>
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <select id="modelSel" onchange="onKeyInput()" style="background:#0d160d; color:#a6e3a1; font-family:var(--mono); font-size:0.69rem; border:1px solid #1e3a1e; padding:0.32rem 0.6rem;">
+      <option value="gemini-pro-latest">Gemini Pro (Advanced)</option>
+      <option value="gemini-flash-latest" selected>Gemini Flash (Fast)</option>
+    </select>
+    <div id="modelStatus" style="width: 10px; height: 10px; border-radius: 50%; background: #333;"></div>
+  </div>
   <button onclick="testKey()" style="background:#1a3a1a; color:#7ec891; font-family:var(--mono); font-size:0.65rem; padding:0.32rem 0.8rem; cursor:pointer; border:1px solid #1e3a1e;">▶ Test Key</button>
 </div>
 
-<section class="hero">
-  <div>
-    <div class="hero-eyebrow">Document Intelligence Platform</div>
-    <h1>Analyse. <em>Decide.</em> Standardise.</h1>
-    <p class="hero-sub">Upload medical or financial docs. Vision AI extracts data and identifies underwriting risks instantly.</p>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-val">3</div><div class="stat-label">Doc Types</div></div>
-      <div class="stat"><div class="stat-val">99%</div><div class="stat-label">Accuracy</div></div>
-      <div class="stat"><div class="stat-val">&lt;8s</div><div class="stat-label">Speed</div></div>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="mock-json">
-      { "decision": "APPROVED", "confidence": 0.94 }
-    </div>
-  </div>
-</section>
-
-<main class="app-shell">
+<main class="app-shell" style="margin-top: 2rem;">
   <aside class="sidebar">
     <div class="card">
-      <div class="card-header"><div class="card-title">📄 Document Upload</div></div>
+      <div class="card-header"><div class="card-title">📄 Document Upload (Multiple)</div></div>
       <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" onchange="onFile(event)"/>
+        <input type="file" id="fileInput" multiple onchange="onFile(event)"/>
         <span style="font-size:2rem">⬆</span><br>
-        <span class="upload-label">Click or drop document</span>
+        <span class="upload-label">Select one or more photos</span>
       </div>
-      <div class="upload-preview" id="uploadPrev">
-        <img id="prevImg" class="preview-thumb" alt=""/>
-        <div id="prevPdf" style="display:none; text-align:center; padding:2rem; background:var(--cream)">📄 PDF Loaded</div>
-        <button onclick="resetFile()" style="width:100%; margin-top:0.5rem; cursor:pointer">✕ Change File</button>
+      <div class="upload-preview" id="uploadPrev" style="display:none; max-height: 300px; overflow-y: auto; padding: 10px;">
+        <div id="previewGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;"></div>
+        <button onclick="resetFile()" style="width:100%; margin-top:0.5rem; cursor:pointer; padding: 5px;">✕ Clear All</button>
       </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><div class="card-title">⚙️ Extraction Rules</div></div>
+        <div style="padding: 10px;">
+            <textarea id="customRules" placeholder="Enter custom rules (e.g. 'Identify if document is expired', 'Check for handwritten notes')" style="width:100%; height:80px; font-family:var(--mono); font-size:0.7rem; padding:8px; border:1px solid var(--border);"></textarea>
+        </div>
     </div>
 
     <div class="card">
       <div class="card-header"><div class="card-title">🗂 Intent</div></div>
       <div class="doc-types">
-        <button class="doc-type-btn active" data-type="auto" onclick="pickType(this)">🤖 Auto-Detect</button>
-        <button class="doc-type-btn" data-type="underwriting" onclick="pickType(this)">👤 Customer Photo (Risk)</button>
-        <button class="doc-type-btn" data-type="medical" onclick="pickType(this)">🏥 Medical Report</button>
+        <button class="doc-type-btn active" data-type="auto" onclick="pickType(this)">🤖 Auto-Detect (All Types)</button>
+        <button class="doc-type-btn" data-type="underwriting" onclick="pickType(this)">👤 Photo Risk</button>
+        <button class="doc-type-btn" data-type="medical" onclick="pickType(this)">🏥 Medical</button>
       </div>
     </div>
 
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>Analyse Document</button>
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyse()" disabled>Analyse Batch</button>
   </aside>
 
   <div class="main-panel">
@@ -183,60 +70,74 @@
       <button class="tab-btn" data-tab="json" onclick="switchTab('json',this)">JSON</button>
     </div>
 
-    <div class="tab-pane active" id="pane-overview"><div id="overviewOut" style="padding:2rem; text-align:center; color:var(--muted)">No data.</div></div>
+    <div class="tab-pane active" id="pane-overview"><div id="overviewOut" style="padding:2rem; text-align:center; color:var(--muted)">Waiting for analysis...</div></div>
     <div class="tab-pane" id="pane-extracted"><div id="extractedOut" class="fields-grid"></div></div>
     <div class="tab-pane" id="pane-json"><div id="jsonOut" class="json-out"></div></div>
   </div>
 </main>
 
-<div class="notif" id="notif"></div>
-
 <script>
-const S = { b64:null, mime:null, docType:'auto', sid:null };
+const S = { files: [], docType:'auto', sid:null };
 
 function init() {
   S.sid = 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase();
   document.getElementById('sid').textContent = 'SESSION: ' + S.sid;
-  const k = sessionStorage.getItem('dm_key');
-  if (k) { document.getElementById('apiKey').value = k; onKeyInput(); }
 }
 
 function onKeyInput() {
   const k = document.getElementById('apiKey').value.trim();
-  const model = document.getElementById('modelSel').value;
-  const isGemini = model.includes('gemini');
   const el = document.getElementById('apiSt');
-  const ok = isGemini ? k.length > 10 : k.startsWith('sk-ant');
+  const indicator = document.getElementById('modelStatus');
+  const ok = k.length > 10;
+  
   el.textContent = ok ? '✓ Ready' : '⚠ Invalid';
   el.className = 'api-status ' + (ok ? 'ok' : 'bad');
-  if(ok) sessionStorage.setItem('dm_key', k);
+  indicator.style.background = ok ? '#1ac86b' : '#333';
+  if(ok) {
+    indicator.style.boxShadow = "0 0 8px #1ac86b";
+    sessionStorage.setItem('dm_key', k);
+  }
   refreshBtn();
 }
 
 function refreshBtn() {
   const k = document.getElementById('apiKey').value;
-  document.getElementById('analyzeBtn').disabled = !(k && S.b64);
+  document.getElementById('analyzeBtn').disabled = !(k && S.files.length > 0);
 }
 
-function onFile(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    S.b64 = ev.target.result.split(',')[1];
-    S.mime = f.type || 'image/jpeg';
-    document.getElementById('uploadZone').style.display = 'none';
-    document.getElementById('uploadPrev').style.display = 'flex';
-    const isImg = f.type.startsWith('image/');
-    document.getElementById('prevImg').style.display = isImg ? 'block' : 'none';
-    document.getElementById('prevPdf').style.display = isImg ? 'none' : 'block';
-    if(isImg) document.getElementById('prevImg').src = ev.target.result;
-    refreshBtn();
-  };
-  r.readAsDataURL(f);
+async function onFile(e) {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  
+  S.files = [];
+  const grid = document.getElementById('previewGrid');
+  grid.innerHTML = '';
+
+  for (const file of files) {
+    const base64 = await toBase64(file);
+    S.files.push({ b64: base64.split(',')[1], mime: file.type });
+    
+    const img = document.createElement('img');
+    img.src = base64;
+    img.className = 'preview-thumb';
+    img.style.height = "80px";
+    grid.appendChild(img);
+  }
+
+  document.getElementById('uploadZone').style.display = 'none';
+  document.getElementById('uploadPrev').style.display = 'block';
+  refreshBtn();
 }
+
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});
 
 function resetFile() {
-  S.b64 = null;
+  S.files = [];
   document.getElementById('uploadZone').style.display = 'block';
   document.getElementById('uploadPrev').style.display = 'none';
   refreshBtn();
@@ -248,76 +149,55 @@ function pickType(btn) {
   S.docType = btn.dataset.type;
 }
 
-async function callAPI(payload, key) {
-  const model = document.getElementById('modelSel').value;
-  const isGemini = model.includes('gemini');
-  const url = isGemini ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}` : 'https://api.anthropic.com/v1/messages';
-
-  const body = isGemini ? {
-    contents: [{ parts: payload.messages[0].content }],
-    systemInstruction: { parts: [{ text: payload.system }] },
-    generationConfig: { responseMimeType: "application/json" }
-  } : {
-    model: model, system: payload.system, messages: payload.messages, max_tokens: 4096
-  };
-
-  const headers = { 'Content-Type': 'application/json' };
-  if(!isGemini) {
-    headers['x-api-key'] = key;
-    headers['anthropic-version'] = '2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access'] = 'true';
-  }
-
-  const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(body) });
-  if (!res.ok) throw new Error('API Error');
-  const data = await res.json();
-  return isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text;
-}
-
-async function testKey() {
-  const k = document.getElementById('apiKey').value.trim();
-  if(!k) return toast('Key required');
-  try {
-    const isGemini = document.getElementById('modelSel').value.includes('gemini');
-    const content = isGemini ? [{text: "Hi"}] : [{type: "text", text: "Hi"}];
-    await callAPI({ system: "Say OK", messages: [{role:'user', content}] }, k);
-    toast('✓ API Connected', 'ok');
-  } catch(e) { toast('✗ Connection Failed'); }
-}
-
 async function analyse() {
   const key = document.getElementById('apiKey').value;
-  const isGemini = document.getElementById('modelSel').value.includes('gemini');
-  document.getElementById('analyzeBtn').disabled = true;
-  setStatus('processing', 'AI Analysis active...');
+  const rules = document.getElementById('customRules').value;
+  setStatus('processing', `Analysing ${S.files.length} document(s)...`);
 
-  const system = `You are DocuMind AI. Analyse intent: ${S.docType}.
-  Return valid JSON ONLY: { "overall_decision": "APPROVED|REJECTED|REVIEW", "rationale": "reason", "risk_markers": [], "fields": {} }`;
+  const system = `You are DocuMind AI. 
+  CLASSIFICATION TASK: For every image, classify as [Income, Medical, Photo, KYC].
+  EXTRACTION RULES: ${rules || "Extract all standard fields"}.
+  Return valid JSON ONLY: { 
+    "classifications": [], 
+    "overall_decision": "APPROVED|REJECTED|REVIEW", 
+    "rationale": "reason", 
+    "fields": {} 
+  }`;
 
-  const content = isGemini ? 
-    [{ text: "Analyse" }, { inline_data: { mime_type: S.mime, data: S.b64 } }] : 
-    [{ type: S.mime.includes('pdf')?'document':'image', source:{ type:'base64', media_type:S.mime, data:S.b64 } }, { type:'text', text:'Analyse' }];
+  // Build parts for Gemini (supporting multiple images)
+  const contentParts = S.files.map(f => ({ inline_data: { mime_type: f.mime, data: f.b64 } }));
+  contentParts.push({ text: "Perform analysis on all provided documents." });
 
   try {
-    const raw = await callAPI({ system, messages: [{ role:'user', content }] }, key);
-    const r = JSON.parse(raw);
-    
-    // Render Overview
-    let riskHtml = '';
-    if (r.risk_markers?.length) {
-      riskHtml = `<div class="risk-card"><div class="risk-title">⚠️ RISK FLAGS</div>${r.risk_markers.map(m=>`<div class="risk-item">• ${m}</div>`).join('')}</div>`;
-    }
-    document.getElementById('overviewOut').innerHTML = `<div class="dec-banner ${r.overall_decision}"><div><div class="sc-l">Decision</div><div class="stat-val">${r.overall_decision}</div></div></div><p style="padding:0 1.4rem">${r.rationale}</p>${riskHtml}`;
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: contentParts }],
+        systemInstruction: { parts: [{ text: system }] },
+        generationConfig: { responseMimeType: "application/json" }
+      })
+    });
 
-    // Render Fields
+    const data = await res.json();
+    const r = JSON.parse(data.candidates[0].content.parts[0].text);
+    
+    // UI Rendering
+    const classTags = r.classifications.map(c => `<span class="badge-live" style="background:var(--accent2); margin-right:5px;">${c}</span>`).join('');
+    document.getElementById('overviewOut').innerHTML = `
+      <div class="dec-banner ${r.overall_decision}">
+        <div><div class="sc-l">Types Detected</div><div style="margin-top:5px">${classTags}</div></div>
+        <div style="text-align:right"><div class="sc-l">Decision</div><div class="stat-val">${r.overall_decision}</div></div>
+      </div>
+      <p style="padding:1rem">${r.rationale}</p>`;
+
     document.getElementById('extractedOut').innerHTML = Object.entries(r.fields || {}).map(([k,v])=>`<div class="fc"><div class="fk">${k}</div><div class="fv">${v}</div></div>`).join('');
     document.getElementById('jsonOut').textContent = JSON.stringify(r, null, 2);
     
-    setStatus('ready', 'Complete');
-    toast('✓ Complete', 'ok');
+    setStatus('ready', 'Batch Analysis Complete');
   } catch (err) {
-    setStatus('error', err.message);
-  } finally { document.getElementById('analyzeBtn').disabled = false; }
+    setStatus('error', "API Error: Check Key or Connection");
+  }
 }
 
 function switchTab(id, btn) {
@@ -332,13 +212,6 @@ function setStatus(type, text) {
   document.getElementById('stxt').textContent = text;
 }
 
-function toast(msg, type) {
-  const el = document.getElementById('notif');
-  el.textContent = msg; el.className = 'notif show ' + (type||'');
-  setTimeout(() => el.classList.remove('show'), 3000);
-}
-
 init();
 </script>
 </body>
-</html>
