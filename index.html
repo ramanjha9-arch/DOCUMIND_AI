@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>DocuMind AI — Intelligent Document Intelligence Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<link href="[https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap)" rel="stylesheet"/>
 <style>
   :root {
     --ink: #0a0a0f; --paper: #f5f3ee; --cream: #ede9e0;
@@ -13,58 +13,50 @@
     --mono: 'DM Mono', monospace; --serif: 'DM Serif Display', serif; --sans: 'Syne', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--paper); color: var(--ink); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
   
   header { position: sticky; top: 0; z-index: 100; background: var(--ink); border-bottom: 2px solid var(--accent); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
   .logo { font-family: var(--serif); font-size: 1.4rem; color: var(--paper); display: flex; align-items: center; gap: 0.5rem; }
   .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
-  .header-nav { display: flex; gap: 1.5rem; align-items: center; }
-  .header-nav a { color: var(--muted); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: color 0.2s; }
-  .header-nav a:hover { color: var(--paper); }
 
-  .api-banner { background: #111a11; border-bottom: 1px solid #1e3a1e; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; flex-wrap: wrap; }
+  .api-banner { background: #111a11; border-bottom: 1px solid #1e3a1e; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; }
   .api-banner input { background: #0d160d; border: 1px solid #1e3a1e; color: #a6e3a1; font-family: var(--mono); padding: 0.35rem 0.8rem; flex: 1; outline: none; }
   .api-status { font-size: 0.65rem; }
   .api-status.ok { color: var(--green); }
   .api-status.bad { color: var(--accent); }
 
-  .app-shell { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; display: grid; grid-template-columns: 340px 1fr; gap: 2rem; }
+  .hero { padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  h1 { font-family: var(--serif); font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
+  h1 em { color: var(--accent); font-style: italic; }
+
+  .app-shell { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; display: grid; grid-template-columns: 340px 1fr; gap: 2rem; }
   .card { background: var(--card); border: 1px solid var(--border); margin-bottom: 1.5rem; }
   .card-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--cream); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; }
 
   .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2rem; text-align: center; cursor: pointer; position: relative; }
   .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  .upload-preview { display: none; padding: 1rem; flex-direction: column; gap: 0.5rem; }
+  .upload-preview { display: none; padding: 1rem; flex-direction: column; }
   .preview-thumb { width: 100%; height: 150px; object-fit: cover; border: 1px solid var(--border); }
 
-  .doc-type-btn { width: 100%; padding: 0.8rem; text-align: left; background: var(--paper); border: 1px solid var(--border); margin-bottom: 0.4rem; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
+  .doc-type-btn { width: 100%; padding: 0.8rem; text-align: left; background: var(--paper); border: 1px solid var(--border); margin-bottom: 0.4rem; cursor: pointer; font-weight: 600; }
   .doc-type-btn.active { background: var(--ink); color: var(--paper); }
 
   .analyze-btn { width: 100%; padding: 1.2rem; background: var(--accent); color: white; border: none; cursor: pointer; font-weight: 800; text-transform: uppercase; }
   .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; }
 
-  .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1rem; }
-  .tab-btn { padding: 1rem; border: none; background: none; font-weight: 700; color: var(--muted); cursor: pointer; }
-  .tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+  .tab-btn { padding: 1rem; border: none; background: none; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  /* Risk Styling */
-  .risk-box { background: #fff5f2; border: 1px solid #ffded4; padding: 1rem; border-left: 4px solid var(--accent); margin-top: 1rem; }
-  .risk-header { font-family: var(--mono); color: var(--accent); font-weight: 800; font-size: 0.65rem; margin-bottom: 0.5rem; }
-  .risk-item { font-size: 0.8rem; margin-bottom: 0.3rem; }
-
-  .dec-banner { padding: 1.5rem; margin-bottom: 1rem; border-left: 5px solid; }
+  .risk-box { background: #fff5f2; border: 1px solid #ffded4; padding: 1rem; border-left: 4px solid var(--accent); margin-top: 1rem; text-align: left; }
+  .dec-banner { padding: 1.5rem; border-left: 5px solid; margin-bottom: 1rem; text-align: left; }
   .dec-banner.APPROVED { background: #1ac86b15; border-color: var(--green); }
   .dec-banner.REJECTED { background: #c8441a15; border-color: var(--accent); }
-  .dec-banner.REVIEW { background: #c8a41a15; border-color: var(--gold); }
 
-  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); }
-  .field-card { background: white; padding: 1rem; }
-  .field-key { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); text-transform: uppercase; }
-  .field-val { font-weight: 700; margin-top: 0.2rem; }
-
-  .notif { position: fixed; bottom: 2rem; right: 2rem; background: var(--ink); color: white; padding: 1rem; transform: translateY(200%); transition: 0.3s; z-index: 9999; }
+  .fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; background: var(--border); }
+  .f-card { background: white; padding: 1rem; }
+  .notif { position: fixed; bottom: 2rem; right: 2rem; background: var(--ink); color: white; padding: 1rem; transform: translateY(200%); transition: 0.3s; }
   .notif.show { transform: translateY(0); }
 </style>
 </head>
@@ -82,35 +74,44 @@
 <div class="api-banner">
   <label style="color:white">API KEY:</label>
   <input type="password" id="apiKey" placeholder="sk-ant... or AIza..." oninput="onKeyInput()">
-  <select id="modelSel" onchange="onKeyInput()">
+  <select id="modelSel" onchange="onKeyInput()" style="background:#0d160d; color:#a6e3a1; border:1px solid #1e3a1e;">
     <option value="gemini-1.5-flash">Gemini 1.5 Flash (Free)</option>
     <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
   </select>
-  <span id="apiSt" class="api-status bad">Key Required</span>
-  <button onclick="testKey()" style="padding:0.3rem 1rem; cursor:pointer">Test</button>
+  <span id="apiSt" class="api-status bad">Not Set</span>
+  <button onclick="testKey()" style="background:#1a3a1a; color:#7ec891; border:1px solid #1e3a1e; cursor:pointer; padding:2px 10px;">Test</button>
 </div>
+
+<section class="hero">
+  <div>
+    <h1>Analyse. <em>Decide.</em> Standardise.</h1>
+    <p style="color:var(--muted); line-height:1.6;">AI-powered document intelligence for medical and financial underwriting.</p>
+  </div>
+  <div style="background:var(--ink); padding:2rem; color:var(--green); font-family:var(--mono); font-size:0.7rem;">
+    { "status": "LIVE_EXTRACTOR_READY" }
+  </div>
+</section>
 
 <main class="app-shell">
   <aside>
     <div class="card">
-      <div class="card-header">Upload File</div>
+      <div class="card-header">Upload</div>
       <div class="upload-zone" id="uploadZone">
         <input type="file" id="fileInput" onchange="onFile(event)">
-        <strong>Click to Upload</strong><br><small>PDF or Image</small>
+        <strong>Click to Upload</strong>
       </div>
       <div class="upload-preview" id="uploadPrev">
-        <img id="prevImg" class="preview-thumb" style="display:none">
-        <div id="prevPdf" style="display:none; padding:1rem; background:#eee">PDF File</div>
-        <button onclick="resetFile()" style="margin-top:0.5rem; cursor:pointer">Change File</button>
+        <img id="prevImg" class="preview-thumb">
+        <div id="prevPdf" style="display:none; padding:1rem; background:#eee">PDF Loaded</div>
+        <button onclick="resetFile()" style="margin-top:0.5rem; cursor:pointer">Change</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header">Intent</div>
+      <div class="card-header">Mode</div>
       <div class="doc-types">
         <button class="doc-type-btn active" data-type="auto" onclick="pickType(this)">🤖 Auto-Detect</button>
-        <button class="doc-type-btn" data-type="underwriting" onclick="pickType(this)">👤 Customer Photo (Risk)</button>
-        <button class="doc-type-btn" data-type="medical" onclick="pickType(this)">🏥 Medical Report</button>
+        <button class="doc-type-btn" data-type="underwriting" onclick="pickType(this)">👤 Photo Risk Analysis</button>
       </div>
     </div>
 
@@ -125,10 +126,10 @@
     </div>
 
     <div class="tab-pane active" id="pane-overview">
-      <div id="overviewOut" style="padding:2rem; text-align:center; color:#999">Upload and Analyse to see results</div>
+      <div id="overviewOut" style="padding:2rem; text-align:center; color:#999">Upload a document to begin.</div>
     </div>
     <div class="tab-pane" id="pane-extracted"><div id="extractedOut" class="fields-grid"></div></div>
-    <div class="tab-pane" id="pane-json"><pre id="jsonOut" style="background:#f4f4f4; padding:1rem; font-size:0.8rem"></pre></div>
+    <div class="tab-pane" id="pane-json"><pre id="jsonOut" style="background:#f4f4f4; padding:1rem; overflow:auto;"></pre></div>
   </section>
 </main>
 
@@ -139,17 +140,17 @@ const S = { b64:null, mime:null, docType:'auto' };
 
 function onKeyInput() {
   const k = document.getElementById('apiKey').value.trim();
-  const model = document.getElementById('modelSel').value;
-  const isGemini = model.includes('gemini');
+  const isGemini = document.getElementById('modelSel').value.includes('gemini');
   const el = document.getElementById('apiSt');
   const ok = isGemini ? k.length > 10 : k.startsWith('sk-ant');
   el.textContent = ok ? '✓ Ready' : '⚠ Invalid';
   el.className = 'api-status ' + (ok ? 'ok' : 'bad');
+  if(ok) sessionStorage.setItem('dm_key', k);
   refreshBtn();
 }
 
 function refreshBtn() {
-  const k = document.getElementById('apiKey').value;
+  const k = document.getElementById('apiKey').value.trim();
   document.getElementById('analyzeBtn').disabled = !(k && S.b64);
 }
 
@@ -186,83 +187,87 @@ function pickType(btn) {
 async function callAPI(payload, key) {
   const model = document.getElementById('modelSel').value;
   const isGemini = model.includes('gemini');
-  const url = isGemini ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}` : 'https://api.anthropic.com/v1/messages';
+  // FIXED: Added v1beta for better instruction support
+  const url = isGemini 
+    ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}` 
+    : '[https://api.anthropic.com/v1/messages](https://api.anthropic.com/v1/messages)';
 
-  const options = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(isGemini ? {
-      contents: [{ parts: payload.messages[0].content }],
-      systemInstruction: { parts: [{ text: payload.system }] },
-      generationConfig: { responseMimeType: "application/json" }
-    } : {
-      model: model, system: payload.system, messages: payload.messages, max_tokens: 4096
-    })
+  const body = isGemini ? {
+    contents: [{ parts: payload.messages[0].content }],
+    systemInstruction: { parts: [{ text: payload.system }] },
+    generationConfig: { responseMimeType: "application/json" }
+  } : {
+    model: model, system: payload.system, messages: payload.messages, max_tokens: 4096
   };
 
+  const headers = { 'Content-Type': 'application/json' };
   if(!isGemini) {
-    options.headers['x-api-key'] = key;
-    options.headers['anthropic-version'] = '2023-06-01';
-    options.headers['anthropic-dangerous-direct-browser-access'] = 'true';
+    headers['x-api-key'] = key;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
   }
 
-  const res = await fetch(url, options);
-  if (!res.ok) throw new Error('API Error');
+  const res = await fetch(url, { method:'POST', headers, body: JSON.stringify(body) });
+  if (!res.ok) {
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err.error?.message || 'API Error');
+  }
   const data = await res.json();
   return isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text;
 }
 
-async function analyse() {
-  const key = document.getElementById('apiKey').value;
-  document.getElementById('analyzeBtn').disabled = true;
-  document.getElementById('overviewOut').textContent = "⏳ Analysing...";
+async function testKey() {
+  const k = document.getElementById('apiKey').value.trim();
+  if(!k) return toast('Key required');
+  try {
+    const isGemini = document.getElementById('modelSel').value.includes('gemini');
+    const content = isGemini ? [{text: "Hi"}] : [{type: "text", text: "Hi"}];
+    await callAPI({ system: "Respond with JSON {'status': 'ok'}", messages: [{role:'user', content}] }, k);
+    toast('✓ Connected', 'ok');
+  } catch(e) { toast('✗ Failed: ' + e.message); }
+}
 
-  const system = `You are DocuMind AI. Extract data and evaluate underwriting risk.
+async function analyse() {
+  const key = document.getElementById('apiKey').value.trim();
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  document.getElementById('overviewOut').innerHTML = "⏳ <strong>Processing...</strong>";
+
+  const system = `You are DocuMind AI. Extract data and detect underwriting risk. 
+  If a photo of a person is provided, check for jaundice (yellow eyes/skin), obesity, or edema.
   Return valid JSON ONLY:
-  {
-    "overall_decision": "APPROVED|REJECTED|REVIEW",
-    "rationale": "reason",
-    "risk_markers": ["marker 1", "marker 2"],
-    "fields": {"name": "value"}
-  }`;
+  { "overall_decision": "APPROVED|REJECTED|REVIEW", "rationale": "...", "risk_markers": [], "fields": {} }`;
 
   const isGemini = document.getElementById('modelSel').value.includes('gemini');
   const content = isGemini ? 
-    [{ text: "Analyse this " + S.docType }, { inline_data: { mime_type: S.mime, data: S.b64 } }] : 
+    [{ text: "Analyse: " + S.docType }, { inline_data: { mime_type: S.mime, data: S.b64 } }] : 
     [{ type: S.mime.includes('pdf')?'document':'image', source:{ type:'base64', media_type:S.mime, data:S.b64 } }, { type:'text', text:'Analyse' }];
 
   try {
-    const text = await callAPI({ system, messages: [{ role:'user', content }] }, key);
-    const result = JSON.parse(text);
-    renderResults(result);
+    const raw = await callAPI({ system, messages: [{ role:'user', content }] }, key);
+    const r = JSON.parse(raw);
+    renderResults(r);
+    toast('✓ Analysis Complete', 'ok');
   } catch (err) {
-    document.getElementById('overviewOut').textContent = "Error: " + err.message;
-  } finally {
-    document.getElementById('analyzeBtn').disabled = false;
-  }
+    document.getElementById('overviewOut').innerHTML = `<div style="color:red">Error: ${err.message}</div>`;
+  } finally { btn.disabled = false; }
 }
 
 function renderResults(r) {
   let riskHtml = '';
-  if (r.risk_markers && r.risk_markers.length) {
-    riskHtml = `<div class="risk-box"><div class="risk-header">⚠️ UNDERWRITING RISK FLAGS</div>`;
-    r.risk_markers.forEach(m => riskHtml += `<div class="risk-item">${m}</div>`);
-    riskHtml += `</div>`;
+  if (r.risk_markers?.length) {
+    riskHtml = `<div class="risk-box"><strong>⚠️ RISK FLAGS:</strong><br>${r.risk_markers.map(m=>`• ${m}`).join('<br>')}</div>`;
   }
-
   document.getElementById('overviewOut').innerHTML = `
     <div class="dec-banner ${r.overall_decision}">
-      <h2 style="font-family:serif">${r.overall_decision}</h2>
-      <p style="font-size:0.9rem">${r.rationale}</p>
+      <h2>${r.overall_decision}</h2>
+      <p>${r.rationale}</p>
     </div>
-    ${riskHtml}
-  `;
+    ${riskHtml}`;
 
-  let fieldsHtml = '';
-  for (const [k, v] of Object.entries(r.fields || {})) {
-    fieldsHtml += `<div class="field-card"><div class="field-key">${k}</div><div class="field-val">${v}</div></div>`;
-  }
-  document.getElementById('extractedOut').innerHTML = fieldsHtml;
+  document.getElementById('extractedOut').innerHTML = Object.entries(r.fields || {}).map(([k,v])=>`
+    <div class="f-card"><div style="font-size:0.6rem; color:#999;">${k}</div><strong>${v}</strong></div>
+  `).join('');
   document.getElementById('jsonOut').textContent = JSON.stringify(r, null, 2);
   switchTab('overview');
 }
@@ -274,16 +279,16 @@ function switchTab(id, btn) {
   if(btn) btn.classList.add('active');
 }
 
-function onKeyInput() {
-  const k = document.getElementById('apiKey').value.trim();
-  const model = document.getElementById('modelSel').value;
-  const isGemini = model.includes('gemini');
-  const el = document.getElementById('apiSt');
-  const ok = isGemini ? k.length > 10 : k.startsWith('sk-ant');
-  el.textContent = ok ? '✓ Ready' : '⚠ Invalid';
-  el.className = 'api-status ' + (ok ? 'ok' : 'bad');
-  refreshBtn();
+function toast(msg, type) {
+  const el = document.getElementById('notif');
+  el.textContent = msg; el.className = 'notif show ' + (type||'');
+  setTimeout(() => el.classList.remove('show'), 3000);
 }
+
+window.onload = () => {
+  const k = sessionStorage.getItem('dm_key');
+  if(k) { document.getElementById('apiKey').value = k; onKeyInput(); }
+};
 </script>
 </body>
 </html>
