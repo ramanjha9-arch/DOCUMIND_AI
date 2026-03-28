@@ -3,289 +3,1430 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DocuMind AI — Intelligent Document Intelligence Platform</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<title>DocuMind AI v2 — Multi-Provider Document Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --ink: #0a0a0f; --paper: #f5f3ee; --cream: #ede9e0;
-    --accent: #c8441a; --accent2: #1a6bc8; --gold: #c8a41a;
-    --green: #1ac86b; --muted: #7a7570; --border: #d4cfc6; --card: #ffffff;
-    --mono: 'DM Mono', monospace; --serif: 'DM Serif Display', serif; --sans: 'Syne', sans-serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--paper); color: var(--ink); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.3;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"); }
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — identical to v1
+═══════════════════════════════════════════ */
+:root {
+  --ink: #0a0a0f; --paper: #f5f3ee; --cream: #ede9e0;
+  --accent: #c8441a; --accent2: #1a6bc8; --gold: #c8a41a;
+  --green: #1ac86b; --muted: #7a7570; --border: #d4cfc6; --card: #ffffff;
+  --mono: 'DM Mono', monospace;
+  --serif: 'DM Serif Display', serif;
+  --sans: 'Syne', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.3;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
 
-  header { position: sticky; top: 0; z-index: 100; background: var(--ink); border-bottom: 2px solid var(--accent); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .logo { font-family: var(--serif); font-size: 1.4rem; color: var(--paper); display: flex; align-items: center; gap: 0.5rem; }
-  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
-  .header-nav { display: flex; gap: 1.5rem; align-items: center; }
-  .header-nav a { color: var(--muted); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: color 0.2s; cursor: pointer; }
-  .header-nav a:hover { color: var(--paper); }
-  .badge-live { background: var(--accent); color: white; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 2px; }
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:2px solid var(--accent);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:var(--serif);font-size:1.4rem;color:var(--paper);display:flex;align-items:center;gap:.5rem}
+.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.logo-v2{font-family:var(--mono);font-size:.58rem;background:var(--accent);color:#fff;padding:1px 5px;margin-left:2px;letter-spacing:.06em}
+.header-right{display:flex;align-items:center;gap:1.5rem}
+.header-nav{display:flex;gap:1.5rem;align-items:center}
+.header-nav a{color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:color .2s;cursor:pointer}
+.header-nav a:hover{color:var(--paper)}
+.badge-live{background:var(--accent);color:white;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:2px 7px}
+.crafted-tag{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.04em;white-space:nowrap}
+.crafted-tag strong{color:var(--green)}
 
-  .api-banner { background: #111a11; border-bottom: 1px solid #1e3a1e; padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: 0.72rem; flex-wrap: wrap; }
-  .api-banner label { color: #7ec891; flex-shrink: 0; font-weight: 600; }
-  .api-banner input { background: #0d160d; border: 1px solid #1e3a1e; color: #a6e3a1; font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.8rem; flex: 1; min-width: 240px; max-width: 400px; outline: none; transition: border-color 0.2s; }
-  .api-banner input:focus { border-color: #1ac86b; }
-  .api-status { font-size: 0.65rem; flex-shrink: 0; }
-  .api-status.ok  { color: var(--green); }
-  .api-status.bad { color: var(--accent); }
+/* ── FILE:// WARNING ── */
+#fileWarning{display:none;background:#1a0a08;border-bottom:1px solid var(--accent);padding:.55rem 2rem;font-family:var(--mono);font-size:.68rem;color:#ffb3a0;line-height:1.7}
+#fileWarning code{background:#fff1;padding:.1em .35em}
 
-  .hero { padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-  h1 { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 1.2rem; }
-  .hero-sub { font-size: 1rem; line-height: 1.7; color: var(--muted); margin-bottom: 2rem; max-width: 460px; }
-  
-  .app-shell { max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; display: grid; grid-template-columns: 340px 1fr; gap: 2rem; }
-  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
-  .card { background: var(--card); border: 1px solid var(--border); overflow: hidden; }
-  .card-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--cream); display: flex; align-items: center; justify-content: space-between; }
-  .card-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
+/* ── PROVIDER BANNER — styled like v1 api-banner ── */
+.provider-banner{background:#0d1117;border-bottom:1px solid #1e2535;padding:.55rem 2rem;display:flex;align-items:center;gap:1rem;font-family:var(--mono);font-size:.72rem;flex-wrap:wrap}
+.pb-group{display:flex;align-items:center;gap:.45rem;flex-shrink:0}
+.pb-label{color:#6a8aad;font-weight:600;white-space:nowrap}
+.pb-select{background:#0a0f18;border:1px solid #1e2535;color:#a8c0e0;font-family:var(--mono);font-size:.68rem;padding:.3rem .55rem;outline:none;cursor:pointer;transition:border-color .2s}
+.pb-select:focus{border-color:var(--accent2)}
+.pb-input{background:#0a0f18;border:1px solid #1e2535;color:#a8c0e0;font-family:var(--mono);font-size:.68rem;padding:.3rem .7rem;outline:none;transition:border-color .2s;min-width:240px;max-width:360px}
+.pb-input:focus{border-color:var(--accent2)}
+.pb-input::placeholder{color:#2a3a55}
+.pb-sep{width:1px;height:20px;background:#1e2535;flex-shrink:0}
+/* status dot */
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s,box-shadow .3s}
+.status-dot.idle{background:var(--muted)}
+.status-dot.testing{background:var(--gold);animation:blink .5s infinite}
+.status-dot.ok{background:var(--green);box-shadow:0 0 5px var(--green)}
+.status-dot.fail{background:var(--accent);box-shadow:0 0 5px var(--accent)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.pb-status-lbl{font-size:.63rem;color:var(--muted);min-width:88px}
+.pb-btn{background:none;border:1px solid #1e2535;color:#6a8aad;font-family:var(--mono);font-size:.63rem;padding:.28rem .65rem;cursor:pointer;transition:all .15s;white-space:nowrap}
+.pb-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+.pb-btn.primary{border-color:var(--accent);color:var(--accent)}
+.pb-btn.primary:hover{background:var(--accent);color:#fff}
 
-  .upload-zone { border: 2px dashed var(--border); background: var(--cream); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
-  .upload-zone:hover { border-color: var(--accent); }
-  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  .upload-preview { display: none; flex-direction: column; gap: 0.6rem; padding: 1rem; }
-  .file-list-item { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); padding: 4px; border-bottom: 1px solid var(--border); }
+/* ── HERO ── */
+.hero{padding:4rem 2rem 2.5rem;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.hero-eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.hero-eyebrow::before{content:'//';opacity:.5}
+h1{font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.5rem);line-height:1.05;color:var(--ink);margin-bottom:1.2rem}
+h1 em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:1rem;line-height:1.7;color:var(--muted);margin-bottom:2rem;max-width:460px}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{background:var(--ink);color:var(--paper);border:none;padding:.8rem 1.8rem;font-family:var(--sans);font-size:.82rem;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn-primary:hover{background:var(--accent);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--ink);border:2px solid var(--border);padding:.8rem 1.8rem;font-family:var(--sans);font-size:.82rem;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn-outline:hover{border-color:var(--ink)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2rem}
+.stat{background:var(--paper);padding:1.2rem}
+.stat-val{font-family:var(--serif);font-size:2rem;color:var(--ink);line-height:1}
+.stat-label{font-size:.7rem;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:.3rem}
+.hero-visual{position:relative;background:var(--ink);border:1px solid #222;padding:1.5rem;min-height:280px;display:flex;flex-direction:column;gap:.8rem;overflow:hidden}
+.hero-visual::after{content:'LIVE OUTPUT';position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;color:var(--green);opacity:.7}
+.mock-line{height:8px;background:#1a1a22;border-radius:2px;animation:shimmer 2s infinite}
+.mock-line.accent{background:#c8441a33;width:60%}
+.mock-line.short{width:40%}
+.mock-line.med{width:75%;animation-delay:.3s}
+@keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
+.mock-json{font-family:var(--mono);font-size:.66rem;color:#4a9;line-height:1.9;background:#0d0d14;border:1px solid #1a1a2e;padding:1rem;flex:1;overflow:hidden}
+.mock-json .k{color:#6a9fd8}
+.mock-json .v{color:#c8a41a}
 
-  .analyze-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; cursor: pointer; font-family: var(--sans); font-size: 0.88rem; font-weight: 700; text-transform: uppercase; transition: all 0.2s; }
-  .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; }
-  
-  .main-panel { display: flex; flex-direction: column; gap: 1.5rem; }
-  .status-bar { background: var(--ink); color: var(--paper); padding: 0.65rem 1.2rem; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 0.68rem; }
-  
-  .tabs { display: flex; border-bottom: 2px solid var(--border); }
-  .tab-btn { padding: 0.75rem 1.1rem; border: none; background: transparent; font-family: var(--sans); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
-  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .tab-pane { display: none; padding: 1.5rem 0; }
-  .tab-pane.active { display: block; }
+/* ── APP SHELL ── */
+.app-shell{max-width:1200px;margin:0 auto;padding:0 2rem 4rem;display:grid;grid-template-columns:340px 1fr;gap:2rem}
+.sidebar{display:flex;flex-direction:column;gap:1.5rem}
+.card{background:var(--card);border:1px solid var(--border);overflow:hidden}
+.card-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);background:var(--cream);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.card-action{background:none;border:none;font-size:.63rem;color:var(--accent2);cursor:pointer;font-family:var(--mono);font-weight:700}
+.card-action:hover{color:var(--ink)}
 
-  .dec-banner { padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid; margin-bottom: 0.8rem; }
-  .dec-banner.APPROVED { background:#1ac86b12; border-color:var(--green); }
-  .dec-banner.REJECTED { background:#c8441a12; border-color:var(--accent); }
-  
-  /* NEW: Action Bar for PDF */
-  .action-bar { display: flex; gap: 10px; margin-bottom: 1rem; }
-  .btn-download { background: var(--accent2); color: white; border: none; padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: var(--mono); }
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:2px dashed var(--border);background:var(--cream);padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:#c8441a08}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:2rem;margin-bottom:.6rem;display:block}
+.upload-label{font-size:.82rem;font-weight:600;color:var(--ink);display:block}
+.upload-sub{font-size:.68rem;color:var(--muted);margin-top:.25rem;font-family:var(--mono)}
 
-  .notif { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300; background: var(--ink); color: var(--paper); padding: 0.75rem 1.1rem; font-family: var(--mono); font-size: 0.7rem; transform: translateX(120%); transition: transform 0.28s ease; }
-  .notif.show { transform: translateX(0); }
+/* ── DOC QUEUE ── */
+.doc-queue{display:flex;flex-direction:column;gap:.3rem;padding:.7rem}
+.doc-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;border:1px solid var(--border);background:var(--paper);cursor:default;transition:border-color .15s}
+.doc-item.done{border-left:3px solid var(--green)}
+.doc-item.error{border-left:3px solid var(--accent)}
+.doc-item.processing{border-left:3px solid var(--gold)}
+.doc-thumb{width:30px;height:30px;object-fit:cover;border:1px solid var(--border);flex-shrink:0}
+.doc-thumb-icon{width:30px;height:30px;background:var(--cream);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.doc-info{flex:1;min-width:0}
+.doc-name{font-family:var(--mono);font-size:.62rem;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-type-tag{font-family:var(--mono);font-size:.55rem;color:var(--muted)}
+.doc-type-tag.classified{color:var(--accent2)}
+.doc-icon{font-size:.8rem;flex-shrink:0}
+.doc-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;flex-shrink:0;padding:0 .2rem;line-height:1}
+.doc-rm:hover{color:var(--accent)}
+
+/* ── DOC TYPE SELECTOR ── */
+.doc-types{display:flex;flex-direction:column;gap:.35rem;padding:.7rem}
+.doc-type-btn{padding:.6rem .9rem;border:1px solid var(--border);background:var(--paper);cursor:pointer;font-family:var(--sans);font-size:.76rem;font-weight:600;display:flex;align-items:center;gap:.7rem;transition:all .15s;color:var(--ink);text-align:left;width:100%}
+.doc-type-btn:hover{border-color:var(--accent)}
+.doc-type-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.dt-icon{font-size:1rem;flex-shrink:0}
+.dt-sub{font-size:.6rem;font-weight:400;color:inherit;opacity:.6;font-family:var(--mono);display:block}
+
+/* ── RULES LIST ── */
+.rules-list{display:flex;flex-direction:column;gap:.3rem;max-height:220px;overflow-y:auto;padding:.7rem}
+.rule-item{padding:.45rem .65rem;border:1px solid var(--border);background:var(--paper);font-size:.7rem;font-family:var(--mono);display:flex;align-items:center;gap:.45rem;cursor:pointer;transition:all .12s;user-select:none}
+.rule-item:hover{border-color:var(--accent2)}
+.rule-item.active{border-color:var(--accent2);background:#1a6bc808}
+.rule-chk{width:12px;height:12px;border:1.5px solid var(--border);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.5rem;transition:all .12s}
+.rule-chk.on{background:var(--accent2);border-color:var(--accent2);color:white}
+.rule-lbl{flex:1;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rule-lbl strong{color:var(--ink)}
+
+/* ── THIRD-PARTY GRID ── */
+.tp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:.8rem}
+.tp-card{padding:.65rem;border:1px solid var(--border);background:var(--paper)}
+.tp-card.on{border-color:var(--green);background:#1ac86b06}
+.tp-name{font-weight:700;font-size:.73rem;color:var(--ink)}
+.tp-dot{font-family:var(--mono);font-size:.58rem;margin-top:.2rem}
+.tp-dot.on{color:var(--green)}
+.tp-dot.off{color:var(--muted)}
+
+/* ── ANALYSE BUTTON ── */
+.analyze-btn{width:100%;padding:1rem;background:var(--accent);color:white;border:none;cursor:pointer;font-family:var(--sans);font-size:.88rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.analyze-btn:hover:not(:disabled){background:#a33515}
+.analyze-btn:disabled{background:var(--muted);cursor:not-allowed;opacity:.7}
+.spinner{display:none;width:15px;height:15px;border:2px solid #ffffff44;border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.analyze-btn.loading .spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── MAIN PANEL ── */
+.main-panel{display:flex;flex-direction:column;gap:1.5rem}
+.status-bar{background:var(--ink);color:var(--paper);padding:.6rem 1.2rem;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.66rem}
+.s-left{display:flex;align-items:center;gap:.8rem}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.sdot.ready{background:var(--green);animation:pulse 2s infinite}
+.sdot.processing{background:var(--gold);animation:pulse .5s infinite}
+.sdot.error{background:var(--accent)}
+
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:2px solid var(--border);overflow-x:auto}
+.tab-btn{padding:.72rem 1.1rem;border:none;background:transparent;font-family:var(--sans);font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .12s;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* ── EMPTY STATE ── */
+.empty{padding:4rem 2rem;text-align:center;border:1px solid var(--border);background:var(--card)}
+.empty-i{font-size:2.2rem;margin-bottom:.8rem;opacity:.2}
+.empty-t{font-family:var(--serif);font-size:1.3rem;margin-bottom:.4rem}
+.empty-s{font-size:.8rem;color:var(--muted);line-height:1.6}
+
+/* ── DECISION BANNER ── */
+.dec-banner{padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;border-left:4px solid;margin-bottom:.8rem}
+.dec-banner.APPROVED{background:#1ac86b12;border-color:var(--green)}
+.dec-banner.REJECTED{background:#c8441a12;border-color:var(--accent)}
+.dec-banner.REVIEW{background:#c8a41a12;border-color:var(--gold)}
+.dec-banner.PENDING{background:#1a6bc812;border-color:var(--accent2)}
+.dec-label{font-family:var(--serif);font-size:1.7rem;font-style:italic}
+.dec-meta{flex:1}
+.dec-conf{font-family:var(--mono);font-size:1.9rem;font-weight:300}
+.dec-conf.hi{color:var(--green)}.dec-conf.md{color:var(--gold)}.dec-conf.lo{color:var(--accent)}
+.conf-wrap{height:4px;background:var(--border);width:110px;margin-top:.4rem}
+.conf-bar{height:100%;transition:width .8s ease}
+.conf-bar.hi{background:var(--green)}.conf-bar.md{background:var(--gold)}.conf-bar.lo{background:var(--accent)}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:.8rem}
+.sc{background:var(--card);padding:.8rem 1rem}
+.sc-l{font-family:var(--mono);font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.22rem}
+.sc-v{font-weight:700;font-size:.82rem;font-family:var(--mono);color:var(--ink)}
+.pass-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.pr{padding:.9rem 1rem}
+.pr.pass{background:#1ac86b12;border-top:3px solid var(--green)}
+.pr.fail{background:#c8441a12;border-top:3px solid var(--accent)}
+.pr.warn{background:#c8a41a12;border-top:3px solid var(--gold)}
+.pr-l{font-family:var(--mono);font-size:.56rem;text-transform:uppercase;color:var(--muted)}
+.pr-v{font-family:var(--serif);font-size:2rem}
+.pr.pass .pr-v{color:var(--green)}.pr.fail .pr-v{color:var(--accent)}.pr.warn .pr-v{color:var(--gold)}
+
+/* ── MULTI-DOC SELECTOR PILLS ── */
+.doc-pills{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.8rem}
+.doc-pill{padding:.28rem .65rem;border:1px solid var(--border);background:var(--paper);font-family:var(--mono);font-size:.6rem;color:var(--muted);cursor:pointer;transition:all .15s}
+.doc-pill:hover{border-color:var(--accent2);color:var(--ink)}
+.doc-pill.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* ── FIELDS GRID ── */
+.fields-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:1px;background:var(--border)}
+.fc{background:var(--card);padding:.85rem 1rem}
+.fk{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.22rem}
+.fv{font-size:.84rem;font-weight:600;color:var(--ink);font-family:var(--mono);word-break:break-word}
+.fv.flagged{color:var(--accent)}.fv.normal{color:var(--green)}.fv.warning{color:var(--gold)}
+.fn{font-size:.56rem;color:var(--muted);margin-top:.15rem;font-family:var(--mono)}
+
+/* ── RULES EVAL ── */
+.rules-out{display:flex;flex-direction:column;gap:.4rem}
+.ri{padding:.72rem 1rem;border:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem;background:var(--card)}
+.rb{padding:.16rem .5rem;font-family:var(--mono);font-size:.56rem;font-weight:700;letter-spacing:.08em;flex-shrink:0;text-transform:uppercase;border:1px solid}
+.rb.PASS{background:#1ac86b20;color:var(--green);border-color:#1ac86b40}
+.rb.FAIL{background:#c8441a20;color:var(--accent);border-color:#c8441a40}
+.rb.WARN{background:#c8a41a20;color:var(--gold);border-color:#c8a41a40}
+.rb.SKIP{background:#7a757020;color:var(--muted);border-color:#7a757040}
+.rd{flex:1;font-size:.74rem;line-height:1.5}
+.rd small{font-family:var(--mono);font-size:.61rem;color:var(--muted);display:block;margin-top:.12rem}
+
+/* ── FACIAL ANALYSIS SECTION ── */
+.face-section{background:var(--card);border:1px solid var(--border);margin-bottom:.8rem}
+.face-section-header{padding:.8rem 1.2rem;border-bottom:1px solid var(--border);background:var(--cream);display:flex;align-items:center;gap:.5rem}
+.face-section-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.face-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border)}
+.face-card{background:var(--card);padding:.9rem 1rem}
+.face-thumb{width:100%;height:110px;object-fit:cover;border:1px solid var(--border);display:block;margin-bottom:.6rem}
+.face-doc-name{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-bottom:.35rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.face-finding{font-size:.73rem;line-height:1.6;color:var(--ink)}
+.face-finding.ok{color:var(--green)}
+.face-finding strong{color:var(--gold)}
+.face-match-bar{background:var(--cream);border-top:1px solid var(--border);padding:.9rem 1.2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.face-match-score-val{font-family:var(--serif);font-size:2.2rem;font-style:italic}
+.face-match-score-val.hi{color:var(--green)}
+.face-match-score-val.md{color:var(--gold)}
+.face-match-score-val.lo{color:var(--accent)}
+.face-match-verdict{font-family:var(--mono);font-size:.65rem;font-weight:600;letter-spacing:.06em}
+.face-match-reason{font-size:.75rem;color:var(--muted);line-height:1.6;flex:1}
+
+/* ── JSON OUTPUT ── */
+.json-out{background:#0d1117;color:#c9d1d9;font-family:var(--mono);font-size:.7rem;line-height:1.8;padding:1.4rem;overflow:auto;max-height:560px;border:1px solid var(--border);position:relative}
+.json-out .jk{color:#79c0ff}.json-out .jv{color:#a5d6a7}.json-out .jn{color:#ffa657}.json-out .jb{color:#d2a8ff}
+.copy-btn{position:sticky;top:0;float:right;background:#21262d;border:1px solid #30363d;color:#8b949e;font-family:var(--mono);font-size:.6rem;padding:.22rem .65rem;cursor:pointer}
+.copy-btn:hover{background:#30363d;color:#c9d1d9}
+
+/* ── SESSION TRENDS ── */
+.sl{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.32rem 0;border-bottom:1px solid var(--border);margin-bottom:.7rem;display:flex;justify-content:space-between}
+.trends-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.tc{background:var(--card);padding:.85rem}
+.tt{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.38rem;font-family:var(--mono)}
+.tv{font-family:var(--serif);font-size:1.5rem}
+.td{font-family:var(--mono);font-size:.6rem;margin-top:.12rem}
+.td.up{color:var(--green)}.td.dn{color:var(--accent)}
+
+/* ── ERROR BOX ── */
+.err-box{padding:1rem 1.2rem;background:#c8441a10;border:1px solid #c8441a40;border-left:4px solid var(--accent);font-family:var(--mono);font-size:.71rem;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.err-box strong{color:var(--accent);display:block;margin-bottom:.3rem}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:#0a0a0fcc;z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);padding:2rem;width:90%;max-width:600px;max-height:90vh;overflow-y:auto;animation:up .2s ease}
+@keyframes up{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.mt{font-family:var(--serif);font-size:1.35rem}
+.mc{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);line-height:1}
+.mc:hover{color:var(--ink)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem}
+.ff{display:flex;flex-direction:column;gap:.25rem;margin-bottom:.7rem}
+.fl{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+.fi,.fs2,.fta{padding:.52rem .72rem;border:1px solid var(--border);background:var(--paper);font-family:var(--mono);font-size:.74rem;color:var(--ink);outline:none;width:100%;transition:border-color .15s}
+.fi:focus,.fs2:focus,.fta:focus{border-color:var(--accent2)}
+.fta{resize:vertical;min-height:60px}
+.modal-rule-row{padding:.65rem .9rem;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;gap:.65rem;margin-bottom:.38rem}
+.mrr-info{flex:1;font-family:var(--mono);font-size:.66rem;min-width:0}
+.mrr-info strong{color:var(--ink)}
+.mrr-info span{color:var(--muted);font-size:.6rem;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge-on{font-family:var(--mono);font-size:.56rem;padding:.15rem .42rem;background:#1a6bc820;color:var(--accent2);border:1px solid #1a6bc840;flex-shrink:0}
+.badge-off{font-family:var(--mono);font-size:.56rem;padding:.15rem .42rem;background:#7a757020;color:var(--muted);border:1px solid #7a757040;flex-shrink:0}
+.sm-btn{background:none;border:1px solid var(--border);cursor:pointer;font-family:var(--mono);font-size:.58rem;color:var(--muted);padding:.18rem .42rem;flex-shrink:0}
+.sm-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+.del-btn{background:none;border:none;cursor:pointer;font-size:.72rem;color:var(--accent);flex-shrink:0}
+
+/* ── TOAST ── */
+.notif{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;background:var(--ink);color:var(--paper);padding:.72rem 1.1rem;border-left:3px solid var(--accent);font-family:var(--mono);font-size:.68rem;max-width:320px;transform:translateX(120%);transition:transform .28s ease;line-height:1.6}
+.notif.show{transform:translateX(0)}
+.notif.ok{border-color:var(--green)}
+
+/* ── OVERVIEW ACTIONS BAR ── */
+.ov-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;flex-wrap:wrap;gap:.5rem}
+.ov-title{font-family:var(--serif);font-size:1.2rem;font-style:italic}
+.ov-btns{display:flex;gap:.5rem}
+.ov-btn{padding:.38rem .9rem;border:1px solid var(--border);background:var(--paper);font-family:var(--mono);font-size:.62rem;color:var(--muted);cursor:pointer;transition:all .15s;font-weight:600}
+.ov-btn:hover{border-color:var(--accent);color:var(--accent)}
+.ov-btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ov-btn.primary:hover{background:var(--accent);border-color:var(--accent)}
+
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .app-shell{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo"><span class="logo-dot"></span>DocuMind AI</div>
-  <nav class="header-nav">
-    <a onclick="switchTab('overview')">Analysis</a>
-    <a onclick="switchTab('json')">JSON</a>
-    <span class="badge-live">v2.1 PRO</span>
-  </nav>
-</header>
-
-<div class="api-banner">
-  <label for="apiKey">🔑 ANTHROPIC KEY:</label>
-  <input type="password" id="apiKey" placeholder="sk-ant-..." oninput="onKeyInput()"/>
-  <span class="api-status bad" id="apiSt">Not set</span>
+<div id="fileWarning">
+  ⚠ <strong>FILE:// DETECTED —</strong> API calls will fail. Run <code>python3 -m http.server 8080</code> in this folder, then open <code>http://localhost:8080</code>
 </div>
 
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="logo">
+    <span class="logo-dot"></span>DocuMind AI<span class="logo-v2">v2</span>
+  </div>
+  <div class="header-right">
+    <nav class="header-nav">
+      <a onclick="openModal('rulesModal')">Rules</a>
+      <a onclick="switchTab('trends')">Trends</a>
+      <a onclick="switchTab('json')">JSON</a>
+      <span class="badge-live">LIVE</span>
+    </nav>
+    <div class="crafted-tag">by <strong>Raman Verma</strong></div>
+  </div>
+</header>
+
+<!-- ══════════════ PROVIDER BANNER ══════════════ -->
+<div class="provider-banner">
+  <div class="pb-group">
+    <span class="pb-label">PROVIDER</span>
+    <select class="pb-select" id="providerSel" onchange="onProviderChange()">
+      <option value="openai">OpenAI</option>
+      <option value="gemini">Google Gemini</option>
+      <option value="grok">Grok (xAI)</option>
+      <option value="anthropic">Anthropic</option>
+    </select>
+  </div>
+  <div class="pb-group">
+    <span class="pb-label">MODEL</span>
+    <select class="pb-select" id="modelSel" onchange="onModelChange()"></select>
+  </div>
+  <div class="pb-sep"></div>
+  <div class="pb-group">
+    <span class="pb-label">🔑 KEY</span>
+    <input type="password" class="pb-input" id="apiKey" placeholder="Paste API key here…" oninput="onKeyChange()"/>
+  </div>
+  <div class="pb-group">
+    <div class="status-dot idle" id="statusDot"></div>
+    <span class="pb-status-lbl" id="statusLabel">Not tested</span>
+  </div>
+  <button class="pb-btn" onclick="testProvider()">▶ Test</button>
+  <div class="pb-sep"></div>
+  <button class="pb-btn primary" onclick="openModal('rulesModal')">⚙ Rules</button>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Document Intelligence Platform v2</div>
+    <h1>Analyse. <em>Decide.</em> Standardise.</h1>
+    <p class="hero-sub">Upload multiple medical, financial, KYC or photo documents. Multi-provider AI extracts, classifies, analyses faces, matches identities and delivers standardised JSON decisions.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.querySelector('.app-shell').scrollIntoView({behavior:'smooth'})">↓ Start Analysing</button>
+      <button class="btn-outline" onclick="openModal('rulesModal')">Manage Rules</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">4</div><div class="stat-label">AI Providers</div></div>
+      <div class="stat"><div class="stat-val">∞</div><div class="stat-label">Doc Batch</div></div>
+      <div class="stat"><div class="stat-val">👤</div><div class="stat-label">Face Match</div></div>
+      <div class="stat"><div class="stat-val">&lt;8s</div><div class="stat-label">Avg. Analysis</div></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="mock-line accent"></div>
+    <div class="mock-json">
+      <div><span class="k">"provider"</span>: <span class="v">"gemini-2.0-flash"</span>,</div>
+      <div><span class="k">"documents_processed"</span>: <span class="v">4</span>,</div>
+      <div><span class="k">"overall_decision"</span>: <span class="v">"APPROVED"</span>,</div>
+      <div><span class="k">"face_match_score"</span>: <span class="v">0.94</span>,</div>
+      <div><span class="k">"hba1c_percent"</span>: <span class="v">6.1</span>,</div>
+      <div><span class="k">"rules_passed"</span>: <span class="v">7</span></div>
+    </div>
+    <div class="mock-line short"></div>
+    <div class="mock-line med"></div>
+  </div>
+</section>
+
+<!-- ══════════════ APP SHELL ══════════════ -->
 <main class="app-shell">
   <aside class="sidebar">
+
+    <!-- DOCUMENT UPLOAD -->
     <div class="card">
-      <div class="card-header"><div class="card-title">📄 Batch Upload</div></div>
-      <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" accept="image/*,.pdf" multiple onchange="handleFiles(this.files)"/>
-        <span class="upload-icon">⬆</span>
-        <span class="upload-label">Upload Multiple Docs</span>
-        <span class="upload-sub">Supports Risk Photo Analysis</span>
+      <div class="card-header">
+        <div class="card-title">📂 Documents</div>
+        <button class="card-action" onclick="clearAllDocs()">Clear all</button>
       </div>
-      <div class="upload-preview" id="uploadPrev">
-        <div id="fileList"></div>
-        <button class="change-btn" onclick="resetFiles()" style="width:100%; margin-top:10px; cursor:pointer;">✕ Clear All</button>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif,.pdf" multiple onchange="onFiles(event)"/>
+        <span class="upload-icon">⬆</span>
+        <span class="upload-label">Click or drop files here</span>
+        <span class="upload-sub">Multiple files · JPG PNG WEBP PDF</span>
+      </div>
+      <div class="doc-queue" id="docQueue" style="display:none"></div>
+    </div>
+
+    <!-- DOC TYPE HINT -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">🗂 Type Hint</div></div>
+      <div class="doc-types">
+        <button class="doc-type-btn active" data-type="auto"      onclick="pickType(this)"><span class="dt-icon">🤖</span><div>Auto-Detect<span class="dt-sub">AI determines type</span></div></button>
+        <button class="doc-type-btn"        data-type="medical"   onclick="pickType(this)"><span class="dt-icon">🏥</span><div>Medical / Lab Report<span class="dt-sub">CBC, LFT, RFT, HbA1c…</span></div></button>
+        <button class="doc-type-btn"        data-type="financial" onclick="pickType(this)"><span class="dt-icon">💰</span><div>Financial Statement<span class="dt-sub">P&amp;L, Balance Sheet, Bank…</span></div></button>
+        <button class="doc-type-btn"        data-type="kyc"       onclick="pickType(this)"><span class="dt-icon">🪪</span><div>KYC / Identity<span class="dt-sub">Passport, NID, Licence…</span></div></button>
+        <button class="doc-type-btn"        data-type="photo"     onclick="pickType(this)"><span class="dt-icon">📷</span><div>Customer Photo<span class="dt-sub">Face analysis + match</span></div></button>
       </div>
     </div>
 
-    <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()" disabled>Analyse Documents</button>
+    <!-- ACTIVE RULES -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚙ Active Rules</div>
+        <button class="card-action" onclick="openModal('rulesModal')">+ Edit</button>
+      </div>
+      <div class="rules-list" id="rulesList"></div>
+    </div>
+
+    <!-- THIRD-PARTY DATA -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">🔌 Third-Party Data</div></div>
+      <div class="tp-grid">
+        <div class="tp-card on"><div class="tp-name">Credit Bureau</div><div class="tp-dot on">● Connected</div></div>
+        <div class="tp-card">   <div class="tp-name">Sanctions List</div><div class="tp-dot off">○ Offline</div></div>
+        <div class="tp-card on"><div class="tp-name">Lab Standards</div><div class="tp-dot on">● Connected</div></div>
+        <div class="tp-card">   <div class="tp-name">Fraud Score</div><div class="tp-dot off">○ Offline</div></div>
+      </div>
+    </div>
+
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyseAll()" disabled>
+      <span class="spinner" id="spin"></span>
+      <span id="btnTxt">Upload documents first</span>
+    </button>
+
   </aside>
 
+  <!-- MAIN PANEL -->
   <div class="main-panel">
     <div class="status-bar">
-      <div class="s-left"><span id="stxt">Ready</span></div>
-      <span id="sid">BATCH-ID: —</span>
-    </div>
-
-    <div class="action-bar" id="reportActions" style="display:none;">
-        <button class="btn-download" onclick="downloadPDFReport()">📥 Download PDF Report</button>
+      <div class="s-left">
+        <div class="sdot" id="sdot"></div>
+        <span id="stxt">Ready — no documents loaded</span>
+      </div>
+      <span id="sid" style="color:var(--muted)">SESSION: —</span>
     </div>
 
     <div>
       <div class="tabs">
-        <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
-        <button class="tab-btn" data-tab="json" onclick="switchTab('json')">JSON Data</button>
+        <button class="tab-btn active" data-tab="overview"  onclick="switchTab('overview',this)">Overview</button>
+        <button class="tab-btn"        data-tab="extracted" onclick="switchTab('extracted',this)">Extracted Fields</button>
+        <button class="tab-btn"        data-tab="rules"     onclick="switchTab('rules',this)">Rules Eval</button>
+        <button class="tab-btn"        data-tab="json"      onclick="switchTab('json',this)">JSON Output</button>
+        <button class="tab-btn"        data-tab="trends"    onclick="switchTab('trends',this)">Trends</button>
       </div>
 
       <div class="tab-pane active" id="pane-overview">
-        <div id="overviewOut">Upload documents to start analysis.</div>
+        <div id="overviewOut"><div class="empty"><div class="empty-i">📋</div><div class="empty-t">No documents analysed yet</div><div class="empty-s">Upload one or more documents and click Analyse.</div></div></div>
+      </div>
+      <div class="tab-pane" id="pane-extracted">
+        <div id="extractedOut"><div class="empty"><div class="empty-i">🔍</div><div class="empty-t">No fields extracted</div><div class="empty-s">Standardised field values appear here after analysis.</div></div></div>
+      </div>
+      <div class="tab-pane" id="pane-rules">
+        <div id="rulesOut"><div class="empty"><div class="empty-i">⚖</div><div class="empty-t">No rules evaluated</div><div class="empty-s">Rule evaluation results appear here after analysis.</div></div></div>
       </div>
       <div class="tab-pane" id="pane-json">
-        <pre id="jsonOut" style="background:#0d1117; color:#c9d1d9; padding:1rem; font-size:0.7rem; overflow:auto;"></pre>
+        <div id="jsonOut"><div class="empty"><div class="empty-i">{}</div><div class="empty-t">No JSON output</div><div class="empty-s">Full structured JSON output appears here after analysis.</div></div></div>
+      </div>
+      <div class="tab-pane" id="pane-trends">
+        <div style="padding:1.2rem 0">
+          <div class="sl">Session Trends <span id="trendCount">0 documents</span></div>
+          <div class="trends-grid" id="trendGrid">
+            <div class="tc"><div class="tt">Avg Confidence</div><div class="tv">—</div><div class="td">No data</div></div>
+            <div class="tc"><div class="tt">Approval Rate</div><div class="tv">—</div><div class="td">No data</div></div>
+            <div class="tc"><div class="tt">Docs Processed</div><div class="tv">0</div><div class="td">This session</div></div>
+          </div>
+          <div style="margin-top:1.4rem" class="sl">AI-Suggested Rule Updates</div>
+          <div id="ruleHints" style="padding:1rem;background:var(--card);border:1px solid var(--border);font-family:var(--mono);font-size:.69rem;color:var(--muted);line-height:1.8">
+            Process at least 3 documents to generate AI-suggested rule updates.
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </main>
 
+<!-- ══════════════ RULES MODAL ══════════════ -->
+<div class="modal-bg" id="rulesModal" onclick="if(event.target===this)closeModal('rulesModal')">
+  <div class="modal">
+    <div class="mh"><div class="mt">Rule Management</div><button class="mc" onclick="closeModal('rulesModal')">✕</button></div>
+    <div class="sl" style="margin-bottom:.8rem">Add New Rule</div>
+    <div class="fr">
+      <div class="ff"><label class="fl">Rule Name</label><input class="fi" id="rName" placeholder="e.g. HbA1c Threshold"/></div>
+      <div class="ff"><label class="fl">Document Type</label>
+        <select class="fs2" id="rDocType"><option value="all">All Types</option><option value="medical">Medical</option><option value="financial">Financial</option><option value="kyc">KYC</option></select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="ff"><label class="fl">Parameter</label><input class="fi" id="rParam" placeholder="e.g. hba1c_percent"/></div>
+      <div class="ff"><label class="fl">Condition</label>
+        <select class="fs2" id="rCond">
+          <option value="lte">≤ Less than or equal</option><option value="lt">&lt; Less than</option>
+          <option value="gte">≥ Greater than or equal</option><option value="gt">&gt; Greater than</option>
+          <option value="eq">= Equals</option><option value="present">Is Present</option>
+        </select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="ff"><label class="fl">Threshold</label><input class="fi" id="rThresh" placeholder="e.g. 6.5"/></div>
+      <div class="ff"><label class="fl">Action if Failed</label>
+        <select class="fs2" id="rAction"><option value="REJECT">Reject</option><option value="WARN">Flag for Review</option><option value="NOTE">Note Only</option></select>
+      </div>
+    </div>
+    <div class="ff"><label class="fl">Description</label><textarea class="fta" id="rDesc" placeholder="e.g. HbA1c must be ≤ 6.5% for approval"></textarea></div>
+    <button class="btn-primary" onclick="addRule()" style="margin-bottom:1.5rem;font-size:.78rem">+ Add Rule</button>
+    <div class="sl" style="margin-bottom:.6rem">Existing Rules</div>
+    <div id="modalRules" style="max-height:300px;overflow-y:auto"></div>
+  </div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <script>
-const STATE = { files: [], results: null, apiKey: '' };
+// ═══════════════════════════════════════════════════
+// PROVIDER CONFIGS
+// ═══════════════════════════════════════════════════
+const PROVIDERS = {
+  openai: {
+    name:'OpenAI',
+    models:[
+      {id:'gpt-4o',      label:'GPT-4o (best vision)'},
+      {id:'gpt-4o-mini', label:'GPT-4o Mini (fast)'},
+      {id:'gpt-4-turbo', label:'GPT-4 Turbo'},
+    ]
+  },
+  gemini: {
+    name:'Google Gemini',
+    models:[
+      {id:'gemini-2.0-flash-exp',  label:'Gemini 2.0 Flash (recommended)'},
+      {id:'gemini-1.5-pro-latest', label:'Gemini 1.5 Pro'},
+      {id:'gemini-1.5-flash',      label:'Gemini 1.5 Flash (cheap)'},
+    ]
+  },
+  grok: {
+    name:'Grok (xAI)',
+    models:[
+      {id:'grok-2-vision-1212', label:'Grok 2 Vision'},
+      {id:'grok-2-1212',        label:'Grok 2'},
+    ]
+  },
+  anthropic: {
+    name:'Anthropic Claude',
+    models:[
+      {id:'claude-sonnet-4-6',        label:'Claude Sonnet 4.6 (recommended)'},
+      {id:'claude-haiku-4-5-20251001',label:'Claude Haiku 4.5 (fast)'},
+      {id:'claude-opus-4-5-20251101', label:'Claude Opus 4.5 (powerful)'},
+    ]
+  }
+};
 
-function onKeyInput() {
-    STATE.apiKey = document.getElementById('apiKey').value.trim();
-    const ok = STATE.apiKey.startsWith('sk-ant');
-    const el = document.getElementById('apiSt');
-    el.textContent = ok ? '✓ Ready' : 'Invalid Key';
-    el.className = 'api-status ' + (ok ? 'ok' : 'bad');
-    refreshUI();
+// ═══════════════════════════════════════════════════
+// DEFAULT RULES
+// ═══════════════════════════════════════════════════
+const DEFAULT_RULES = [
+  {id:'R001',name:'HbA1c Threshold',      docType:'medical',   param:'hba1c_percent',        cond:'lte',thresh:'6.5',  action:'REJECT',desc:'HbA1c must be ≤ 6.5% for standard approval',on:true},
+  {id:'R002',name:'Glucose Normal Range', docType:'medical',   param:'glucose_mmol_l',       cond:'lte',thresh:'11.1', action:'WARN',  desc:'Blood glucose should not exceed 11.1 mmol/L',on:true},
+  {id:'R003',name:'KYC ID Expiry',        docType:'kyc',       param:'document_expiry_valid',cond:'present',thresh:'', action:'REJECT',desc:'Identity document must not be expired',on:true},
+  {id:'R004',name:'KYC Name Match',       docType:'kyc',       param:'name_match_score',     cond:'gte',thresh:'0.9',  action:'REJECT',desc:'Name match score must be ≥ 0.9',on:true},
+  {id:'R005',name:'Debt-to-Income Ratio', docType:'financial', param:'debt_to_income_ratio', cond:'lte',thresh:'0.43', action:'REJECT',desc:'DTI must be ≤ 43% for loan approval',on:true},
+  {id:'R006',name:'Credit Score Min',     docType:'financial', param:'credit_score',         cond:'gte',thresh:'650',  action:'WARN',  desc:'Credit score ≥ 650 for standard tier',on:true},
+  {id:'R007',name:'Creatinine Check',     docType:'medical',   param:'creatinine_umol_l',    cond:'lte',thresh:'110',  action:'WARN',  desc:'Creatinine ≤ 110 µmol/L (normal renal range)',on:false},
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+const S = {
+  docs: [],      // {id,name,mime,b64,thumb,result,status,error}
+  rules: [],
+  sessions: [],  // completed results for trends
+  docType: 'auto',
+  sid: 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase(),
+  faceMatch: null,
+};
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+function init() {
+  if (location.protocol === 'file:') document.getElementById('fileWarning').style.display = 'block';
+  S.rules = DEFAULT_RULES.map(r => ({...r}));
+  S.sid = 'SID-' + Math.random().toString(36).substr(2,8).toUpperCase();
+  document.getElementById('sid').textContent = 'SESSION: ' + S.sid;
+
+  const savedProvider = sessionStorage.getItem('dm_provider') || 'openai';
+  document.getElementById('providerSel').value = savedProvider;
+  renderModelList();
+  const savedKey = sessionStorage.getItem('dm_key_' + savedProvider) || '';
+  if (savedKey) { document.getElementById('apiKey').value = savedKey; }
+  renderRules();
 }
 
-function handleFiles(files) {
-    Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            STATE.files.push({
-                name: file.name,
-                type: file.type,
-                base64: e.target.result.split(',')[1]
-            });
-            updateFileList();
-        };
-        reader.readAsDataURL(file);
+// ═══════════════════════════════════════════════════
+// PROVIDER / MODEL
+// ═══════════════════════════════════════════════════
+function onProviderChange() {
+  const p = document.getElementById('providerSel').value;
+  sessionStorage.setItem('dm_provider', p);
+  renderModelList();
+  const saved = sessionStorage.getItem('dm_key_' + p) || '';
+  document.getElementById('apiKey').value = saved;
+  setDot('idle', 'Not tested');
+  refreshBtn();
+}
+function onModelChange() { setDot('idle', 'Not tested'); }
+function onKeyChange() {
+  const k = document.getElementById('apiKey').value.trim();
+  const p = document.getElementById('providerSel').value;
+  if (k) sessionStorage.setItem('dm_key_' + p, k);
+  setDot('idle', 'Not tested');
+  refreshBtn();
+}
+function renderModelList() {
+  const p = document.getElementById('providerSel').value;
+  document.getElementById('modelSel').innerHTML =
+    PROVIDERS[p].models.map(m => '<option value="' + m.id + '">' + m.label + '</option>').join('');
+}
+function getProvider() { return document.getElementById('providerSel').value; }
+function getModel()    { return document.getElementById('modelSel').value; }
+function getKey()      { return document.getElementById('apiKey').value.trim(); }
+function setDot(state, label) {
+  document.getElementById('statusDot').className = 'status-dot ' + state;
+  document.getElementById('statusLabel').textContent = label;
+  refreshBtn();
+}
+
+// ═══════════════════════════════════════════════════
+// SAFE FETCH — with file:// and error detection
+// ═══════════════════════════════════════════════════
+async function safeFetch(url, opts) {
+  let res;
+  try { res = await fetch(url, opts); }
+  catch(e) {
+    if (location.protocol === 'file:') throw new Error('FILE:// CORS BLOCK\nRun: python3 -m http.server 8080\nThen open: http://localhost:8080');
+    throw new Error('Network error — cannot reach API server.\n' + e.message);
+  }
+  if (!res.ok) {
+    let body = {};
+    try { body = await res.json(); } catch(_) {}
+    const msg = (body.error && (body.error.message || JSON.stringify(body.error))) || res.statusText;
+    if (res.status === 401 || res.status === 403) throw new Error('Auth error ' + res.status + ' — API key invalid or insufficient permissions.\n' + msg);
+    if (res.status === 429) throw new Error('Rate limit (429) — please wait a moment and retry.\n' + msg);
+    if (res.status === 400) throw new Error('Bad request (400) — ' + msg);
+    if (res.status === 529) throw new Error('Server overloaded (529) — retry in a few seconds.\n' + msg);
+    throw new Error('API error ' + res.status + ': ' + msg);
+  }
+  return res;
+}
+
+// ═══════════════════════════════════════════════════
+// PROVIDER API ABSTRACTION
+// ═══════════════════════════════════════════════════
+async function callVisionAPI(sysPrompt, userText, b64, mime) {
+  const provider = getProvider();
+  const model    = getModel();
+  const key      = getKey();
+  if (!key) throw new Error('No API key entered.');
+
+  if (provider === 'openai' || provider === 'grok') {
+    const base = provider === 'grok' ? 'https://api.x.ai/v1' : 'https://api.openai.com/v1';
+    const userContent = [{ type:'text', text:userText }];
+    if (b64) userContent.push({ type:'image_url', image_url:{ url:'data:' + mime + ';base64,' + b64, detail:'high' } });
+    const res = await safeFetch(base + '/chat/completions', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + key },
+      body: JSON.stringify({ model, max_tokens:4096, temperature:0.1,
+        messages:[{ role:'system', content:sysPrompt },{ role:'user', content:userContent }] })
     });
-}
+    const d = await res.json();
+    if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
+    return d.choices[0].message.content;
 
-function updateFileList() {
-    const list = document.getElementById('fileList');
-    list.innerHTML = STATE.files.map(f => `<div class="file-list-item">📄 ${f.name}</div>`).join('');
-    document.getElementById('uploadZone').style.display = 'none';
-    document.getElementById('uploadPrev').style.display = 'block';
-    refreshUI();
-}
+  } else if (provider === 'gemini') {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + key;
+    const parts = [{ text: sysPrompt + '\n\n' + userText }];
+    if (b64) parts.push({ inlineData:{ mimeType: mime, data: b64 } });
+    const res = await safeFetch(url, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ contents:[{ parts }], generationConfig:{ temperature:0.1, maxOutputTokens:4096 } })
+    });
+    const d = await res.json();
+    if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
+    const cand = d.candidates && d.candidates[0];
+    if (!cand) throw new Error('Gemini returned no candidates. Check quota or region.');
+    return cand.content.parts.map(p => p.text || '').join('');
 
-function resetFiles() {
-    STATE.files = [];
-    document.getElementById('uploadZone').style.display = 'block';
-    document.getElementById('uploadPrev').style.display = 'none';
-    refreshUI();
-}
-
-function refreshUI() {
-    const canAnalyze = STATE.apiKey.startsWith('sk-ant') && STATE.files.length > 0;
-    document.getElementById('analyzeBtn').disabled = !canAnalyze;
-}
-
-async function runAnalysis() {
-    const btn = document.getElementById('analyzeBtn');
-    btn.innerText = "Analyzing Batch...";
-    btn.disabled = true;
-
-    // Model Change: Using Claude 3.5 Sonnet for vision + risk reasoning
-    const prompt = `Analyze these ${STATE.files.length} documents. Perform: 
-    1. Data Extraction 
-    2. Photo Risk Analysis (Check for tampering, blur, or fraud indicators)
-    Return a single JSON object with 'decision', 'risk_score' (0-100), 'summary', and 'extracted_data' array.`;
-
-    const messages = [{
-        role: "user",
-        content: [
-            { type: "text", text: prompt },
-            ...STATE.files.map(f => ({
-                type: f.type === 'application/pdf' ? "document" : "image",
-                source: { type: "base64", media_type: f.type, data: f.base64 }
-            }))
-        ]
-    }];
-
-    try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': STATE.apiKey,
-                'anthropic-version': '2023-06-01',
-                'anthropic-dangerous-direct-browser-calls': 'true'
-            },
-            body: JSON.stringify({
-                model: "claude-3-5-sonnet-20241022",
-                max_tokens: 4000,
-                messages: messages
-            })
-        });
-
-        const data = await response.json();
-        const textResponse = data.content[0].text;
-        STATE.results = JSON.parse(textResponse.match(/\{[\s\S]*\}/)[0]);
-        
-        displayResults();
-        toast("Analysis Completed", "ok");
-    } catch (err) {
-        document.getElementById('overviewOut').innerHTML = `<div style="color:red">Error: ${err.message}</div>`;
-    } finally {
-        btn.innerText = "Analyse Documents";
-        btn.disabled = false;
+  } else if (provider === 'anthropic') {
+    const parts = [];
+    if (b64) {
+      if (mime === 'application/pdf') parts.push({ type:'document', source:{ type:'base64', media_type:'application/pdf', data:b64 } });
+      else parts.push({ type:'image', source:{ type:'base64', media_type:(['image/jpeg','image/png','image/gif','image/webp'].includes(mime)?mime:'image/jpeg'), data:b64 } });
     }
+    parts.push({ type:'text', text:userText });
+    const res = await safeFetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true' },
+      body: JSON.stringify({ model, max_tokens:4096, system:sysPrompt, messages:[{ role:'user', content:parts }] })
+    });
+    const d = await res.json();
+    if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
+    return (d.content||[]).map(c => c.text||'').join('');
+  }
+  throw new Error('Unknown provider: ' + provider);
 }
 
-function displayResults() {
-    const r = STATE.results;
-    document.getElementById('reportActions').style.display = 'flex';
-    document.getElementById('jsonOut').textContent = JSON.stringify(r, null, 2);
-    
-    document.getElementById('overviewOut').innerHTML = `
-        <div class="dec-banner ${r.decision}">
-            <div>
-                <strong>DECISION: ${r.decision}</strong><br>
-                <span>Risk Score: ${r.risk_score}/100</span>
-            </div>
+function parseJSON(raw) {
+  const clean = raw.replace(/^```(?:json)?\s*/m,'').replace(/```\s*$/m,'').trim();
+  try { return JSON.parse(clean); } catch(_) {
+    const m = clean.match(/\{[\s\S]*\}/);
+    if (m) return JSON.parse(m[0]);
+    throw new Error('Model did not return valid JSON:\n' + raw.slice(0,300));
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// TEST PROVIDER
+// ═══════════════════════════════════════════════════
+async function testProvider() {
+  const key = getKey();
+  if (!key) { toast('Enter an API key first'); return; }
+  setDot('testing', 'Testing…');
+  try {
+    const provider = getProvider();
+    const model    = getModel();
+    if (provider === 'openai' || provider === 'grok') {
+      const base = provider === 'grok' ? 'https://api.x.ai/v1' : 'https://api.openai.com/v1';
+      const res = await safeFetch(base + '/chat/completions', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json','Authorization':'Bearer ' + key },
+        body: JSON.stringify({ model, max_tokens:5, messages:[{ role:'user',content:'Reply: OK' }] })
+      });
+      const d = await res.json(); if (d.error) throw new Error(d.error.message);
+    } else if (provider === 'gemini') {
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + key;
+      const res = await safeFetch(url, {
+        method:'POST', headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ contents:[{ parts:[{ text:'Reply: OK' }] }], generationConfig:{ maxOutputTokens:5 } })
+      });
+      const d = await res.json(); if (d.error) throw new Error(d.error.message);
+    } else {
+      const res = await safeFetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true' },
+        body: JSON.stringify({ model, max_tokens:5, messages:[{ role:'user',content:'Reply: OK' }] })
+      });
+      const d = await res.json(); if (d.error) throw new Error(d.error.message);
+    }
+    setDot('ok', PROVIDERS[provider].name + ' ✓');
+    toast('✓ ' + PROVIDERS[provider].name + ' — connected & responding', 'ok');
+  } catch(err) {
+    setDot('fail', 'Failed');
+    toast('✗ ' + err.message.split('\n')[0]);
+    console.error('Test error:', err);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// FILE HANDLING — multiple files
+// ═══════════════════════════════════════════════════
+function onFiles(e) {
+  Array.from(e.target.files).forEach(addFile);
+  document.getElementById('fileInput').value = '';
+}
+function addFile(f) {
+  const id = 'doc_' + Date.now() + '_' + Math.random().toString(36).substr(2,4);
+  const doc = { id, name:f.name, mime:f.type||'image/jpeg', b64:null, thumb:null, result:null, status:'pending', error:null };
+  S.docs.push(doc);
+  const reader = new FileReader();
+  reader.onload = ev => {
+    doc.b64 = ev.target.result.split(',')[1];
+    if (f.type.startsWith('image/')) doc.thumb = ev.target.result;
+    renderDocQueue(); refreshBtn();
+  };
+  reader.readAsDataURL(f);
+  renderDocQueue(); refreshBtn();
+}
+
+const uz = document.getElementById('uploadZone');
+uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('dragover'); });
+uz.addEventListener('dragleave', () => uz.classList.remove('dragover'));
+uz.addEventListener('drop', e => {
+  e.preventDefault(); uz.classList.remove('dragover');
+  Array.from(e.dataTransfer.files).forEach(addFile);
+});
+
+function removeDoc(id) { S.docs = S.docs.filter(d => d.id !== id); renderDocQueue(); refreshBtn(); }
+function clearAllDocs() {
+  S.docs = [];
+  renderDocQueue(); refreshBtn();
+  setStatus('', 'Ready — no documents loaded');
+  resetOutputs();
+}
+
+function renderDocQueue() {
+  const el = document.getElementById('docQueue');
+  if (!S.docs.length) { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  const statusIcon = { pending:'📄', processing:'⏳', done:'✅', error:'❌' };
+  el.innerHTML = S.docs.map(doc => {
+    const thumbHtml = doc.thumb
+      ? '<img class="doc-thumb" src="' + doc.thumb + '" alt=""/>'
+      : '<div class="doc-thumb-icon">' + (doc.mime === 'application/pdf' ? '📄' : '🖼️') + '</div>';
+    const typeTag = doc.result
+      ? '<div class="doc-type-tag classified">' + (doc.result.document_type||'').replace(/_/g,' ') + '</div>'
+      : '<div class="doc-type-tag">' + (doc.b64 ? 'ready' : 'loading…') + '</div>';
+    return '<div class="doc-item ' + doc.status + '">' +
+      thumbHtml +
+      '<div class="doc-info"><div class="doc-name">' + esc(doc.name) + '</div>' + typeTag + '</div>' +
+      '<span class="doc-icon">' + (statusIcon[doc.status]||'📄') + '</span>' +
+      '<button class="doc-rm" onclick="removeDoc(\'' + doc.id + '\')" title="Remove">✕</button>' +
+    '</div>';
+  }).join('');
+}
+
+function refreshBtn() {
+  const hasReady = S.docs.some(d => d.b64);
+  const hasKey   = !!getKey();
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = !(hasReady && hasKey);
+  const count = S.docs.filter(d => d.b64).length;
+  if (!hasKey) document.getElementById('btnTxt').textContent = 'Enter API key first';
+  else if (!hasReady) document.getElementById('btnTxt').textContent = 'Upload documents first';
+  else document.getElementById('btnTxt').textContent = 'Analyse ' + count + ' Document' + (count !== 1 ? 's' : '');
+}
+
+// ═══════════════════════════════════════════════════
+// PROMPTS
+// ═══════════════════════════════════════════════════
+const SYS_PROMPT = `You are DocuMind AI — a professional document intelligence system for life insurance underwriting.
+Analyse the provided document image/file and return ONLY a single valid JSON object — no markdown fences, no preamble, no commentary.
+
+UNIT STANDARDISATION:
+- Glucose → mmol/L (if mg/dL: divide by 18.016)
+- HbA1c → %
+- Creatinine → µmol/L (if mg/dL: multiply by 88.4)
+- Cholesterol → mmol/L (if mg/dL: divide by 38.67)
+- Dates → YYYY-MM-DD
+
+DOCUMENT TYPES: medical_lab_report | medical_prescription | financial_statement | kyc_identity | customer_photo | insurance_policy | other
+
+CRITICAL: If the document contains any photograph of a human face, set "has_face":true and perform facial analysis.`;
+
+function buildDocPrompt(doc, rulesText) {
+  return 'Analyse this document. Type hint: ' + S.docType + '. Session: ' + S.sid + '\n\n' +
+'Active rules:\n' + rulesText + '\n\n' +
+'Return ONLY this JSON:\n' +
+'{\n' +
+'  "document_type": "medical_lab_report|financial_statement|kyc_identity|customer_photo|other",\n' +
+'  "detected_subtype": "specific label",\n' +
+'  "has_face": false,\n' +
+'  "extraction_confidence": 0.0,\n' +
+'  "overall_decision": "APPROVED|REJECTED|REVIEW|PENDING",\n' +
+'  "decision_confidence": 0.0,\n' +
+'  "decision_rationale": "one sentence explanation",\n' +
+'  "extracted_fields": {\n' +
+'    "field_name": { "value": "...", "unit": "...", "standardised": true, "original_label": "...", "original_value": "...", "original_unit": "...", "status": "normal|warning|flagged|unknown", "reference_range": "..." }\n' +
+'  },\n' +
+'  "rules_evaluation": [\n' +
+'    { "rule_id": "R001", "rule_name": "...", "status": "PASS|FAIL|WARN|SKIP", "reason": "...", "extracted_value": "...", "threshold": "..." }\n' +
+'  ],\n' +
+'  "facial_analysis": {\n' +
+'    "has_face": false,\n' +
+'    "face_description": "neutral factual description of facial features for identity matching",\n' +
+'    "conditions_detected": [],\n' +
+'    "deformities_noted": [],\n' +
+'    "skin_observations": "",\n' +
+'    "overall_severity": "none|mild|moderate|significant"\n' +
+'  },\n' +
+'  "metadata": {\n' +
+'    "session_id": "' + S.sid + '",\n' +
+'    "analysed_at": "' + new Date().toISOString() + '",\n' +
+'    "platform": "DocuMind AI v2 — by Raman Verma"\n' +
+'  }\n' +
+'}';
+}
+
+// ═══════════════════════════════════════════════════
+// ANALYSE ALL DOCS
+// ═══════════════════════════════════════════════════
+async function analyseAll() {
+  const key = getKey();
+  if (!key) { toast('Enter API key first'); return; }
+  const ready = S.docs.filter(d => d.b64);
+  if (!ready.length) { toast('Upload documents first'); return; }
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true; btn.classList.add('loading');
+  document.getElementById('spin').style.display = 'block';
+  setStatus('processing', 'Analysing ' + ready.length + ' document(s)…');
+  S.faceMatch = null;
+
+  const activeRules = S.rules.filter(r => r.on);
+  const rulesText   = activeRules.map(r => '- ' + r.id + ': ' + r.desc + ' [fail→' + r.action + ']').join('\n') || 'No active rules.';
+
+  for (let i = 0; i < ready.length; i++) {
+    const doc = ready[i];
+    doc.status = 'processing';
+    renderDocQueue();
+    document.getElementById('btnTxt').textContent = 'Analysing ' + (i+1) + '/' + ready.length + '…';
+    try {
+      const raw = await callVisionAPI(SYS_PROMPT, buildDocPrompt(doc, rulesText), doc.b64, doc.mime);
+      doc.result = parseJSON(raw);
+      doc.status = 'done';
+      S.sessions.push({...doc.result, ts: Date.now()});
+    } catch(err) {
+      doc.status = 'error';
+      doc.error  = err.message;
+      console.error('Doc error [' + doc.name + ']:', err);
+    }
+    renderDocQueue();
+  }
+
+  // Face match if ≥2 docs have faces
+  const faceDocs = ready.filter(d => d.status === 'done' && d.result && d.result.has_face);
+  if (faceDocs.length >= 2) {
+    setStatus('processing', 'Running face match across ' + faceDocs.length + ' photos…');
+    await runFaceMatch(faceDocs);
+  }
+
+  buildAllOutputs();
+  drawTrends();
+  btn.disabled = false; btn.classList.remove('loading');
+  document.getElementById('spin').style.display = 'none';
+  document.getElementById('btnTxt').textContent = 'Re-Analyse All';
+  refreshBtn();
+
+  const successCount = ready.filter(d => d.status === 'done').length;
+  setStatus('ready', '✓ ' + successCount + '/' + ready.length + ' analysed' + (S.faceMatch ? ' · Face match complete' : ''));
+  toast('✓ Analysis complete — ' + successCount + '/' + ready.length + ' succeeded', 'ok');
+  switchTab('overview');
+}
+
+async function runFaceMatch(faceDocs) {
+  try {
+    const descs = faceDocs.map((d,i) =>
+      'Doc ' + (i+1) + ' (' + d.name + '): ' + (d.result.facial_analysis && d.result.facial_analysis.face_description || 'No description available')
+    ).join('\n\n');
+    const prompt = 'You are a biometric identity verification expert.\n\nCompare these facial descriptions from different documents and determine if they belong to the same person.\n\n' + descs + '\n\nReturn ONLY this JSON:\n{"match_score":0.0,"match_verdict":"MATCH|LIKELY_MATCH|INCONCLUSIVE|LIKELY_MISMATCH|MISMATCH","confidence":0.0,"reasoning":"one sentence explanation"}';
+    const raw = await callVisionAPI('You are a biometric expert. Reply ONLY with JSON.', prompt, null, null);
+    S.faceMatch = parseJSON(raw);
+  } catch(err) {
+    S.faceMatch = { match_score:null, match_verdict:'ERROR', confidence:0, reasoning: err.message };
+    console.error('Face match error:', err);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD ALL OUTPUTS
+// ═══════════════════════════════════════════════════
+function buildAllOutputs() {
+  buildOverview();
+  buildExtracted();
+  buildRulesTab();
+  buildJSON();
+}
+
+function resetOutputs() {
+  const mt = (i,t,s) => '<div class="empty"><div class="empty-i">'+i+'</div><div class="empty-t">'+t+'</div><div class="empty-s">'+s+'</div></div>';
+  document.getElementById('overviewOut').innerHTML  = mt('📋','No documents analysed yet','Upload documents and click Analyse.');
+  document.getElementById('extractedOut').innerHTML = mt('🔍','No fields extracted','Standardised field values appear here after analysis.');
+  document.getElementById('rulesOut').innerHTML     = mt('⚖','No rules evaluated','Rule evaluation results appear here after analysis.');
+  document.getElementById('jsonOut').innerHTML      = mt('{}','No JSON output','Full structured JSON output appears here after analysis.');
+}
+
+// ── OVERVIEW ──
+function buildOverview() {
+  const done   = S.docs.filter(d => d.status === 'done' && d.result);
+  const errors = S.docs.filter(d => d.status === 'error');
+  if (!done.length && !errors.length) return;
+
+  const totalPass = done.reduce((a,d) => a + (d.result.rules_evaluation||[]).filter(r=>r.status==='PASS').length, 0);
+  const totalFail = done.reduce((a,d) => a + (d.result.rules_evaluation||[]).filter(r=>r.status==='FAIL').length, 0);
+  const totalWarn = done.reduce((a,d) => a + (d.result.rules_evaluation||[]).filter(r=>r.status==='WARN').length, 0);
+
+  let html = '';
+
+  // Actions bar
+  html += '<div class="ov-actions">';
+  html += '<div class="ov-title">Analysis Summary — ' + done.length + ' document' + (done.length!==1?'s':'') + '</div>';
+  html += '<div class="ov-btns">';
+  html += '<button class="ov-btn" onclick="downloadReport()">⬇ Download Report</button>';
+  html += '<button class="ov-btn primary" onclick="window.print()">🖨 Print</button>';
+  html += '</div></div>';
+
+  // Decision cards — one per doc
+  done.forEach(doc => {
+    const r   = doc.result;
+    const dec = r.overall_decision || 'PENDING';
+    const conf = Math.round((r.decision_confidence||0)*100);
+    const cc  = conf >= 80 ? 'hi' : conf >= 60 ? 'md' : 'lo';
+    const ev  = r.rules_evaluation || [];
+    const pass = ev.filter(x=>x.status==='PASS').length;
+    const fail = ev.filter(x=>x.status==='FAIL').length;
+    const warn = ev.filter(x=>x.status==='WARN').length;
+    const fc  = Object.keys(r.extracted_fields||{}).length;
+
+    html += '<div style="margin-bottom:1.2rem">';
+    html += '<div style="font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;padding:.2rem 0;border-bottom:1px solid var(--border)">📄 ' + esc(doc.name) + ' · ' + (r.document_type||'').replace(/_/g,' ') + (r.detected_subtype?' · '+r.detected_subtype:'') + '</div>';
+
+    html += '<div class="dec-banner ' + dec + '">';
+    html += '<div class="dec-meta">';
+    html += '<div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.18rem">Overall Decision</div>';
+    html += '<div class="dec-label">' + dec + '</div>';
+    html += '<div style="font-size:.74rem;color:var(--muted);margin-top:.3rem;line-height:1.5;max-width:380px">' + esc(r.decision_rationale||'No rationale provided.') + '</div>';
+    html += '</div>';
+    html += '<div style="text-align:right;flex-shrink:0">';
+    html += '<div style="font-family:var(--mono);font-size:.56rem;text-transform:uppercase;color:var(--muted);margin-bottom:.18rem">Confidence</div>';
+    html += '<div class="dec-conf ' + cc + '">' + conf + '%</div>';
+    html += '<div class="conf-wrap"><div class="conf-bar ' + cc + '" style="width:' + conf + '%"></div></div>';
+    html += '</div></div>';
+
+    html += '<div class="stats-row">';
+    [['Doc Type',(r.document_type||'—').replace(/_/g,' ')],['Fields Found',fc],['Rules Applied',ev.length],['Extraction',Math.round((r.extraction_confidence||0)*100)+'%']]
+      .forEach(function(item){ html += '<div class="sc"><div class="sc-l">'+item[0]+'</div><div class="sc-v">'+esc(String(item[1]))+'</div></div>'; });
+    html += '</div>';
+    html += '<div class="pass-row">';
+    html += '<div class="pr pass"><div class="pr-l">Passed</div><div class="pr-v">'+pass+'</div></div>';
+    html += '<div class="pr fail"><div class="pr-l">Failed</div><div class="pr-v">'+fail+'</div></div>';
+    html += '<div class="pr warn"><div class="pr-l">Warnings</div><div class="pr-v">'+warn+'</div></div>';
+    html += '</div>';
+    html += '</div>';
+  });
+
+  // Error cards
+  errors.forEach(doc => {
+    html += '<div class="err-box" style="margin-bottom:1rem"><strong>✗ Error — ' + esc(doc.name) + '</strong>' + esc(doc.error||'Unknown error') + '</div>';
+  });
+
+  // Facial analysis section
+  const faceDocs = done.filter(d => d.result && d.result.has_face);
+  if (faceDocs.length) {
+    html += '<div class="face-section">';
+    html += '<div class="face-section-header"><span style="font-size:1rem">👤</span><div class="face-section-title">Facial Analysis &amp; Identity</div></div>';
+    html += '<div class="face-grid">';
+    faceDocs.forEach(doc => {
+      const fa = doc.result.facial_analysis || {};
+      html += '<div class="fc" style="padding:.9rem 1rem">';
+      if (doc.thumb) html += '<img style="width:100%;height:100px;object-fit:cover;border:1px solid var(--border);display:block;margin-bottom:.5rem" src="' + doc.thumb + '" alt=""/>';
+      html += '<div class="fk" style="margin-bottom:.3rem">' + esc(doc.name) + '</div>';
+      if (fa.conditions_detected && fa.conditions_detected.length) {
+        html += '<div style="font-size:.72rem;line-height:1.6;color:var(--gold)"><strong>Conditions:</strong><br>' + fa.conditions_detected.map(c=>'• '+esc(c)).join('<br>') + '</div>';
+      } else {
+        html += '<div style="font-size:.72rem;color:var(--green)">✓ No conditions detected</div>';
+      }
+      if (fa.deformities_noted && fa.deformities_noted.length) {
+        html += '<div style="font-size:.72rem;color:var(--accent);margin-top:.25rem"><strong>Deformities:</strong><br>' + fa.deformities_noted.map(d=>'• '+esc(d)).join('<br>') + '</div>';
+      }
+      if (fa.face_description) html += '<div style="font-size:.62rem;color:var(--muted);margin-top:.3rem;font-family:var(--mono);line-height:1.5">' + esc(fa.face_description) + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    if (S.faceMatch && faceDocs.length >= 2) {
+      const fm = S.faceMatch;
+      const score = fm.match_score !== null ? Math.round((fm.match_score||0)*100) : '—';
+      const sc = typeof fm.match_score === 'number' ? (fm.match_score>=.8?'hi':fm.match_score>=.5?'md':'lo') : 'lo';
+      html += '<div class="face-match-bar">';
+      html += '<div><div style="font-family:var(--mono);font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.2rem">Face Match Score</div>';
+      html += '<div class="face-match-score-val ' + sc + '">' + score + (typeof fm.match_score==='number'?'%':'') + '</div></div>';
+      html += '<div><div style="font-family:var(--mono);font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.2rem">Verdict</div>';
+      html += '<div class="face-match-verdict">' + esc(fm.match_verdict||'—') + '</div></div>';
+      if (fm.reasoning) html += '<div class="face-match-reason">' + esc(fm.reasoning) + '</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  // Attribution footer
+  html += '<div style="margin-top:1.5rem;padding-top:.7rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;font-family:var(--mono);font-size:.58rem;color:var(--muted)">';
+  html += '<span>Session: ' + S.sid + ' · ' + new Date().toLocaleString() + '</span>';
+  html += '<span>Conceptualised &amp; crafted by <strong style="color:var(--ink)">Raman Verma</strong> · DocuMind AI v2 · ' + esc(PROVIDERS[getProvider()].name) + '</span>';
+  html += '</div>';
+
+  document.getElementById('overviewOut').innerHTML = html;
+}
+
+// ── EXTRACTED FIELDS ──
+function buildExtracted() {
+  const done = S.docs.filter(d => d.status === 'done' && d.result);
+  if (!done.length) return;
+  let html = '';
+  if (done.length > 1) {
+    html += '<div class="doc-pills">' + done.map((d,i) =>
+      '<span class="doc-pill' + (i===0?' active':'') + '" data-docid="' + d.id + '" onclick="pillSelect(this,\'fields\')">' + esc(d.name.length>22?d.name.slice(0,20)+'…':d.name) + '</span>'
+    ).join('') + '</div>';
+  }
+  html += '<div id="fieldsBody"></div>';
+  document.getElementById('extractedOut').innerHTML = html;
+  renderFieldsBody(done[0]);
+}
+
+function pillSelect(btn, tab) {
+  btn.parentElement.querySelectorAll('.doc-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const doc = S.docs.find(d => d.id === btn.dataset.docid);
+  if (!doc) return;
+  if (tab === 'fields') renderFieldsBody(doc);
+  else if (tab === 'rules') renderRulesBody(doc);
+}
+
+function renderFieldsBody(doc) {
+  const el = document.getElementById('fieldsBody');
+  if (!el) return;
+  const fields = (doc.result && doc.result.extracted_fields) || {};
+  const keys = Object.keys(fields);
+  if (!keys.length) { el.innerHTML = '<div style="padding:1rem;font-family:var(--mono);font-size:.72rem;color:var(--muted)">No fields extracted.</div>'; return; }
+  el.innerHTML = '<div class="sl" style="margin:.6rem 0">Extracted &amp; Standardised <span>' + keys.length + ' fields</span></div>' +
+    '<div class="fields-grid">' + keys.map(k => {
+      const v = fields[k];
+      return '<div class="fc"><div class="fk">' + esc(k) + '</div>' +
+        '<div class="fv ' + (v.status||'') + '">' + esc(String(v.value!=null?v.value:'—')) + (v.unit?' <span style="opacity:.6;font-size:.64rem">'+esc(v.unit)+'</span>':'') + '</div>' +
+        (v.original_value!==undefined&&String(v.original_value)!==String(v.value)?'<div class="fn">orig: '+esc(String(v.original_value))+' '+esc(v.original_unit||'')+'</div>':'') +
+        (v.reference_range?'<div class="fn">ref: '+esc(v.reference_range)+'</div>':'') +
+        (v.standardised?'<div class="fn" style="color:var(--green)">✓ standardised</div>':'') +
+      '</div>';
+    }).join('') + '</div>';
+}
+
+// ── RULES EVAL ──
+function buildRulesTab() {
+  const done = S.docs.filter(d => d.status === 'done' && d.result);
+  if (!done.length) return;
+  let html = '';
+  if (done.length > 1) {
+    html += '<div class="doc-pills">' + done.map((d,i) =>
+      '<span class="doc-pill' + (i===0?' active':'') + '" data-docid="' + d.id + '" onclick="pillSelect(this,\'rules\')">' + esc(d.name.length>22?d.name.slice(0,20)+'…':d.name) + '</span>'
+    ).join('') + '</div>';
+  }
+  html += '<div id="rulesBody"></div>';
+  document.getElementById('rulesOut').innerHTML = html;
+  renderRulesBody(done[0]);
+}
+
+function renderRulesBody(doc) {
+  const el = document.getElementById('rulesBody');
+  if (!el) return;
+  const ev = (doc.result && doc.result.rules_evaluation) || [];
+  if (!ev.length) { el.innerHTML = '<div style="padding:1rem;font-family:var(--mono);font-size:.72rem;color:var(--muted)">No rules evaluated.</div>'; return; }
+  el.innerHTML = '<div class="sl" style="margin:.6rem 0">Rule Evaluation <span>' + ev.length + ' rules</span></div>' +
+    '<div class="rules-out">' + ev.map(x =>
+      '<div class="ri"><div class="rb ' + (x.status||'SKIP') + '">' + (x.status||'SKIP') + '</div>' +
+      '<div class="rd"><strong>' + esc(x.rule_id||'') + ': ' + esc(x.rule_name||'') + '</strong><br>' + esc(x.reason||'—') +
+      '<small>Extracted: ' + esc(String(x.extracted_value!=null?x.extracted_value:'—')) + (x.threshold?' | Threshold: '+esc(String(x.threshold)):'') + '</small></div></div>'
+    ).join('') + '</div>';
+}
+
+// ── JSON ──
+function buildJSON() {
+  const done = S.docs.filter(d => d.status === 'done' && d.result);
+  if (!done.length) return;
+  const all = {
+    session_id: S.sid,
+    generated_at: new Date().toISOString(),
+    generated_by: 'DocuMind AI v2 — Conceptualised & crafted by Raman Verma',
+    provider: PROVIDERS[getProvider()].name,
+    model: getModel(),
+    documents: done.map(d => ({ file: d.name, ...d.result })),
+    face_match_result: S.faceMatch || null
+  };
+  window._jsonExport = all;
+  const raw = JSON.stringify(all, null, 2);
+  const escaped = raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const col = escaped
+    .replace(/("[\w _-]+")\s*:/g,'<span class="jk">$1</span>:')
+    .replace(/: ("(?:[^"\\]|\\.)*")/g,': <span class="jv">$1</span>')
+    .replace(/: (-?\d+\.?\d*)/g,': <span class="jn">$1</span>')
+    .replace(/: (true|false|null)/g,': <span class="jb">$1</span>');
+  document.getElementById('jsonOut').innerHTML =
+    '<div class="json-out"><button class="copy-btn" onclick="copyJSON()">⎘ Copy</button><pre style="white-space:pre-wrap;word-break:break-word">' + col + '</pre></div>';
+}
+
+function copyJSON() {
+  if (!window._jsonExport) return;
+  navigator.clipboard.writeText(JSON.stringify(window._jsonExport,null,2))
+    .then(() => toast('✓ JSON copied','ok'))
+    .catch(() => toast('Copy failed'));
+}
+
+// ── TRENDS ──
+function drawTrends() {
+  const s = S.sessions, n = s.length;
+  document.getElementById('trendCount').textContent = n + ' document' + (n!==1?'s':'');
+  if (!n) return;
+  const avgC = Math.round(s.reduce((a,x) => a+(x.decision_confidence||0),0)/n*100);
+  const appr = s.filter(x => x.overall_decision==='APPROVED').length;
+  const appc = Math.round(appr/n*100);
+  document.getElementById('trendGrid').innerHTML =
+    '<div class="tc"><div class="tt">Avg Confidence</div><div class="tv">'+avgC+'%</div><div class="td '+(avgC>=80?'up':'dn')+'">'+(avgC>=80?'↑ High':'↓ Low')+'</div></div>' +
+    '<div class="tc"><div class="tt">Approval Rate</div><div class="tv">'+appc+'%</div><div class="td '+(appc>=60?'up':'dn')+'">'+appr+'/'+n+' approved</div></div>' +
+    '<div class="tc"><div class="tt">Docs Processed</div><div class="tv">'+n+'</div><div class="td up">This session</div></div>';
+  if (n >= 3) {
+    const fm = {};
+    s.forEach(x => { (x.rules_evaluation||[]).filter(r=>r.status==='FAIL').forEach(r=>{ fm[r.rule_name]=(fm[r.rule_name]||0)+1; }); });
+    const top = Object.entries(fm).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    document.getElementById('ruleHints').innerHTML = top.length
+      ? '<strong style="color:var(--ink)">Suggested Adjustments:</strong><br><br>' + top.map(([r,c])=>'⚠ "<strong style="color:var(--ink)">'+esc(r)+'</strong>" failed '+c+'× — consider relaxing threshold').join('<br>')
+      : 'All rules passing consistently.';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// DOWNLOAD REPORT
+// ═══════════════════════════════════════════════════
+function downloadReport() {
+  const done = S.docs.filter(d => d.status === 'done' && d.result);
+  if (!done.length) { toast('No completed analyses to report'); return; }
+  const now = new Date().toLocaleString('en-IN',{dateStyle:'long',timeStyle:'short'});
+  const faceDocs = done.filter(d => d.result && d.result.has_face);
+
+  let body = `<div style="max-width:860px;margin:0 auto;font-family:'Segoe UI',Arial,sans-serif;color:#111;padding:2.5rem 2rem">
+  <div style="border-bottom:3px solid #c8441a;padding-bottom:1rem;margin-bottom:2rem">
+    <div style="font-size:.75rem;color:#999;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">Confidential — Internal Use Only</div>
+    <h1 style="font-family:Georgia,serif;font-size:2rem;margin:0 0 .4rem;color:#0a0a0f">DocuMind AI — Document Intelligence Report</h1>
+    <div style="font-size:.82rem;color:#555">Session: ${S.sid} &nbsp;·&nbsp; Generated: ${now}</div>
+    <div style="font-size:.72rem;color:#888;margin-top:.25rem">Conceptualised &amp; crafted by <strong style="color:#0a0a0f">Raman Verma</strong> &nbsp;·&nbsp; Powered by ${esc(PROVIDERS[getProvider()].name)} / ${esc(getModel())}</div>
+  </div>`;
+
+  // Summary table
+  const tPass = done.reduce((a,d)=>a+(d.result.rules_evaluation||[]).filter(r=>r.status==='PASS').length,0);
+  const tFail = done.reduce((a,d)=>a+(d.result.rules_evaluation||[]).filter(r=>r.status==='FAIL').length,0);
+  const tWarn = done.reduce((a,d)=>a+(d.result.rules_evaluation||[]).filter(r=>r.status==='WARN').length,0);
+  const approved = done.filter(d=>d.result.overall_decision==='APPROVED').length;
+
+  body += `<table style="width:100%;border-collapse:collapse;margin-bottom:2rem;font-size:.82rem">
+    <thead><tr style="background:#ede9e0"><th style="padding:.6rem 1rem;text-align:left;border:1px solid #d4cfc6;font-family:Georgia,serif">Metric</th><th style="padding:.6rem 1rem;border:1px solid #d4cfc6">Value</th></tr></thead>
+    <tbody>
+      <tr><td style="padding:.5rem 1rem;border:1px solid #eee">Documents Processed</td><td style="padding:.5rem 1rem;border:1px solid #eee;font-weight:700">${done.length}</td></tr>
+      <tr><td style="padding:.5rem 1rem;border:1px solid #eee">Approved</td><td style="padding:.5rem 1rem;border:1px solid #eee;color:#1a8a4a;font-weight:700">${approved}</td></tr>
+      <tr><td style="padding:.5rem 1rem;border:1px solid #eee">Rules — Passed / Failed / Warned</td><td style="padding:.5rem 1rem;border:1px solid #eee">${tPass} / ${tFail} / ${tWarn}</td></tr>
+      ${S.faceMatch?`<tr><td style="padding:.5rem 1rem;border:1px solid #eee">Face Match Verdict</td><td style="padding:.5rem 1rem;border:1px solid #eee;font-weight:700">${esc(S.faceMatch.match_verdict||'—')} (${typeof S.faceMatch.match_score==='number'?Math.round(S.faceMatch.match_score*100)+'%':'—'})</td></tr>`:''}
+    </tbody>
+  </table>`;
+
+  // Per-document sections
+  done.forEach(doc => {
+    const r = doc.result;
+    const dec = r.overall_decision||'PENDING';
+    const decClr = {APPROVED:'#1a8a4a',REJECTED:'#c8441a',REVIEW:'#c8a41a',PENDING:'#1a6bc8'}[dec]||'#555';
+    const conf = Math.round((r.decision_confidence||0)*100);
+
+    body += `<div style="margin-bottom:2rem;border:1px solid #d4cfc6;page-break-inside:avoid">
+      <div style="background:#ede9e0;padding:.8rem 1rem;border-bottom:1px solid #d4cfc6;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:.65rem;color:#999;text-transform:uppercase;letter-spacing:.06em">${esc((r.document_type||'unknown').replace(/_/g,' '))}${r.detected_subtype?' · '+esc(r.detected_subtype):''}</div>
+          <div style="font-weight:700;font-size:.95rem;margin-top:.2rem">${esc(doc.name)}</div>
         </div>
-        <p>${r.summary}</p>
-    `;
+        <div style="text-align:right">
+          <div style="font-family:Georgia,serif;font-size:1.5rem;color:${decClr};font-style:italic">${dec}</div>
+          <div style="font-size:.68rem;color:#888">${conf}% confidence</div>
+        </div>
+      </div>
+      <div style="padding:1rem">
+        ${r.decision_rationale?`<p style="font-size:.8rem;color:#555;margin-bottom:.8rem;font-style:italic">"${esc(r.decision_rationale)}"</p>`:''}`;
+
+    // Fields table
+    const fields = Object.entries(r.extracted_fields||{});
+    if (fields.length) {
+      body += `<table style="width:100%;border-collapse:collapse;font-size:.76rem;margin-bottom:.8rem">
+        <thead><tr style="background:#f5f3ee"><th style="padding:.4rem .7rem;text-align:left;border:1px solid #eee">Field</th><th style="padding:.4rem .7rem;border:1px solid #eee">Value</th><th style="padding:.4rem .7rem;border:1px solid #eee">Status</th><th style="padding:.4rem .7rem;border:1px solid #eee">Ref Range</th></tr></thead><tbody>
+        ${fields.map(([k,v])=>`<tr><td style="padding:.35rem .7rem;border:1px solid #eee;font-family:monospace">${esc(k)}</td><td style="padding:.35rem .7rem;border:1px solid #eee;font-weight:600">${esc(String(v.value??'—'))}${v.unit?' '+esc(v.unit):''}</td><td style="padding:.35rem .7rem;border:1px solid #eee;color:${v.status==='normal'?'#1a8a4a':v.status==='warning'?'#c8a41a':v.status==='flagged'?'#c8441a':'#888'}">${esc(v.status||'—')}</td><td style="padding:.35rem .7rem;border:1px solid #eee;color:#888">${esc(v.reference_range||'—')}</td></tr>`).join('')}
+        </tbody></table>`;
+    }
+
+    // Rules eval
+    const ev = r.rules_evaluation||[];
+    if (ev.length) {
+      body += `<table style="width:100%;border-collapse:collapse;font-size:.73rem">
+        <thead><tr style="background:#f5f3ee"><th style="padding:.38rem .7rem;text-align:left;border:1px solid #eee">Rule</th><th style="padding:.38rem .7rem;border:1px solid #eee">Status</th><th style="padding:.38rem .7rem;text-align:left;border:1px solid #eee">Reason</th></tr></thead><tbody>
+        ${ev.map(x=>`<tr><td style="padding:.3rem .7rem;border:1px solid #eee;font-family:monospace">${esc(x.rule_id)}: ${esc(x.rule_name)}</td><td style="padding:.3rem .7rem;border:1px solid #eee;font-weight:700;color:${x.status==='PASS'?'#1a8a4a':x.status==='FAIL'?'#c8441a':x.status==='WARN'?'#c8a41a':'#888'}">${x.status}</td><td style="padding:.3rem .7rem;border:1px solid #eee">${esc(x.reason||'—')}</td></tr>`).join('')}
+        </tbody></table>`;
+    }
+
+    // Facial analysis in report
+    if (r.has_face && r.facial_analysis) {
+      const fa = r.facial_analysis;
+      body += `<div style="margin-top:.8rem;padding:.75rem 1rem;background:#fdf8f0;border-left:3px solid #c8a41a;font-size:.78rem">
+        <strong>👤 Facial Analysis</strong><br>
+        ${fa.conditions_detected&&fa.conditions_detected.length ? 'Conditions: '+fa.conditions_detected.map(c=>esc(c)).join(', ') : '✓ No medical conditions detected'}
+        ${fa.deformities_noted&&fa.deformities_noted.length ? '<br>Deformities: '+fa.deformities_noted.map(d=>esc(d)).join(', ') : ''}
+        ${fa.face_description ? '<br><em style="color:#888">'+esc(fa.face_description)+'</em>' : ''}
+      </div>`;
+    }
+    body += '</div></div>';
+  });
+
+  // Face match in report
+  if (S.faceMatch && faceDocs.length >= 2) {
+    const fm = S.faceMatch;
+    const score = typeof fm.match_score==='number' ? Math.round(fm.match_score*100)+'%' : '—';
+    const clr = typeof fm.match_score==='number' ? (fm.match_score>=.8?'#1a8a4a':fm.match_score>=.5?'#c8a41a':'#c8441a') : '#888';
+    body += `<div style="margin-bottom:2rem;padding:1rem;background:#f0f5ff;border:1px solid #d4cfc6;page-break-inside:avoid">
+      <h3 style="font-family:Georgia,serif;font-size:1.1rem;margin-bottom:.6rem">🔍 Face Match Result</h3>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;align-items:center">
+        <div><div style="font-size:.65rem;color:#999;text-transform:uppercase">Match Score</div><div style="font-size:2rem;font-family:Georgia,serif;font-style:italic;color:${clr}">${score}</div></div>
+        <div><div style="font-size:.65rem;color:#999;text-transform:uppercase">Verdict</div><div style="font-size:1rem;font-weight:700;margin-top:.2rem">${esc(fm.match_verdict||'—')}</div></div>
+        ${fm.reasoning?`<div style="flex:1;font-size:.78rem;color:#555">${esc(fm.reasoning)}</div>`:''}
+      </div>
+    </div>`;
+  }
+
+  body += `<div style="border-top:1px solid #d4cfc6;padding-top:.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;font-size:.68rem;color:#aaa">
+    <span>Confidential — For internal use only</span>
+    <span>Conceptualised &amp; crafted by <strong style="color:#0a0a0f">Raman Verma</strong> &nbsp;·&nbsp; DocuMind AI v2</span>
+  </div></div>`;
+
+  const win = window.open('','_blank');
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>DocuMind Report — '+now+'</title><style>body{margin:0;background:#f5f3ee}@media print{body{background:#fff}table{page-break-inside:auto}tr{page-break-inside:avoid}</style></head><body>'+body+'<script>setTimeout(function(){window.print()},700)<\/script></body></html>');
+  win.document.close();
 }
 
-function downloadPDFReport() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const r = STATE.results;
-
-    doc.setFont("helvetica", "bold");
-    doc.text("DocuMind AI - Intelligent Analysis Report", 10, 10);
-    doc.setFontSize(10);
-    doc.text(`Status: ${r.decision} | Risk Score: ${r.risk_score}`, 10, 20);
-    
-    doc.text("Summary:", 10, 30);
-    doc.setFont("helvetica", "normal");
-    doc.text(doc.splitTextToSize(r.summary, 180), 10, 35);
-
-    doc.save("DocuMind_Analysis_Report.pdf");
+// ═══════════════════════════════════════════════════
+// RULES MANAGEMENT
+// ═══════════════════════════════════════════════════
+function renderRules() {
+  document.getElementById('rulesList').innerHTML = S.rules.map(r =>
+    '<div class="rule-item '+(r.on?'active':'')+'" onclick="toggleRule(\''+r.id+'\')">' +
+    '<div class="rule-chk '+(r.on?'on':'')+'">'+  (r.on?'✓':'')+'</div>' +
+    '<div class="rule-lbl"><strong>'+r.id+'</strong> '+esc(r.name)+'</div>' +
+    '</div>'
+  ).join('');
+}
+function renderModalRules() {
+  document.getElementById('modalRules').innerHTML = S.rules.map(r =>
+    '<div class="modal-rule-row">' +
+    '<div class="mrr-info"><strong>'+r.id+': '+esc(r.name)+'</strong><span>'+esc(r.desc)+'</span></div>' +
+    '<span class="'+(r.on?'badge-on':'badge-off')+'">'+(r.on?'ON':'OFF')+'</span>' +
+    '<button class="sm-btn" onclick="toggleRule(\''+r.id+'\');renderModalRules()">Toggle</button>' +
+    '<button class="del-btn" onclick="deleteRule(\''+r.id+'\')">✕</button>' +
+    '</div>'
+  ).join('');
+}
+function toggleRule(id) {
+  const r = S.rules.find(x => x.id === id);
+  if (r) { r.on = !r.on; renderRules(); }
+}
+function addRule() {
+  const name  = document.getElementById('rName').value.trim();
+  const param = document.getElementById('rParam').value.trim();
+  if (!name||!param) { toast('Rule name and parameter are required'); return; }
+  const id = 'R'+String(S.rules.length+1).padStart(3,'0');
+  S.rules.push({ id, name, on:true,
+    desc:    document.getElementById('rDesc').value.trim()||name,
+    docType: document.getElementById('rDocType').value,
+    param,
+    cond:    document.getElementById('rCond').value,
+    thresh:  document.getElementById('rThresh').value,
+    action:  document.getElementById('rAction').value,
+  });
+  ['rName','rParam','rThresh','rDesc'].forEach(i => document.getElementById(i).value='');
+  renderRules(); renderModalRules();
+  toast('✓ Rule added: '+name,'ok');
+}
+function deleteRule(id) {
+  S.rules = S.rules.filter(r => r.id !== id);
+  renderRules(); renderModalRules();
+  toast('Rule deleted');
 }
 
-function switchTab(id) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('pane-' + id).classList.add('active');
-    document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function setStatus(type, text) {
+  document.getElementById('sdot').className = 'sdot '+type;
+  document.getElementById('stxt').textContent = text;
+}
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById('pane-'+id);
+  if (pane) pane.classList.add('active');
+  const b = btn || document.querySelector('.tab-btn[data-tab="'+id+'"]');
+  if (b) b.classList.add('active');
+}
+function pickType(btn) {
+  document.querySelectorAll('.doc-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  S.docType = btn.dataset.type;
+}
+function openModal(id)  { document.getElementById(id).classList.add('open'); renderModalRules(); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function toast(msg, type) {
+  type = type||'';
+  const el = document.getElementById('notif');
+  el.textContent = msg; el.className = 'notif show '+type;
+  clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 4000);
 }
 
-function toast(msg) {
-    const el = document.getElementById('notif');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 3000);
-}
+init();
 </script>
 </body>
 </html>

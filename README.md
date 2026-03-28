@@ -1,156 +1,127 @@
-# DocuMind AI 🧠📄
+# DocuMind AI v2 🧠
 
-**Intelligent Document Intelligence Platform** — upload medical, financial, or KYC documents and get structured AI analysis with rule-based decision making, all in a single HTML file.
+**Multi-provider Document Intelligence Platform**
+*Conceptualised & crafted by Raman Verma*
 
 ---
 
-## Features
+## What's New in v2
 
-- **Vision AI analysis** — sends documents to Claude's vision model for extraction
-- **Three document types** — Medical/Lab reports, Financial statements, KYC/Identity
-- **Auto-detection** — AI identifies the document type automatically
-- **Rule engine** — configurable pass/fail/warn rules with custom thresholds
-- **Unit standardisation** — glucose, HbA1c, creatinine etc. all normalised to standard units
-- **JSON export** — full structured output you can copy or use downstream
-- **Session trends** — approval rates, confidence trends across multiple documents
-- **No server needed** — pure client-side, runs on GitHub Pages or any static host
+| Feature | Details |
+|---------|---------|
+| **Multi-provider AI** | OpenAI (GPT-4o), Google Gemini, Grok (xAI), Anthropic Claude |
+| **Live connection test** | Green dot confirms model is reachable before you analyse |
+| **Multiple documents** | Upload a whole batch — each is classified and analysed separately |
+| **Facial analysis** | Detects medical conditions / deformities from customer photos |
+| **Face match scoring** | Compares faces across multiple documents for identity verification |
+| **Downloadable report** | Professional HTML report that opens print-to-PDF |
+| **Session JSON export** | Full structured output for all documents in one JSON |
 
 ---
 
 ## Quickstart
 
-### Option 1 — Open locally (simplest)
-
+### Serve (mandatory — file:// won't work with APIs)
 ```bash
-# Clone or download the repo, then just open the file:
-open index.html
-# or double-click index.html in your file manager
-```
-
-> **Note:** Some browsers block API calls from `file://` URLs due to CORS. If the analysis button returns a network error, use Option 2 instead.
-
-### Option 2 — Serve locally (recommended for development)
-
-```bash
-# Python 3
 python3 -m http.server 8080
-# then open http://localhost:8080
-
-# Node.js (npx)
-npx serve .
+# Open: http://localhost:8080
 ```
 
-### Option 3 — GitHub Pages (recommended for sharing)
-
-1. Fork or push this repo to GitHub
-2. Go to **Settings → Pages → Source → Deploy from branch → main / root**
-3. Your site will be live at `https://YOUR_USERNAME.github.io/REPO_NAME/`
+### GitHub Pages
+Push `index.html`, `config.js`, `README.md` to a repo → Settings → Pages → main/root.
 
 ---
 
-## API Key Setup
+## API Keys & Providers
 
-DocuMind AI calls the **Anthropic API** directly from your browser. You need a key from [platform.anthropic.com](https://platform.anthropic.com).
+All keys are entered in the top config bar. They're saved per-provider in `sessionStorage` (tab only, never persisted).
 
-### Method A — Enter in the banner (easiest, no config needed)
+| Provider | Key format | Get key |
+|----------|-----------|---------|
+| OpenAI | `sk-...` | platform.openai.com |
+| Gemini | `AIzaSy...` | aistudio.google.com |
+| Grok (xAI) | `xai-...` | console.x.ai |
+| Anthropic | `sk-ant-...` | platform.anthropic.com |
 
-Paste your `sk-ant-...` key into the green banner at the top of the page. It is stored in `sessionStorage` only — it disappears when you close the tab, and never leaves your browser.
+**Recommended models:**
+- 🟢 **Gemini 2.0 Flash** — free tier, fast, excellent vision
+- 🟢 **GPT-4o** — best overall vision accuracy
+- 🟢 **Grok 2 Vision** — strong vision, xAI platform
+- 🟡 **Claude Sonnet 4.6** — great if Anthropic CORS allows
 
-### Method B — Pre-set via `config.js` (for personal/internal deployments)
-
-1. Open `config.js`
-2. Replace the empty string:
-   ```js
-   const DOCUMIND_API_KEY = 'sk-ant-api03-YOUR-KEY-HERE';
-   ```
-3. Save the file
-
-> ⚠️ **Security warning:** `config.js` is loaded client-side. Anyone who views source can read the key. For public GitHub Pages sites, always use Method A. For private/internal hosting, Method B is fine — just ensure `config.js` stays in `.gitignore` and is **never committed to a public repo**.
+> Use the **▶ Test** button after entering a key — the status dot turns green when the model is reachable.
 
 ---
 
-## File Structure
+## Workflow
+
+1. Select provider + model → paste API key → click **▶ Test** (wait for green dot)
+2. Drag-drop one or more documents (JPG, PNG, WEBP, PDF)
+3. Click **Analyse Documents**
+4. Review **Overview** → **Extracted Fields** → **Rules Eval** → **JSON**
+5. Click **⬇ Download Report** for a printable/PDF-able professional report
+
+---
+
+## Document Types Supported
+
+- Medical / Lab reports (CBC, LFT, RFT, HbA1c, lipid panels…)
+- Financial statements (P&L, balance sheet, bank statements…)
+- KYC / Identity documents (passport, Aadhaar, driving licence, PAN…)
+- **Customer photographs** — facial condition analysis + match scoring
+- Auto-classification — AI determines type from content
+
+---
+
+## Facial Analysis
+
+When a document contains a photograph (e.g. passport photo, standalone customer photo):
+- AI analyses the face for visible medical conditions or physical findings
+- Clinical, factual language used (not diagnostic)
+- If **multiple photo documents** are uploaded, a **face match score** is computed by comparing facial descriptions
+- Match verdicts: MATCH / LIKELY_MATCH / INCONCLUSIVE / LIKELY_MISMATCH / MISMATCH
+
+---
+
+## Report Download
+
+Click **⬇ Download Report** from the Overview tab. A new window opens with a clean, professionally formatted HTML report containing:
+- Executive summary table
+- Per-document decision cards with rationale
+- Extracted fields in tabular format
+- Rules evaluation grid
+- Facial analysis findings
+- Face match score (if applicable)
+- Attribution footer: *Conceptualised & crafted by Raman Verma*
+
+Use **Ctrl+P / Cmd+P → Save as PDF** to create a PDF.
+
+---
+
+## Files
 
 ```
-documind/
-├── index.html      ← The entire app (HTML + CSS + JS, single file)
-├── config.js       ← Optional API key pre-configuration (do NOT commit if key is set)
-├── .gitignore      ← Excludes config.js from git
-└── README.md       ← This file
+documind2/
+├── index.html   ← Entire app (no dependencies, no build)
+├── config.js    ← Optional key pre-configuration (add to .gitignore)
+├── .gitignore   ← Excludes config.js
+└── README.md    ← This file
 ```
-
----
-
-## Supported Document Types
-
-| Type | Examples | Key Fields Extracted |
-|------|----------|----------------------|
-| **Medical / Lab Report** | CBC, LFT, RFT, HbA1c panels | HbA1c, glucose, creatinine, haemoglobin, cholesterol |
-| **Financial Statement** | P&L, Balance Sheet, Bank statement | Net income, revenue, DTI ratio, credit score |
-| **KYC / Identity** | Passport, Aadhaar, Driving Licence, PAN | Full name, DOB, ID number, expiry date |
-
----
-
-## Built-in Rules (configurable)
-
-| ID | Rule | Default Action |
-|----|------|----------------|
-| R001 | HbA1c ≤ 6.5% | Reject if failed |
-| R002 | Glucose ≤ 11.1 mmol/L | Warn if failed |
-| R003 | KYC ID expiry valid | Reject if failed |
-| R004 | Name match score ≥ 0.9 | Reject if failed |
-| R005 | Debt-to-income ≤ 43% | Reject if failed |
-| R006 | Credit score ≥ 650 | Warn if failed |
-| R007 | Creatinine ≤ 110 µmol/L | Warn if failed (off by default) |
-
-All rules can be toggled, edited, or deleted. New rules can be added via the **Rules** panel.
-
----
-
-## Unit Standardisation
-
-The AI automatically converts non-standard units:
-
-| Parameter | Standard Unit | Conversion |
-|-----------|---------------|------------|
-| Glucose | mmol/L | mg/dL ÷ 18.016 |
-| Creatinine | µmol/L | mg/dL × 88.4 |
-| Cholesterol | mmol/L | mg/dL ÷ 38.67 |
-| HbA1c | % | as-is |
-| Dates | YYYY-MM-DD | ISO 8601 |
-
----
-
-## Known Limitations
-
-- **Browser CORS:** Direct browser-to-Anthropic API calls require the `anthropic-dangerous-direct-browser-calls: true` header. This is intentional for single-file deployments. For production, route calls through your own backend.
-- **PDF support:** PDF analysis requires Claude's document API. Complex scanned PDFs may have lower accuracy than image uploads.
-- **No persistence:** Session data is in-memory only and resets on page refresh. For persistent history, extend the app to use `localStorage` or a backend.
 
 ---
 
 ## Troubleshooting
 
-| Symptom | Likely Cause | Fix |
-|---------|-------------|-----|
-| Nothing styled / all white | CSS variable bug (em-dash instead of `--`) | Use the fixed version from this repo |
-| "API 401" error | Invalid or expired key | Generate a new key at platform.anthropic.com |
-| "Failed to fetch" / network error | Opening via `file://` URL | Serve via `python3 -m http.server` or deploy to GitHub Pages |
-| Tabs not switching | JS error | Open browser console (F12) and check for errors |
-| No fields extracted | Document image too low resolution | Use a clearer scan or photo; minimum ~300 DPI recommended |
-| Analysis hangs | Large PDF / slow connection | Wait up to 30 seconds; PDFs are larger payloads |
+| Error | Fix |
+|-------|-----|
+| "fetch failed" | Open via HTTP, not file:// |
+| 401 Unauthorized | Invalid API key |
+| 403 Forbidden | Key has no access to this model |
+| 429 Rate limit | Wait 30s and retry |
+| Gemini "no candidates" | Key quota exhausted or region restriction |
+| Grok model error | Use `grok-2-vision-1212` for image docs |
+| Status dot stays grey | Click ▶ Test after entering key |
 
 ---
 
-## Technology
-
-- **Frontend:** Vanilla HTML + CSS + JavaScript (zero dependencies, zero build step)
-- **AI:** [Anthropic Claude](https://anthropic.com) — `claude-opus-4-5-20251101` vision model
-- **Fonts:** DM Serif Display, DM Mono, Syne (Google Fonts)
-- **Hosting:** Any static host — GitHub Pages, Netlify, Vercel, or local
-
----
-
-## License
-
-MIT — free to use, modify, and distribute. Attribution appreciated but not required.
+*DocuMind AI v2 — Conceptualised & crafted by Raman Verma*
