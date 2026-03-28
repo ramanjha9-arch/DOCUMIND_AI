@@ -258,7 +258,8 @@
   <select id="modelSel" style="background:#0d160d;border:1px solid #1e3a1e;color:#a6e3a1;font-family:var(--mono);font-size:0.69rem;padding:0.32rem 0.6rem;outline:none;flex-shrink:0;">
     <option value="claude-haiku-4-5-20251001">Haiku 4.5 (fast/cheap)</option>
     <option value="claude-sonnet-4-6" selected>Sonnet 4.6 (recommended)</option>
-    <option value="claude-opus-4-5-20251101">Opus 4.5 (best)</option>
+    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast & Free)</option>
+    <option value="gemini-1.5-pro">Gemini 1.5 Pro (High Reasoning)</option>
   </select>
   <button onclick="testKey()" style="background:#1a3a1a;border:1px solid #1e3a1e;color:#7ec891;font-family:var(--mono);font-size:0.65rem;padding:0.32rem 0.8rem;cursor:pointer;flex-shrink:0;">▶ Test Key</button>
   <span class="api-config-note">Key stays in your browser only</span>
@@ -579,20 +580,68 @@ async function callAPI(payload, key) {
   // key and model must be provided
   const apiKey = key || getKey();
   const model  = document.getElementById('modelSel').value;
+  const isGemini = model.includes('gemini');
 
   // Merge model into payload if not set
   if (!payload.model) payload.model = model;
 
-  let res;
-  try {
-    res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:  'POST',
+  async function callAPI(payload, key) {
+  const apiKey = key || getKey();
+  const model = document.getElementById('modelSel').value;
+  const isGemini = model.includes('gemini');
+
+  let url, options;
+
+  if (isGemini) {
+    // --- GOOGLE GEMINI CONFIG ---
+    url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: payload.messages[0].content }],
+        systemInstruction: { parts: [{ text: payload.system || "" }] },
+        generationConfig: { 
+          maxOutputTokens: payload.max_tokens || 4096,
+          responseMimeType: "application/json" 
+        }
+      })
+    };
+  } else {
+    // --- ANTHROPIC CONFIG ---
+    url = 'https://api.anthropic.com/v1/messages';
+    options = {
+      method: 'POST',
       headers: {
-        'Content-Type':                          'application/json',
-        'x-api-key':                             apiKey,
-        'anthropic-version':                     '2023-06-01',
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
+      body: JSON.stringify({
+        model: model,
+        system: payload.system,
+        messages: payload.messages,
+        max_tokens: payload.max_tokens || 4096
+      })
+    };
+  }
+
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(`API Error ${res.status}: ${errData.error?.message || res.statusText}`);
+  }
+
+  const data = await res.json();
+  
+  // Standardize the output so the rest of your app doesn't break
+  return {
+    content: [{
+      text: isGemini ? data.candidates[0].content.parts[0].text : data.content[0].text
+    }]
+  };
+},
       body: JSON.stringify(payload)
     });
   } catch (networkErr) {
@@ -636,7 +685,7 @@ async function testKey() {
   try {
     const data = await callAPI({
       model:      document.getElementById('modelSel').value,
-      max_tokens: 10,
+      max_tokens: 1,
       messages:   [{ role:'user', content:'Hi' }]
     }, key);
     if (data.content) {
@@ -655,7 +704,19 @@ async function testKey() {
 // ══════════════════════════════════════════════════════
 async function analyse() {
   const key = getKey();
-  if (!key || !key.startsWith('sk-ant')) { toast('Enter a valid Anthropic API key first'); return; }
+  const model = document.getElementById('modelSel').value;
+  const isGemini = model.includes('gemini');
+
+  // 1. Updated Key Validation (Gemini keys usually start with AIza)
+  if (!key) { 
+    toast('Enter an API key first'); 
+    return; 
+  }
+  if (!isGemini && !key.startsWith('sk-ant')) {
+    toast('Enter a valid Anthropic API key (sk-ant-...)');
+    return;
+  }
+  
   if (!S.b64) { toast('Upload a document first'); return; }
 
   const btn = document.getElementById('analyzeBtn');
@@ -720,6 +781,49 @@ async function analyse() {
     '    "platform": "DocuMind AI v1.0"\n' +
     '  }\n' +
     '}';
+
+  // 2. Build provider-specific content array
+  const VALID_IMG = ['image/jpeg','image/png','image/gif','image/webp'];
+  let content;
+  
+  if (isGemini) {
+    // Gemini Format
+    content = [
+      { text: usr },
+      { inline_data: { mime_type: S.mime, data: S.b64 } }
+    ];
+  } else {
+    // Anthropic Format
+    const type = S.mime === 'application/pdf' ? 'document' : 'image';
+    content = [
+      { type: type, source: { type: 'base64', media_type: S.mime, data: S.b64 } },
+      { type: 'text', text: usr }
+    ];
+  }
+
+  try {
+    // 3. Updated callAPI parameters
+    const data = await callAPI({
+      max_tokens: 4096,
+      system:     sys,
+      messages:   [{ role:'user', content: content }]
+    }, key);
+
+    const raw = (data.content || []).map(function(c){ return c.text || ''; }).join('');
+
+    // Parse JSON — strip accidental fences
+    var result;
+    try {
+      var clean = raw.replace(/^
+http://googleusercontent.com/immersive_entry_chip/0
+
+### Key Changes Made:
+* **Provider Detection:** Added `const isGemini = model.includes('gemini');` to branch logic based on your selector.
+* **Flexible Key Check:** Loosened the `sk-ant` requirement so it only applies when an Anthropic model is selected.
+* **Payload Switching:** Gemini requires `inline_data` and puts the text block first in the array for better prompt adherence, whereas Anthropic requires `source` objects.
+* **Response Consistency:** Since I updated your `callAPI` in the previous step to return the same format `{ content: [{ text: "..." }] }` for both providers, the JSON parsing logic at the end of `analyse()` remains fully compatible.
+
+Would you like me to help you refine the **System Prompt (`sys`)** specifically to help Gemini better categorize the `document_type` for financial vs medical docs?
 
   // Build content array — images vs PDF
   const VALID_IMG = ['image/jpeg','image/png','image/gif','image/webp'];
