@@ -339,7 +339,7 @@ h1 em{font-style:italic;color:var(--accent)}
       <a onclick="switchTab('json')">JSON</a>
       <span class="badge-live">LIVE</span>
     </nav>
-    <div class="crafted-tag">by <strong>Crafted by Raman Jha</strong></div>
+    <div class="crafted-tag">by <strong>Raman Jha</strong></div>
   </div>
 </header>
 
@@ -907,7 +907,7 @@ function buildDocPrompt(doc, rulesText) {
 '  "metadata": {\n' +
 '    "session_id": "' + S.sid + '",\n' +
 '    "analysed_at": "' + new Date().toISOString() + '",\n' +
-'    "platform": "DocuMind AI v2 — by Raman Verma"\n' +
+'    "platform": "DocuMind AI v2 — by Raman Jha"\n' +
 '  }\n' +
 '}';
 }
@@ -1106,7 +1106,7 @@ function buildOverview() {
   // Attribution footer
   html += '<div style="margin-top:1.5rem;padding-top:.7rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;font-family:var(--mono);font-size:.58rem;color:var(--muted)">';
   html += '<span>Session: ' + S.sid + ' · ' + new Date().toLocaleString() + '</span>';
-  html += '<span>Conceptualised &amp; crafted by <strong style="color:var(--ink)">Raman Verma</strong> · DocuMind AI v2 · ' + esc(PROVIDERS[getProvider()].name) + '</span>';
+  html += '<span>Conceptualised &amp; crafted by <strong style="color:var(--ink)">Raman Jha</strong> · DocuMind AI v2 · ' + esc(PROVIDERS[getProvider()].name) + '</span>';
   html += '</div>';
 
   document.getElementById('overviewOut').innerHTML = html;
@@ -1189,7 +1189,7 @@ function buildJSON() {
   const all = {
     session_id: S.sid,
     generated_at: new Date().toISOString(),
-    generated_by: 'DocuMind AI v2 — Conceptualised & crafted by Raman Verma',
+    generated_by: 'DocuMind AI v2 — Conceptualised & crafted by Raman Jha',
     provider: PROVIDERS[getProvider()].name,
     model: getModel(),
     documents: done.map(d => ({ file: d.name, ...d.result })),
@@ -1250,7 +1250,7 @@ function downloadReport() {
     <div style="font-size:.75rem;color:#999;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">Confidential — Internal Use Only</div>
     <h1 style="font-family:Georgia,serif;font-size:2rem;margin:0 0 .4rem;color:#0a0a0f">DocuMind AI — Document Intelligence Report</h1>
     <div style="font-size:.82rem;color:#555">Session: ${S.sid} &nbsp;·&nbsp; Generated: ${now}</div>
-    <div style="font-size:.72rem;color:#888;margin-top:.25rem">Conceptualised &amp; crafted by <strong style="color:#0a0a0f">Raman Verma</strong> &nbsp;·&nbsp; Powered by ${esc(PROVIDERS[getProvider()].name)} / ${esc(getModel())}</div>
+    <div style="font-size:.72rem;color:#888;margin-top:.25rem">Conceptualised &amp; crafted by <strong style="color:#0a0a0f">Raman Jha</strong> &nbsp;·&nbsp; Powered by ${esc(PROVIDERS[getProvider()].name)} / ${esc(getModel())}</div>
   </div>`;
 
   // Summary table
@@ -1338,7 +1338,7 @@ function downloadReport() {
 
   body += `<div style="border-top:1px solid #d4cfc6;padding-top:.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;font-size:.68rem;color:#aaa">
     <span>Confidential — For internal use only</span>
-    <span>Conceptualised &amp; crafted by <strong style="color:#0a0a0f">Raman Verma</strong> &nbsp;·&nbsp; DocuMind AI v2</span>
+    <span>Conceptualised &amp; crafted by <strong style="color:#0a0a0f">Raman Jha</strong> &nbsp;·&nbsp; DocuMind AI v2</span>
   </div></div>`;
 
   const win = window.open('','_blank');
